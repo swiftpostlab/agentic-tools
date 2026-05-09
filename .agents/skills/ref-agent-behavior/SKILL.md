@@ -1,6 +1,6 @@
 ---
-name: agent-behavior
-description: "Project persona and workflow expectations. Use when: starting a new task, addressing feedback, planning commits, or understanding project communication style."
+name: ref-agent-behavior
+description: "Reference guidance for project persona and workflow expectations. Use when: starting a new task, addressing feedback, planning commits, or understanding project communication style."
 ---
 
 # Project Conventions

@@ -5,6 +5,7 @@ Use this checklist when creating, reviewing, or refactoring a skill.
 - Does the skill have one clear responsibility?
 - Does the YAML frontmatter include `name` and `description`?
 - Does the `name` field match the folder name and follow the Agent Skills naming constraints?
+- Does the `name` use `ref-...` for reference-style guidance and `tool-...` for action-oriented, user-invoked workflows?
 - Is the `description` concise, specific, and written as a trigger for activation rather than a generic summary?
 - Does the skill include a clear `When to use` section?
 - Does the `SKILL.md` contain the core instructions the agent needs on every activation?

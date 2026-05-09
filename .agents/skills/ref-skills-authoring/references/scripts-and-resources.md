@@ -92,13 +92,13 @@ Good:
 - `Read ./references/release-checks.md before preparing a release PR.`
 - `Use ./assets/report-template.md when the user requests the standard report format.`
 - `Run ./scripts/validate.py after generating the mapping file.`
-- `Read C:/Users/fcole/Projects/swiftpost-shareable-skills/.agents/skills/code-conventions/SKILL.md if the task shifts from skill design to repo Python coding standards.`
+- `Read C:/Users/fcole/Projects/swiftpost-shareable-skills/.agents/skills/ref-code-conventions/SKILL.md if the task shifts from skill design to repo Python coding standards.`
 
 Bad:
 
 - `See references/ for details.`
 - `There are some helpful scripts in scripts/`.
-- `Read ../code-conventions/SKILL.md if you need coding guidance.`
+- `Read ../ref-code-conventions/SKILL.md if you need coding guidance.`
 
 ## Resource Layout Heuristic
 

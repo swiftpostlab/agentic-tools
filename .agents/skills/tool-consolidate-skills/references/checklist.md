@@ -15,7 +15,7 @@ Use this checklist after reorganizing instructions or skills.
 
 Typical moves from this repo:
 
-- Dependency preferences belong in `code-conventions`, not in `copilot-instructions.md`.
+- Dependency preferences belong in `ref-code-conventions`, not in `copilot-instructions.md`.
 - "Ask for clarification rather than making assumptions" belongs in `copilot-instructions.md` because it applies broadly.
-- AI guardrail behavior belongs in `ai-security` plus the top-level restricted-file policy summary.
+- AI guardrail behavior belongs in `ref-ai-security` plus the top-level restricted-file policy summary.
 - Copied examples must use this repo's real commands and libraries instead of inherited ones from another project.

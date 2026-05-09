@@ -10,7 +10,7 @@ Use this checklist when transplanting this repo's skills and AI-policy tooling i
 
 ## Skills
 
-- Did you copy `skills-authoring` before or alongside other skills so the target repo has a standard for skill quality?
+- Did you copy `ref-skills-authoring` before or alongside other skills so the target repo has a standard for skill quality?
 - Did you copy only the generic skills that actually match the target repo's stack and domains?
 - Did you avoid copying repo-specific skills unchanged into the target repo?
 - If the target repo has analogous packages or layers, did you create its own repo-specific skills instead?

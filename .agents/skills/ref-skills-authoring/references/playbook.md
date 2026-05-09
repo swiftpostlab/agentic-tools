@@ -43,7 +43,7 @@ Good boundaries:
 
 - `code-review` for security and correctness review patterns.
 - `pdf-processing` for extracting text, filling forms, and validating output.
-- `project-structure-setup` for repo layout and tool wiring.
+- `ref-project-structure-setup` for repo layout and tool wiring.
 
 Bad boundaries:
 
@@ -51,6 +51,15 @@ Bad boundaries:
 - A skill that is so narrow that several skills must activate for a routine task.
 
 Use this test: if the agent activates the skill, should most of the loaded instructions apply to the current task? If not, the skill is scoped too broadly.
+
+## Choose The Skill Role And Name
+
+Pick the skill name only after you know whether the skill is primarily reference material or primarily an action workflow.
+
+- Use `ref-...` when the skill mainly explains a domain, repo convention, workflow model, or decision surface.
+- Use `tool-...` when the skill mainly tells the agent how to perform an action-oriented workflow that the user may invoke directly.
+- Make `tool-...` names sound like actions, such as `tool-adopt-these-skills`, not passive topic labels.
+- Do not use `tool-...` just because the skill mentions commands. If the skill mainly informs the agent when interpreting or reviewing something, it still belongs under `ref-...`.
 
 ## What Belongs In `SKILL.md`
 

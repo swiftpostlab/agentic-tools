@@ -50,19 +50,19 @@ All project skills are located in `.agents/skills/` and automatically load in Co
 
 ### Available Skills
 
-**`agent-behavior`** — Project persona and workflow expectations
+**`ref-agent-behavior`** — Project persona and workflow expectations
 - Use when: starting tasks, planning commits, preserving structure, or understanding communication expectations
 
-**`code-conventions`** — Python code structure and quality standards
+**`ref-code-conventions`** — Python code structure and quality standards
 - Use when: creating features, writing tests, adjusting project config, or working with source code
 
-**`project-structure-setup`** — Project layout, `pyproject.toml`, and tool wiring
+**`ref-project-structure-setup`** — Project layout, `pyproject.toml`, and tool wiring
 - Use when: locating code, understanding folder layout, or updating project/tool configuration
 
-**`ai-security`** — AI policy, protected files, exclusion sync, and multi-client enforcement
+**`ref-ai-security`** — AI policy, protected files, exclusion sync, and multi-client enforcement
 - Use when: changing `.ai-policy.json`, sync behavior, generated restriction files, or agent file-access enforcement
 
-**`skills-authoring`** — Guidelines for creating and maintaining project skills
+**`ref-skills-authoring`** — Guidelines for creating and maintaining project skills
 - Use when: designing skills, updating copied skills, or evaluating skill quality
 
 **`tool-consolidate-skills`** — Consolidate overlapping skill and top-level guidance
@@ -71,8 +71,8 @@ All project skills are located in `.agents/skills/` and automatically load in Co
 **`tool-adopt-these-skills`** — Adopt this repo's core skills and AI security tooling in another repository
 - Use when: bootstrapping another repo with this repo's agent setup or porting the AI security workflow elsewhere
 
-**`tasks-management`** — Maintain feature task tracking under `.agents/tasks/`
-- Use when: a task should be tracked as a structured multi-step feature
+**`ref-local-feature-tracking`** — Maintain local feature tracking under `.agents/tasks/`
+- Use when: a task needs local planning, temporary feature notes, or structured tracking under `.agents/tasks/`
 
 ## Workflow
 
@@ -83,7 +83,7 @@ When working on this project:
 3. **Implement**: Follow the owning skill for the area you are touching.
 4. **Validate**: Run lint, type-checking, and tests before committing.
 5. **Commit**: Keep commits small and focused.
-6. **Reflect**: Review what happened in the session, identify both corrections and durable lessons, and decide whether any skill or instruction should be updated. Summarize the result to the user and ask if they want the guidance updated. If yes, update the relevant skill using `skills-authoring`, and after editing suggest a follow-up consolidation pass with `tool-consolidate-skills`.
+6. **Reflect**: Review what happened in the session, identify both corrections and durable lessons, and decide whether any skill or instruction should be updated. Summarize the result to the user and ask if they want the guidance updated. If yes, update the relevant skill using `ref-skills-authoring`, and after editing suggest a follow-up consolidation pass with `tool-consolidate-skills`.
 
 ## Quick Commands
 
@@ -101,8 +101,8 @@ Use the Poe validation tasks above as the default way to run tests, lint, and ty
 
 ## Asking for Help
 
-- For code structure, typing, tests, or CLI/task choices: use `code-conventions`.
-- For repo layout, tool wiring, or `pyproject.toml`: use `project-structure-setup`.
-- For workflow and structural caution: use `agent-behavior`.
-- For security policy config and generated restriction files: use `ai-security`.
-- For skills themselves: use `skills-authoring` and `tool-consolidate-skills`.
+- For code structure, typing, tests, or CLI/task choices: use `ref-code-conventions`.
+- For repo layout, tool wiring, or `pyproject.toml`: use `ref-project-structure-setup`.
+- For workflow and structural caution: use `ref-agent-behavior`.
+- For security policy config and generated restriction files: use `ref-ai-security`.
+- For skills themselves: use `ref-skills-authoring` and `tool-consolidate-skills`.

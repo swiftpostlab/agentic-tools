@@ -1,6 +1,6 @@
 ---
-name: skills-authoring
-description: "Guidelines for creating and maintaining project skills. Use when: designing new skills, updating existing skills, establishing skill standards, evaluating skill quality, organizing skill subfiles, or adapting copied skill content to the repo's actual stack."
+name: ref-skills-authoring
+description: "Reference guidance for creating and maintaining project skills. Use when: designing new skills, updating existing skills, establishing skill standards, evaluating skill quality, organizing skill subfiles, or adapting copied skill content to the repo's actual stack."
 ---
 
 # Skills Authoring
@@ -99,6 +99,10 @@ Read `./references/playbook.md` for the detailed workflow and decision rules.
 - **One responsibility per skill.** A skill about code conventions should not also cover deployment.
 - **Frontmatter required:** Every skill must have `name` and `description` in YAML frontmatter.
 - **Follow the spec for `name`:** 1-64 chars, lowercase letters/numbers/hyphens only, no leading or trailing hyphen, no consecutive hyphens, and it must match the folder name.
+- **Choose the skill prefix by role:** In this repo, use `ref-...` when a skill mainly informs the agent about a domain, workflow, convention, or repository surface. Use `tool-...` when a skill mainly tells the agent to carry out an action-oriented workflow that the user may invoke directly.
+- **Name tool skills as actions:** A `tool-...` skill should read like an action connected to its purpose, such as `tool-adopt-these-skills` or `tool-consolidate-skills`, not like a passive topic label.
+- **Name reference skills as stable subjects:** A `ref-...` skill should name the subject area it explains, such as behavior, code conventions, project structure, AI security, or local feature tracking.
+- **Do not use `tool-...` for passive guidance:** If the skill mostly teaches the agent how to understand or review something rather than execute a user-invoked workflow, it should stay under `ref-...`.
 - **Keep `description` under 1024 chars:** It must describe both what the skill does and when to use it.
 - **Use optional fields only when they add execution value:** `compatibility` is for environment requirements, `license` for licensing, `metadata` for extra client metadata, and `allowed-tools` only when the client supports it.
 - **Name must match folder:** The `name` field must match the skill folder name.
@@ -107,7 +111,7 @@ Read `./references/playbook.md` for the detailed workflow and decision rules.
 - **Provider-agnostic:** No provider-specific features or assumptions. Skills must work with Copilot, Claude, Gemini, and others.
 - **Adapt to the real repo:** When a skill is copied or derived from another project, update its commands, libraries, file names, folder layout, and examples to match this repository before keeping it.
 - **Do not preserve stale stack details:** Remove or replace inherited references to the wrong package manager, framework, language conventions, file extensions, or UI library when they do not match the current repo.
-- **Name repo-specific skills explicitly:** If a skill depends on repo-only packages, conventions, or wrappers that would not transfer cleanly to another project, prefix or name it in a repo-specific way. Keep transferable guidance under generic names like `code-conventions`, `project-structure-setup`, or `skills-authoring`.
+- **Name repo-specific skills explicitly:** If a skill depends on repo-only packages, conventions, or wrappers that would not transfer cleanly to another project, prefix or name it in a repo-specific way. Keep transferable guidance under names that clearly advertise their role, such as `ref-code-conventions`, `ref-project-structure-setup`, or `ref-skills-authoring`.
 - **Make values explicit:** When a skill depends on values like simplicity, clarity, or maintainability, state them directly in the purpose or rules instead of leaving them implicit.
 - **Prefer modern defaults:** When a skill gives coding guidance, prefer modern, intention-revealing language and platform APIs over older sentinel-style patterns when both are supported by the project's runtime targets.
 - **Prefer operational labels:** When naming workflow steps or guidance sections, prefer labels that describe the actual review/update action. Favor concrete labels like `Reflect` or `Capture Lessons` over vaguer labels like `Learn` when the step includes reviewing outcomes, correcting guidance, and updating the source of truth.

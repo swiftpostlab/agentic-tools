@@ -2,7 +2,7 @@
 
 ~~~markdown
 ---
-name: my-skill
+name: ref-my-skill
 description: "Brief description. Use when: trigger condition 1, trigger condition 2."
 argument-hint: "Optional slash-command hint"
 ---
@@ -64,6 +64,8 @@ Use this table when the skill includes important commands or operational steps:
 
 Adapt the template to the real repo before keeping it:
 
+- Choose `ref-...` when the skill mainly informs the agent and `tool-...` when the skill mainly drives an action-oriented workflow.
+- If you use `tool-...`, make the name read like an action rather than a passive topic.
 - Replace placeholder names, commands, and file paths.
 - Rewrite the `description` so it triggers on realistic user intent.
 - Remove sections that do not add value for the skill's actual responsibility.

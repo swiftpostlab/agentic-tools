@@ -28,13 +28,13 @@ Pick one of these modes:
 1. Existing repo that is already set up.
 2. New Python script/tool repo.
 3. New Python application repo.
-4. AI-security-only adoption.
+4. Security-policy-only adoption.
 5. Other or unclear.
 
 If the user has not made the target clear, ask which mode they want and whether they want:
 
 - the full skill system,
-- only the AI-security tooling,
+- only the `ref-ai-security` skill and related policy tooling,
 - or only selected reusable skills.
 
 Treat this as a small interactive decision step. Choose the mode first, then give only the relevant transplant guidance.
@@ -54,26 +54,26 @@ Use this matrix as the compact default recommendation after the mode is known.
 
 | Mode | Default recommendation |
 |------|------------------------|
-| Existing repo already set up | `skills-authoring`, `tool-consolidate-skills`, selective `ai-security`, then only the domain skills that match the existing stack |
-| New Python script/tool repo | `skills-authoring`, adapted `code-conventions`, `project-structure-setup`, optional `ai-security` |
-| New Python application repo | recommend this repo as starter, then adapt `agent-behavior`, `code-conventions`, `project-structure-setup`, `ai-security`, and `tasks-management` as needed |
-| AI-security-only adoption | `ai-security`, the sync script, policy file, generated outputs, and provider-routing docs |
+| Existing repo already set up | `ref-skills-authoring`, `tool-consolidate-skills`, selective `ref-ai-security`, then only the domain skills that match the existing stack |
+| New Python script/tool repo | `ref-skills-authoring`, adapted `ref-code-conventions`, `ref-project-structure-setup`, optional `ref-ai-security` |
+| New Python application repo | recommend this repo as starter, then adapt `ref-agent-behavior`, `ref-code-conventions`, `ref-project-structure-setup`, `ref-ai-security`, and `ref-local-feature-tracking` as needed |
+| Security-policy-only adoption | `ref-ai-security`, the sync script, policy file, generated outputs, and provider-routing docs |
 | Other or unclear | ask first; do not recommend a full transplant until the project type is explicit |
 
 ## Start with these skills
 
 Adopt these first unless the target repo has a strong reason not to:
 
-- `agent-behavior` — shared workflow expectations, validation discipline, and structural caution.
-- `code-conventions` — code quality, testing, and tool usage guidance. Rewrite the project-specific structure examples for the target repo.
-- `ai-security` — policy model, protected/excluded files, sync workflow, and multi-client enforcement limits.
+- `ref-agent-behavior` — shared workflow expectations, validation discipline, and structural caution.
+- `ref-code-conventions` — code quality, testing, and tool usage guidance. Rewrite the project-specific structure examples for the target repo.
+- `ref-ai-security` — policy model, protected/excluded files, sync workflow, and multi-client enforcement limits.
 
 Adopt these when they match the target repo's needs:
 
-- `project-structure-setup` — useful when the target repo also wants centralized `pyproject.toml` guidance and folder layout rules.
-- `skills-authoring` — useful when the target repo expects to keep evolving its own skills.
+- `ref-project-structure-setup` — useful when the target repo also wants centralized `pyproject.toml` guidance and folder layout rules.
+- `ref-skills-authoring` — useful when the target repo expects to keep evolving its own skills.
 - `tool-consolidate-skills` — useful once the target repo has enough skills or instruction files that duplication becomes a maintenance problem.
-- `tasks-management` — useful when the target repo wants structured task tracking for multi-step work.
+- `ref-local-feature-tracking` — useful when the target repo wants structured local task tracking for multi-step work.
 
 ## AI security assets to adopt
 
@@ -100,9 +100,9 @@ If the target repo does not use Python or `uv`, adapt the sync invocation to its
 1. Inspect the target repo before copying anything.
    - Identify its package manager, project layout, CI system, and top-level instruction files.
    - Do not assume Python, `uv`, or `pyproject.toml` unless the target repo already uses them or explicitly wants them.
-   - Identify whether the situation is an existing repo retrofit, a new Python repo, or an AI-security-only adoption case.
+   - Identify whether the situation is an existing repo retrofit, a new Python repo, or a security-policy-only adoption case.
 2. Copy the essential skill folders.
-   - Start with `skills-authoring`, then `agent-behavior`, `code-conventions`, and `ai-security` as needed.
+   - Start with `ref-skills-authoring`, then `ref-agent-behavior`, `ref-code-conventions`, and `ref-ai-security` as needed.
    - Keep each skill in its own folder under `.agents/skills/` with a `SKILL.md` file.
    - If copying the top-level instructions, copy the source `## Personality` section verbatim before adapting the rest of the document.
 3. Rewrite project-specific guidance.
@@ -124,11 +124,11 @@ If the target repo does not use Python or `uv`, adapt the sync invocation to its
 
 Start with the skills that are most transferable across projects:
 
-- `skills-authoring` for how skills should be structured and maintained.
+- `ref-skills-authoring` for how skills should be structured and maintained.
 - `tool-consolidate-skills` for keeping top-level instructions slim and moving detail into the right skills.
-- `agent-behavior` for workflow expectations that are still valid in the target repo.
-- `code-conventions` and `project-structure-setup` only when the target repo is close enough to adapt them quickly.
-- `tasks-management` if the target repo wants task tracking in `.agents/tasks/`.
+- `ref-agent-behavior` for workflow expectations that are still valid in the target repo.
+- `ref-code-conventions` and `ref-project-structure-setup` only when the target repo is close enough to adapt them quickly.
+- `ref-local-feature-tracking` if the target repo wants task tracking in `.agents/tasks/`.
 
 Do not copy repo-specific skills unchanged into another repo. Treat them as examples of how to author project-specific skills, not as generic guidance.
 

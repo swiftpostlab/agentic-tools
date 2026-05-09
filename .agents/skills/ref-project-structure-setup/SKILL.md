@@ -1,6 +1,6 @@
 ---
-name: project-structure-setup
-description: "Project folder layout, organization, pyproject.toml configuration hub, and tool setup. Use when: understanding the project architecture, locating where code goes, understanding tool configuration, configuring new tools, or explaining the project structure to others."
+name: ref-project-structure-setup
+description: "Reference guidance for project folder layout, organization, pyproject.toml configuration hub, and tool setup. Use when: understanding the project architecture, locating where code goes, understanding tool configuration, configuring new tools, or explaining the project structure to others."
 argument-hint: "Optional: aspect to explain (e.g., 'folder structure', 'pyproject.toml', 'poe tasks')"
 ---
 
@@ -108,7 +108,7 @@ Type checker configuration in **strict mode**:
 - Rules tune warning/error levels for project needs
 - `stubPath = "src/typings"` allows custom type stubs for untyped libraries
 
-See [code-conventions skill](../code-conventions/SKILL.md) for typing rules.
+See C:/Users/fcole/Projects/swiftpost-shareable-skills/.agents/skills/ref-code-conventions/SKILL.md for typing rules.
 
 #### `[tool.pytest.ini_options]`
 Test framework configuration:
@@ -210,8 +210,8 @@ If the implementation intentionally stays in `scripts/`, the entrypoint may targ
 
 ## See Also
 
-- [code-conventions skill](../code-conventions/SKILL.md) — Code writing standards and feature-first layout details
-- [agent-behavior skill](../agent-behavior/SKILL.md) — Project persona and workflow expectations
+- C:/Users/fcole/Projects/swiftpost-shareable-skills/.agents/skills/ref-code-conventions/SKILL.md — Code writing standards and feature-first layout details
+- C:/Users/fcole/Projects/swiftpost-shareable-skills/.agents/skills/ref-agent-behavior/SKILL.md — Project persona and workflow expectations
 - [pyproject.toml reference](../../pyproject.toml) — Actual configuration file
 - [uv documentation](https://docs.astral.sh/uv/) — Package manager and runner
 - [poethepoet documentation](https://poethepoet.naiveapproach.com/) — Task runner
