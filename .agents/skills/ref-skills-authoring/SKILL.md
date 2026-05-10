@@ -1,6 +1,8 @@
 ---
 name: ref-skills-authoring
 description: "Reference guidance for creating and maintaining project skills. Use when: designing new skills, updating existing skills, establishing skill standards, evaluating skill quality, organizing skill subfiles, or adapting copied skill content to the repo's actual stack."
+metadata:
+	shareable-skills.visibility: "shareable"
 ---
 
 # Skills Authoring
@@ -115,6 +117,26 @@ Read `./references/playbook.md` for the detailed workflow and decision rules.
 - **Make values explicit:** When a skill depends on values like simplicity, clarity, or maintainability, state them directly in the purpose or rules instead of leaving them implicit.
 - **Prefer modern defaults:** When a skill gives coding guidance, prefer modern, intention-revealing language and platform APIs over older sentinel-style patterns when both are supported by the project's runtime targets.
 - **Prefer operational labels:** When naming workflow steps or guidance sections, prefer labels that describe the actual review/update action. Favor concrete labels like `Reflect` or `Capture Lessons` over vaguer labels like `Learn` when the step includes reviewing outcomes, correcting guidance, and updating the source of truth.
+
+## Shareability And Dependency Metadata
+
+When a skill should be exported, shared across repos, or composed with other skills, track that through `metadata` rather than through the skill name.
+
+- Use `metadata.shareable-skills.visibility` with one of two string values: `shareable` or `repo-local`.
+- Use `metadata.shareable-skills.requires` as a space-separated string of hard dependency skill names. Omit the key when there are no hard skill dependencies.
+- Use `metadata.shareable-skills.reason` for a short explanation when a skill is `repo-local` or when the dependency would otherwise be surprising.
+- Keep `shareable` skills dependency-light. If one shareable skill depends on another, that dependency should usually also be `shareable` and the chain should stay shallow.
+- If a skill depends on repo-specific commands, file layout, policy, or other `repo-local` skills, mark it `repo-local` too.
+- Do not encode shareability in the `name`. Keep the `name` focused on what the skill does so discovery and trigger quality stay intact.
+- The Agent Skills spec treats `metadata` as a string-to-string mapping, so do not use YAML lists or nested objects for these fields.
+
+Example:
+
+```yaml
+metadata:
+	shareable-skills.visibility: "shareable"
+	shareable-skills.requires: "ref-skills-authoring"
+```
 
 ## Description Rules
 

@@ -4,6 +4,8 @@
 ---
 name: ref-my-skill
 description: "Brief description. Use when: trigger condition 1, trigger condition 2."
+metadata:
+  shareable-skills.visibility: "shareable"
 argument-hint: "Optional slash-command hint"
 ---
 
@@ -66,6 +68,9 @@ Adapt the template to the real repo before keeping it:
 
 - Choose `ref-...` when the skill mainly informs the agent and `tool-...` when the skill mainly drives an action-oriented workflow.
 - If you use `tool-...`, make the name read like an action rather than a passive topic.
+- If the skill should be exportable, set `shareable-skills.visibility: "shareable"`. If it depends on this repo's concrete layout, policies, or wrappers, set it to `"repo-local"` instead.
+- If the skill has hard dependencies on other skills, add `shareable-skills.requires` as a space-separated list of skill names.
+- If the skill is `repo-local` for a non-obvious reason, add `shareable-skills.reason` with a short explanation.
 - Replace placeholder names, commands, and file paths.
 - Rewrite the `description` so it triggers on realistic user intent.
 - Remove sections that do not add value for the skill's actual responsibility.
