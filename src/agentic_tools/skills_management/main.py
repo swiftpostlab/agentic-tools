@@ -587,10 +587,6 @@ def add_source_argument(parser: ArgumentParser) -> None:
     )
 
 
-def add_destination_arguments(parser: ArgumentParser) -> None:
-    add_source_argument(parser)
-
-
 def add_target_arguments(parser: ArgumentParser) -> None:
     parser.add_argument(
         "-t",
