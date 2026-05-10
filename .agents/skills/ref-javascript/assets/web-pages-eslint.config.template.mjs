@@ -20,7 +20,7 @@ const WEB_FILES = ['src/features/**/*.js', 'src/features/**/*.mjs'];
 const IGNORED_FEATURE_WEB_FILES = [
   'src/features/**/*.user.js',
   'src/features/**/*.user.ts',
-  'src/features/debt-tracker-working-in-progress/backend-server.js',
+  'src/features/example-tooling-sandbox/server-preview.js',
 ];
 
 /** @type {import('@typescript-eslint/utils/ts-eslint').FlatConfig.RuleEntry} */

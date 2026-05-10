@@ -72,9 +72,10 @@ Adapt the template to the real repo before keeping it:
 - If the skill has hard dependencies on other skills, add `shareable-skills.requires` as a space-separated list of skill names.
 - If the skill is `repo-local` for a non-obvious reason, add `shareable-skills.reason` with a short explanation.
 - Replace placeholder names, commands, and file paths.
+- Keep placeholders synthetic. Do not turn generic examples into copies of real folder or script names from another repo unless the skill is intentionally documenting that concrete repo.
 - Rewrite the `description` so it triggers on realistic user intent.
 - Remove sections that do not add value for the skill's actual responsibility.
 - Keep critical gotchas in `SKILL.md` and move bulky detail into `references/`, `assets/`, or `scripts/`.
-- Use relative paths for this skill's own files and absolute paths for other skills.
+- Use relative paths for this skill's own files and repo-root-relative paths for other skills in this repo.
 - If the skill includes commands or task steps, frame them with what, why, when, and expected outcome.
 - If the workflow is fragile or multistep, add an explicit plan-validate-execute loop.

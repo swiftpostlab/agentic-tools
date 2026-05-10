@@ -73,14 +73,14 @@ Provide portable defaults for self-contained web pages and browser-only tools th
 ### Single-file local tool
 
 ```text
-src/features/json-inspector/
-  json-inspector.html
+src/features/example-mini-lab/
+  example-mini-lab.html
 ```
 
 ### Standalone page with local sibling assets
 
 ```text
-src/features/report-viewer/
+src/features/example-dashboard-kit/
   index.html
   css/styles.css
   js/app.js

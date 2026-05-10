@@ -16,6 +16,7 @@ Use this checklist when creating, reviewing, or refactoring a skill.
 - Does the skill tell the agent when to read supporting files instead of vaguely mentioning them?
 - Does the guidance use this repo's actual commands, file paths, packages, and conventions?
 - Were stale references from another project removed instead of preserved?
+- Do generic examples use synthetic folder, feature, and script names instead of leaking real names from this repo or another repo?
 - If the skill is repo-specific, is that made explicit in the name or wording?
 - Does `SKILL.md` stay concise, with long checklists, templates, or examples moved into `references/`, `assets/`, or `scripts/`?
 - Are all links to supporting files relative `./references/...`, `./assets/...`, or `./scripts/...` paths?
@@ -39,4 +40,5 @@ Typical fixes:
 - Add a gotchas section for repeated agent mistakes.
 - Replace equal-option lists with one default plus a fallback.
 - Replace inherited package-manager or framework examples with this repo's real stack.
+- Replace copied feature-folder and script names with clearly synthetic placeholders unless the example is intentionally documenting a real repo surface.
 - Split mixed guidance into separate skills when one file is trying to cover multiple domains.

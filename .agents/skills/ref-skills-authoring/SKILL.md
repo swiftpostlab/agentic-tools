@@ -111,9 +111,11 @@ Read `./references/playbook.md` for the detailed workflow and decision rules.
 - **Name must match folder:** The `name` field must match the skill folder name.
 - **"When to use" section:** Include a clear section so the AI can determine relevance.
 - **Concrete examples:** Provide small examples, templates, or commands where they reduce ambiguity.
+- **Use synthetic example names by default:** In generic examples, templates, and starter snippets, prefer obviously made-up folder, file, feature, and script names. Do not reuse real folder or script names from this repo or another repo unless the skill is intentionally documenting that exact concrete surface.
 - **Provider-agnostic:** No provider-specific features or assumptions. Skills must work with Copilot, Claude, Gemini, and others.
 - **Adapt to the real repo:** When a skill is copied or derived from another project, update its commands, libraries, file names, folder layout, and examples to match this repository before keeping it.
 - **Do not preserve stale stack details:** Remove or replace inherited references to the wrong package manager, framework, language conventions, file extensions, or UI library when they do not match the current repo.
+- **Do not leak foreign repo artifacts into generic examples:** If you copied a template or skill from another repo, replace example paths like feature folders, excluded files, and sample script names with synthetic placeholders unless the skill explicitly says it is documenting the source repo itself.
 - **Name repo-specific skills explicitly:** If a skill depends on repo-only packages, conventions, or wrappers that would not transfer cleanly to another project, prefix or name it in a repo-specific way. Keep transferable guidance under names that clearly advertise their role, such as `ref-code-conventions`, `ref-project-structure-setup`, or `ref-skills-authoring`.
 - **Make values explicit:** When a skill depends on values like simplicity, clarity, or maintainability, state them directly in the purpose or rules instead of leaving them implicit.
 - **Prefer modern defaults:** When a skill gives coding guidance, prefer modern, intention-revealing language and platform APIs over older sentinel-style patterns when both are supported by the project's runtime targets.

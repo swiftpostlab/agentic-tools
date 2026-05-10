@@ -98,8 +98,8 @@ src/
 
 ```text
 scripts/
-  build-static-site.mts
-  sync-ai-policy.mts
+  generate-catalog.mts
+  refresh-manifest.mts
 tsconfig.json
 ```
 

@@ -43,6 +43,7 @@ Read .agents/skills/ref-skills-authoring/SKILL.md before drafting the new skill.
 - Keep hard dependencies few, especially for `shareable` skills.
 - Keep the first version narrow. Do not solve adjacent workflows in the same skill unless they are operationally inseparable.
 - Prefer asking a short focused set of questions over dumping a large questionnaire at once.
+- Default generic examples, paths, and script names to clearly synthetic placeholders unless the skill is intentionally documenting a real repo surface.
 
 ## Wizard Questions
 
@@ -65,6 +66,7 @@ Ask only the questions that are still unanswered after reading the user's reques
 - Do not create a `tool-...` skill just because the skill mentions commands. A reference skill can still mention commands.
 - Do not encode shareability in the skill name. Use `metadata.shareable-skills.visibility` instead.
 - Do not create support files preemptively if a concise `SKILL.md` is enough.
+- Do not copy real folder or script names from another repo into generic examples just because they came along with a borrowed template.
 - If the new skill would substantially overlap with an existing one, stop and clarify whether the user wants an update instead of a new skill.
 
 ## Validation
@@ -72,5 +74,6 @@ Ask only the questions that are still unanswered after reading the user's reques
 - Review the draft against .agents/skills/ref-skills-authoring/references/checklist.md.
 - Confirm the `name` matches the folder and uses the correct `ref-` or `tool-` prefix.
 - Confirm any shareability metadata uses `shareable-skills.visibility` and, when needed, `shareable-skills.requires` as string values rather than YAML lists.
-- Confirm any cross-skill reference uses an absolute path.
+- Confirm cross-skill references use repo-root-relative paths for skills in this repo.
+- Confirm generic examples use synthetic folder, feature, and script names rather than real names copied from another repo.
 - Run a targeted error check on the new files before concluding.

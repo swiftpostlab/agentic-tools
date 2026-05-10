@@ -86,8 +86,8 @@ packages/package-name/
 ### Browser script with local helpers
 
 ```text
-src/features/report-viewer/
-  report-viewer.html
+src/features/example-browser-tool/
+  example-browser-tool.html
   js/
     app.js
     storage.js
@@ -97,9 +97,9 @@ src/features/report-viewer/
 
 ```text
 scripts/
-  build-static-site.mts
-src/features/json-text-into-csv/
-  csv_script_skyscanner.mjs
+  generate-catalog.mts
+src/features/example-data-transform/
+  normalize-results.mjs
 ```
 
 ## Validation

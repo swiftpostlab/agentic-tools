@@ -103,6 +103,7 @@ Use this structure unless the task has a better shape:
 - Explain why when the rule is context-sensitive.
 - Keep non-obvious constraints close to the top.
 - Avoid describing what the agent already knows by default.
+- Keep generic examples synthetic. If you copy examples from another repo, replace real folder and script names unless the skill is intentionally documenting that exact repo surface.
 
 ## Task Framing Rule
 
@@ -151,9 +152,10 @@ When updating a copied or stale skill:
 
 1. Remove inherited stack details that do not match this repo.
 2. Rewrite the description before tuning anything else.
-3. Delete filler sections that do not influence behavior.
-4. Promote recurring corrections into defaults, gotchas, or validation rules.
-5. Split the skill if it covers multiple unrelated workflows.
+3. Replace copied example paths, feature names, and script names with synthetic placeholders unless they are intentionally documenting a real repo surface.
+4. Delete filler sections that do not influence behavior.
+5. Promote recurring corrections into defaults, gotchas, or validation rules.
+6. Split the skill if it covers multiple unrelated workflows.
 
 ## Done Criteria
 
