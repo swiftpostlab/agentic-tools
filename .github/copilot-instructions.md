@@ -74,6 +74,18 @@ All project skills are located in `.agents/skills/` and automatically load in Co
 **`ref-skills-authoring`** — Guidelines for creating and maintaining project skills
 - Use when: designing skills, updating copied skills, or evaluating skill quality
 
+**`ref-instructions-authoring`** — Guidance for writing and maintaining multi-provider instruction files
+- Use when: authoring or updating `.github/copilot-instructions.md`, `GEMINI.md`, or `.claude/CLAUDE.md`, choosing a source of truth, or designing an import bridge across providers
+
+**`ref-copilot-instructions`** — Guidance for `.github/copilot-instructions.md`
+- Use when: editing Copilot instructions, deciding what belongs in the source-of-truth instruction file, or updating workflow, skill-routing, or command summaries
+
+**`ref-gemini-instructions`** — Guidance for `GEMINI.md`
+- Use when: editing `GEMINI.md`, deciding whether Gemini needs provider-specific text, or keeping Gemini routed to the shared repo instructions
+
+**`ref-claude-instructions`** — Guidance for `.claude/CLAUDE.md`
+- Use when: editing Claude instructions, deciding whether Claude needs provider-specific text, or keeping Claude routed to the shared repo instructions
+
 **`ref-deno`** — Portable Deno guidance for modern runtime usage and hybrid repos
 - Use when: writing Deno code, configuring `deno.json`, or migrating older Deno patterns
 
@@ -115,6 +127,9 @@ All project skills are located in `.agents/skills/` and automatically load in Co
 
 **`tool-create-skill`** — Guided wizard for creating a new skill
 - Use when: the user wants to add a new skill or scaffold one through a guided intake flow
+
+**`tool-maintain-instructions`** — Guided workflow for updating repo instruction files
+- Use when: instruction files may be outdated after code, workflow, or skill changes, or a multi-provider repo needs its instruction bridge refreshed
 
 **`tool-make-skill-shareable`** — Guided workflow for making an existing skill shareable
 - Use when: a skill lacks shareability metadata, portability is unclear, or a repo-local skill may need to be split before export
@@ -160,6 +175,10 @@ Use the Poe validation tasks above as the default way to run tests, lint, and ty
 - For portable coding defaults across languages and CLIs: use `ref-coding-patterns`.
 - For generic architecture and feature-boundary decisions: use `ref-architecture`.
 - For security policy config and generated restriction files: use `ref-ai-security`.
+- For writing and maintaining top-level instruction files across providers: use `ref-instructions-authoring`.
+- For `.github/copilot-instructions.md`: use `ref-copilot-instructions`.
+- For `GEMINI.md`: use `ref-gemini-instructions`.
+- For `.claude/CLAUDE.md`: use `ref-claude-instructions`.
 - For Python code and CLI patterns: use `ref-python`.
 - For JavaScript scripts or browser code with JSDoc: use `ref-javascript`.
 - For React component structure, hooks, client-side state, and React-friendly library choices: use `ref-react`.
@@ -172,6 +191,7 @@ Use the Poe validation tasks above as the default way to run tests, lint, and ty
 - For Supabase CLI, schema, edge functions, and ORM boundaries: use `ref-supabase`.
 - For deciding whether a skill should be shared, exported, or kept repo-local: use `ref-shareable-skills`.
 - For creating a new skill through a guided intake flow: use `tool-create-skill`.
+- For refreshing `.github/copilot-instructions.md`, `GEMINI.md`, and `.claude/CLAUDE.md` after repo changes: use `tool-maintain-instructions`.
 - For turning an existing skill into a shareable one through a guided review: use `tool-make-skill-shareable`.
 - For grouping the current diff into focused commits and making them: use `tool-commit`.
 - For skills themselves: use `ref-skills-authoring` and `tool-consolidate-skills`.
