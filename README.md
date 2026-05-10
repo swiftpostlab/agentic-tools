@@ -1,12 +1,12 @@
-# Opinionated Python project starter with batteries included [![.github/workflows/ci.yaml](https://github.com/fcole90/python-poetry-starter/actions/workflows/ci.yaml/badge.svg)](https://github.com/fcole90/python-poetry-starter/actions/workflows/ci.yaml)
+# Agentic Tools
 
-This project is designed to be a quick-start for Python projects, providing a set of tools and configurations that make development easier. It includes:
+This project packages reusable agent workflows, shareable skills, and supporting automation for agent-oriented repositories. It includes:
 
-- Initial uv setup with local virtualenv and including poe task runner
+- Shareable skill definitions under `.agents/skills/`
+- A packaged skills-management CLI for listing, linking, and unlinking skills
 - Test setup with pytest
-- Linting setup with blake
-- Typechecking setup with pyright
-- Continuous integration with GitHub Actions
+- Linting setup with Black
+- Typechecking setup with Pyright
 
 ## Requirements
 
@@ -23,6 +23,12 @@ uv sync
 ```
 
 After this step you may want to close and reopen your terminal or IDE to ensure that the uv-managed virtual environment is activated correctly.
+
+## Skills Management
+
+```sh
+uv run skills-management list
+```
 
 ## Tests
 

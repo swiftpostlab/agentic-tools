@@ -1,5 +1,5 @@
 [project]
-name = "swiftpost-shareable-skills"
+name = "agentic-tools"
 version = "0.1.0"
 description = ""
 authors = [{ name = "swiftpost", email = "swiftpostlab@gmail.com" }]
@@ -22,7 +22,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/swiftpost_shareable_skills", "scripts"]
+packages = ["src/agentic_tools", "scripts"]
 
 [tool.pytest.ini_options]
 minversion = "9.0"
@@ -46,10 +46,11 @@ reportUnknownModuleType = "warning"
 reportUnnecessaryTypeIgnoreComment = "warning"
 
 [project.scripts]
-main = "swiftpost_shareable_skills.main:main"
+main = "agentic_tools.main:main"
 sync-ai-policy = "scripts.sync_ai_policy:main"
 sync-ai-policy-import-vscode = "scripts.sync_ai_policy:import_vscode_main"
-skills-sharing-cli = "swiftpost_shareable_skills.skills_sharing.main:main"
+skills-management-cli = "agentic_tools.skills_management.main:main"
+skills-management = "agentic_tools.skills_management.main:main"
 
 [tool.poe.tasks]
 lint = "python -m black --check ./src"

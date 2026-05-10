@@ -3,11 +3,11 @@ from pathlib import Path
 
 import pytest
 
-import swiftpost_shareable_skills.skills_sharing.main as skills_sharing_main
-from swiftpost_shareable_skills.skills_sharing.main import SkillsSharingError
-from swiftpost_shareable_skills.skills_sharing.main import discover_skill_manifests
-from swiftpost_shareable_skills.skills_sharing.main import link_skill_directory
-from swiftpost_shareable_skills.skills_sharing.main import resolve_selected_skills
+import agentic_tools.skills_management.main as skills_management_main
+from agentic_tools.skills_management.main import SkillsManagementError
+from agentic_tools.skills_management.main import discover_skill_manifests
+from agentic_tools.skills_management.main import link_skill_directory
+from agentic_tools.skills_management.main import resolve_selected_skills
 
 
 def write_skill(
@@ -34,16 +34,16 @@ def write_skill(
     (skill_dir / "SKILL.md").write_text("\n".join(lines), encoding="utf-8")
 
 
-def assert_skills_sharing_error_contains(
+def assert_skills_management_error_contains(
     action: Callable[[], object], expected_text: str
 ) -> None:
     try:
         action()
-    except SkillsSharingError as error:
+    except SkillsManagementError as error:
         assert expected_text in str(error)
         return
 
-    raise AssertionError("Expected SkillsSharingError was not raised")
+    raise AssertionError("Expected SkillsManagementError was not raised")
 
 
 def test_discover_skill_manifests_reads_shareability_metadata(tmp_path: Path) -> None:
@@ -102,7 +102,7 @@ def test_resolve_selected_skills_rejects_missing_metadata_with_wizard_recommenda
     write_skill(tmp_path, "ref-alpha")
     manifests = discover_skill_manifests(tmp_path)
 
-    assert_skills_sharing_error_contains(
+    assert_skills_management_error_contains(
         lambda: resolve_selected_skills(manifests, ["ref-alpha"]),
         "tool-make-skill-shareable",
     )
@@ -128,7 +128,7 @@ def test_resolve_selected_skills_rejects_repo_local_dependency(tmp_path: Path) -
 
     manifests = discover_skill_manifests(tmp_path)
 
-    assert_skills_sharing_error_contains(
+    assert_skills_management_error_contains(
         lambda: resolve_selected_skills(manifests, ["ref-alpha"]),
         "which is not shareable",
     )
@@ -166,7 +166,7 @@ def test_main_list_prints_all_skills_from_source(
     )
     write_skill(tmp_path, "tool-beta")
 
-    exit_code = skills_sharing_main.main(["list", "--from", str(tmp_path)])
+    exit_code = skills_management_main.main(["list", "--from", str(tmp_path)])
     output = capsys.readouterr().out
 
     assert exit_code == 0
@@ -190,7 +190,7 @@ def test_main_link_dry_run_defaults_destination_to_current_repo(
     )
     monkeypatch.chdir(destination_repo)
 
-    exit_code = skills_sharing_main.main(
+    exit_code = skills_management_main.main(
         ["link", "ref-alpha", "--from", str(source_repo), "--dry-run"]
     )
     output = capsys.readouterr().out
@@ -214,7 +214,7 @@ def test_main_link_dry_run_accepts_skills_root_source_path(
         metadata={"shareable-skills.visibility": "shareable"},
     )
 
-    exit_code = skills_sharing_main.main(
+    exit_code = skills_management_main.main(
         [
             "link",
             "ref-alpha",
@@ -245,10 +245,10 @@ def test_main_link_global_dry_run_uses_global_destination(
         metadata={"shareable-skills.visibility": "shareable"},
     )
     monkeypatch.setattr(
-        skills_sharing_main, "DEFAULT_GLOBAL_SKILLS_DIR", global_skills_dir
+        skills_management_main, "DEFAULT_GLOBAL_SKILLS_DIR", global_skills_dir
     )
 
-    exit_code = skills_sharing_main.main(
+    exit_code = skills_management_main.main(
         ["link", "ref-alpha", "--from", str(source_repo), "--global", "--dry-run"]
     )
     output = capsys.readouterr().out
@@ -271,7 +271,7 @@ def test_main_unlink_dry_run_uses_expected_source_and_destination(
         metadata={"shareable-skills.visibility": "shareable"},
     )
 
-    exit_code = skills_sharing_main.main(
+    exit_code = skills_management_main.main(
         [
             "unlink",
             "ref-alpha",

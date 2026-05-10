@@ -2,7 +2,7 @@
 description: "Project context and guidance for GitHub Copilot working on this repository."
 ---
 
-# Python UV Template - Copilot Guide
+# Agentic Tools - Copilot Guide
 
 Use this file for always-on repository rules and routing. Keep domain-specific detail in the skills under `.agents/skills/`.
 
@@ -136,7 +136,7 @@ When working on this project:
 - `uv run poe typecheck` — Run Pyright strict mode.
 - `uv run poe lint-filter` — Run lint and filter output.
 - `uv run poe typecheck-filter` — Run type-checking and filter output.
-- `uv run skills-sharing-cli list` — List skills available from the current repo or a specified source.
+- `uv run skills-management list` — List skills available from the current repo or a specified source.
 - `uv run sync-ai-policy` — Regenerate agent config from `.ai-policy.json`.
 - `uv run sync-ai-policy-import-vscode` — Import VS Code approvals into policy, then sync.
 
