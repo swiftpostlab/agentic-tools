@@ -157,6 +157,55 @@ def test_link_skill_directory_dry_run_does_not_create_target_directory(
     assert not destination_skills_dir.exists()
 
 
+def test_link_skill_directory_falls_back_to_windows_junction_when_needed(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    write_skill(
+        tmp_path,
+        "ref-alpha",
+        metadata={"shareable-skills.visibility": "shareable"},
+    )
+    manifests = discover_skill_manifests(tmp_path)
+
+    destination_skills_dir = tmp_path / "global-skills"
+    junction_calls: list[tuple[Path, Path]] = []
+
+    def raise_windows_symlink_error(
+        self: Path, target: Path, *, target_is_directory: bool = False
+    ) -> None:
+        del self, target, target_is_directory
+        error = OSError("privilege not held")
+        error.winerror = 1314  # type: ignore[attr-defined]
+        raise error
+
+    monkeypatch.setattr(skills_management_main, "is_windows", lambda: True)
+    monkeypatch.setattr(Path, "symlink_to", raise_windows_symlink_error)
+    monkeypatch.setattr(
+        skills_management_main,
+        "create_windows_directory_junction",
+        lambda destination, target: junction_calls.append((destination, target)),
+    )
+
+    message = link_skill_directory(
+        manifests["ref-alpha"],
+        destination_skills_dir,
+        dry_run=False,
+        force=False,
+    )
+
+    assert message == (
+        f"Linked {destination_skills_dir / 'ref-alpha'} -> "
+        f"{(tmp_path / '.agents' / 'skills' / 'ref-alpha').resolve()}"
+    )
+    assert junction_calls == [
+        (
+            destination_skills_dir / "ref-alpha",
+            (tmp_path / ".agents" / "skills" / "ref-alpha").resolve(),
+        )
+    ]
+
+
 def test_main_list_prints_all_skills_from_source(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:

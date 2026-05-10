@@ -16,6 +16,7 @@ from dataclasses import dataclass
 from importlib.util import find_spec
 import os
 from pathlib import Path
+import subprocess
 from typing import Any
 from typing import Sequence
 
@@ -154,7 +155,9 @@ def require_string_list(value: Any, *, context: str) -> tuple[str, ...]:
     entries: list[str] = []
     for entry in value:
         if not isinstance(entry, str) or entry.strip() == "":
-            raise SkillsManagementError(f"{context} must contain only non-empty strings.")
+            raise SkillsManagementError(
+                f"{context} must contain only non-empty strings."
+            )
         entries.append(entry)
 
     if not entries:
@@ -167,7 +170,9 @@ def parse_configured_skill_sources(text: str) -> tuple[ConfiguredSkillSource, ..
     try:
         parsed = json.loads(text)
     except JSONDecodeError as error:
-        raise SkillsManagementError(f"Skills config is not valid JSON: {error}") from error
+        raise SkillsManagementError(
+            f"Skills config is not valid JSON: {error}"
+        ) from error
 
     config = require_json_object(parsed, context="Skills config")
     raw_sources = config.get("sources")
@@ -202,7 +207,9 @@ def parse_configured_skill_sources(text: str) -> tuple[ConfiguredSkillSource, ..
     return tuple(configured_sources)
 
 
-def load_configured_skill_sources(config_path: Path) -> tuple[ConfiguredSkillSource, ...]:
+def load_configured_skill_sources(
+    config_path: Path,
+) -> tuple[ConfiguredSkillSource, ...]:
     if not config_path.exists():
         raise SkillsManagementError(f"Could not find skills config at {config_path}")
     if not config_path.is_file():
@@ -245,13 +252,17 @@ def resolve_package_source_root(package_name: str) -> Path:
 
         search_roots: list[Path] = []
         if spec.submodule_search_locations is not None:
-            search_roots.extend(Path(entry) for entry in spec.submodule_search_locations)
+            search_roots.extend(
+                Path(entry) for entry in spec.submodule_search_locations
+            )
         if spec.origin is not None:
             search_roots.append(Path(spec.origin))
 
         for search_root in search_roots:
             normalized_root = search_root.resolve()
-            start_path = normalized_root.parent if normalized_root.is_file() else normalized_root
+            start_path = (
+                normalized_root.parent if normalized_root.is_file() else normalized_root
+            )
             for possible_root in [start_path, *start_path.parents]:
                 if (possible_root / ".agents" / "skills").is_dir():
                     return possible_root
@@ -434,6 +445,53 @@ def resolve_existing_symlink_target(path: Path) -> Path:
     return (path.parent / target).resolve(strict=False)
 
 
+def is_windows() -> bool:
+    return os.name == "nt"
+
+
+def is_directory_junction(path: Path) -> bool:
+    isjunction = getattr(os.path, "isjunction", None)
+    return bool(callable(isjunction) and isjunction(path))
+
+
+def is_directory_link(path: Path) -> bool:
+    return path.is_symlink() or (is_windows() and is_directory_junction(path))
+
+
+def resolve_existing_link_target(path: Path) -> Path:
+    if path.is_symlink():
+        return resolve_existing_symlink_target(path)
+    if is_windows() and is_directory_junction(path):
+        return path.resolve(strict=False)
+    raise SkillsManagementError(f"Path '{path}' is not a supported directory link.")
+
+
+def remove_directory_link(path: Path) -> None:
+    if path.is_symlink():
+        path.unlink()
+        return
+    if is_windows() and is_directory_junction(path):
+        path.rmdir()
+        return
+    raise SkillsManagementError(f"Path '{path}' is not a supported directory link.")
+
+
+def create_windows_directory_junction(destination: Path, target: Path) -> None:
+    result = subprocess.run(
+        ["cmd", "/c", "mklink", "/J", str(destination), str(target)],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode == 0:
+        return
+
+    details = result.stderr.strip() or result.stdout.strip() or "unknown error"
+    raise SkillsManagementError(
+        f"Could not create directory junction '{destination}' -> '{target}': {details}"
+    )
+
+
 def link_skill_directory(
     manifest: SkillManifest,
     destination_skills_dir: Path,
@@ -449,15 +507,15 @@ def link_skill_directory(
 
     destination_skills_dir.mkdir(parents=True, exist_ok=True)
 
-    if destination.is_symlink():
-        existing_target = resolve_existing_symlink_target(destination)
+    if is_directory_link(destination):
+        existing_target = resolve_existing_link_target(destination)
         if existing_target == target:
             return f"Already linked {destination} -> {target}"
         if not force:
             raise SkillsManagementError(
                 f"Destination '{destination}' already points to '{existing_target}'. Use --force to replace it."
             )
-        destination.unlink()
+        remove_directory_link(destination)
     elif destination.exists():
         raise SkillsManagementError(
             f"Destination '{destination}' already exists and is not a symlink. Remove it manually before linking."
@@ -466,10 +524,9 @@ def link_skill_directory(
     try:
         destination.symlink_to(target, target_is_directory=True)
     except OSError as error:
-        if os.name == "nt" and getattr(error, "winerror", None) == 1314:
-            raise SkillsManagementError(
-                "Windows refused to create the symlink. Enable Developer Mode or rerun the command from an elevated shell."
-            ) from error
+        if is_windows() and getattr(error, "winerror", None) == 1314:
+            create_windows_directory_junction(destination, target)
+            return f"Linked {destination} -> {target}"
         raise SkillsManagementError(
             f"Could not create symlink '{destination}' -> '{target}': {error}"
         ) from error
@@ -500,7 +557,7 @@ def unlink_skill_directory(
             return f"Would unlink {destination}"
         return f"Would unlink {destination} -> {expected_target}"
 
-    if not destination.is_symlink():
+    if not is_directory_link(destination):
         if destination.exists():
             raise SkillsManagementError(
                 f"Destination '{destination}' exists and is not a symlink. Remove it manually if that is intended."
@@ -509,7 +566,7 @@ def unlink_skill_directory(
             f"Skill '{skill_name}' is not linked at '{destination}'."
         )
 
-    existing_target = resolve_existing_symlink_target(destination)
+    existing_target = resolve_existing_link_target(destination)
     if expected_target is not None and existing_target != expected_target.resolve(
         strict=False
     ):
@@ -517,7 +574,7 @@ def unlink_skill_directory(
             f"Destination '{destination}' points to '{existing_target}', not '{expected_target}'."
         )
 
-    destination.unlink()
+    remove_directory_link(destination)
     return f"Unlinked {destination} -> {existing_target}"
 
 
