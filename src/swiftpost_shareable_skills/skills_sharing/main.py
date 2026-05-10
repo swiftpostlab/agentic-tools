@@ -1,0 +1,547 @@
+"""Share skills between repositories by listing, linking, and unlinking skill directories.
+
+Usage:
+- List skills in the current repository: `uv run skills-sharing-cli list`
+- Link one skill to the global skills directory: `uv run skills-sharing-cli link ref-skills-authoring --global`
+- Link one skill from another repo into the current repo: `uv run skills-sharing-cli link ref-skills-authoring --from ../python-uv-template`
+"""
+
+from __future__ import annotations
+
+from argparse import ArgumentParser
+from dataclasses import dataclass
+import os
+from pathlib import Path
+from typing import Sequence
+
+DEFAULT_GLOBAL_SKILLS_DIR = Path.home() / ".agents" / "skills"
+SHAREABLE_VISIBILITY = "shareable"
+REPO_LOCAL_VISIBILITY = "repo-local"
+SHAREABILITY_WIZARD = "tool-make-skill-shareable"
+
+
+class SkillsSharingError(Exception):
+    """Raised when a skill sharing action cannot be completed safely."""
+
+
+@dataclass(frozen=True)
+class SkillManifest:
+    name: str
+    directory: Path
+    visibility: str | None
+    requires: tuple[str, ...]
+    reason: str | None
+
+
+def strip_yaml_string(value: str) -> str:
+    trimmed = value.strip()
+    if len(trimmed) >= 2 and trimmed[0] == trimmed[-1] and trimmed[0] in {'"', "'"}:
+        return trimmed[1:-1]
+    return trimmed
+
+
+def parse_frontmatter(text: str) -> dict[str, str | dict[str, str]]:
+    lines = text.splitlines()
+    if not lines or lines[0].strip() != "---":
+        raise SkillsSharingError("Skill file is missing YAML frontmatter.")
+
+    frontmatter: dict[str, str | dict[str, str]] = {}
+    current_mapping: dict[str, str] | None = None
+
+    for line in lines[1:]:
+        if line.strip() == "---":
+            return frontmatter
+
+        if not line.strip():
+            continue
+
+        indent = len(line) - len(line.lstrip(" "))
+        if indent == 0:
+            key, separator, raw_value = line.partition(":")
+            if separator == "":
+                raise SkillsSharingError(f"Invalid frontmatter line: {line}")
+
+            key = key.strip()
+            raw_value = raw_value.strip()
+            if raw_value == "":
+                current_mapping = {}
+                frontmatter[key] = current_mapping
+                continue
+
+            frontmatter[key] = strip_yaml_string(raw_value)
+            current_mapping = None
+            continue
+
+        if current_mapping is None:
+            continue
+
+        nested_key, separator, raw_value = line.strip().partition(":")
+        if separator == "":
+            raise SkillsSharingError(f"Invalid nested frontmatter line: {line}")
+
+        current_mapping[nested_key.strip()] = strip_yaml_string(raw_value.strip())
+
+    raise SkillsSharingError("Skill file is missing the closing frontmatter delimiter.")
+
+
+def split_requires(value: str | None) -> tuple[str, ...]:
+    if value is None:
+        return ()
+
+    return tuple(entry for entry in value.split() if entry)
+
+
+def is_skills_root(path: Path) -> bool:
+    return path.name == "skills" and path.parent.name == ".agents"
+
+
+def to_skills_root(path: Path) -> Path:
+    return path if is_skills_root(path) else path / ".agents" / "skills"
+
+
+def resolve_path(raw_path: str | None) -> Path:
+    base_path = Path.cwd() if raw_path is None else Path(raw_path)
+    return base_path.expanduser().resolve()
+
+
+def resolve_source_skills_root(path: Path) -> Path:
+    skills_root = to_skills_root(path)
+    if not skills_root.exists():
+        raise SkillsSharingError(f"Could not find skills directory at {skills_root}")
+    if not skills_root.is_dir():
+        raise SkillsSharingError(
+            f"Skills directory path is not a directory: {skills_root}"
+        )
+    return skills_root
+
+
+def resolve_destination_skills_root(path: Path, *, use_global: bool) -> Path:
+    if use_global:
+        return DEFAULT_GLOBAL_SKILLS_DIR
+
+    return to_skills_root(path)
+
+
+def read_skill_manifest(skill_directory: Path) -> SkillManifest:
+    skill_file = skill_directory / "SKILL.md"
+    frontmatter = parse_frontmatter(skill_file.read_text(encoding="utf-8"))
+
+    raw_name = frontmatter.get("name")
+    if not isinstance(raw_name, str) or raw_name == "":
+        raise SkillsSharingError(f"Skill at {skill_directory} is missing a valid name.")
+
+    if raw_name != skill_directory.name:
+        raise SkillsSharingError(
+            f"Skill name '{raw_name}' does not match directory '{skill_directory.name}'."
+        )
+
+    metadata = frontmatter.get("metadata", {})
+    metadata_mapping = metadata if isinstance(metadata, dict) else {}
+    visibility = metadata_mapping.get("shareable-skills.visibility")
+    requires = split_requires(metadata_mapping.get("shareable-skills.requires"))
+    reason = metadata_mapping.get("shareable-skills.reason")
+
+    return SkillManifest(
+        name=raw_name,
+        directory=skill_directory,
+        visibility=visibility,
+        requires=requires,
+        reason=reason,
+    )
+
+
+def discover_skill_manifests(source_path: Path) -> dict[str, SkillManifest]:
+    skills_root = resolve_source_skills_root(source_path)
+    manifests: dict[str, SkillManifest] = {}
+
+    for child in sorted(skills_root.iterdir(), key=lambda path: path.name):
+        if not child.is_dir() or not (child / "SKILL.md").exists():
+            continue
+
+        manifest = read_skill_manifest(child)
+        manifests[manifest.name] = manifest
+
+    return manifests
+
+
+def build_make_shareable_recommendation(skill_name: str) -> str:
+    return (
+        f"Recommended next step: use /{SHAREABILITY_WIZARD} on '{skill_name}' to decide "
+        "whether it should be shareable or repo-local and to add "
+        "shareable-skills.visibility, shareable-skills.requires, and "
+        "shareable-skills.reason if needed."
+    )
+
+
+def ensure_shareable_manifest(
+    manifest: SkillManifest,
+    manifests: dict[str, SkillManifest],
+) -> None:
+    if manifest.visibility is None:
+        raise SkillsSharingError(
+            f"Skill '{manifest.name}' is missing shareability metadata. "
+            f"{build_make_shareable_recommendation(manifest.name)}"
+        )
+
+    if manifest.visibility not in {SHAREABLE_VISIBILITY, REPO_LOCAL_VISIBILITY}:
+        raise SkillsSharingError(
+            f"Skill '{manifest.name}' has an unsupported visibility value "
+            f"'{manifest.visibility}'."
+        )
+
+    if manifest.visibility == REPO_LOCAL_VISIBILITY:
+        reason = manifest.reason or "No shareable-skills.reason was provided."
+        raise SkillsSharingError(
+            f"Skill '{manifest.name}' is marked repo-local and cannot be linked. {reason}"
+        )
+
+    for dependency_name in manifest.requires:
+        dependency = manifests.get(dependency_name)
+        if dependency is None:
+            raise SkillsSharingError(
+                f"Skill '{manifest.name}' depends on unknown skill '{dependency_name}'."
+            )
+
+        if dependency.visibility is None:
+            raise SkillsSharingError(
+                f"Skill '{manifest.name}' depends on '{dependency_name}', but that skill is "
+                "missing shareability metadata. "
+                f"{build_make_shareable_recommendation(dependency_name)}"
+            )
+
+        if dependency.visibility != SHAREABLE_VISIBILITY:
+            raise SkillsSharingError(
+                f"Skill '{manifest.name}' depends on '{dependency_name}', which is not shareable."
+            )
+
+
+def resolve_selected_skills(
+    manifests: dict[str, SkillManifest],
+    requested_names: Sequence[str],
+) -> list[SkillManifest]:
+    resolved: list[SkillManifest] = []
+    visiting: set[str] = set()
+    visited: set[str] = set()
+
+    def visit(skill_name: str) -> None:
+        if skill_name in visited:
+            return
+        if skill_name in visiting:
+            raise SkillsSharingError(
+                f"Circular skill dependency detected at '{skill_name}'."
+            )
+
+        manifest = manifests.get(skill_name)
+        if manifest is None:
+            raise SkillsSharingError(f"Unknown skill '{skill_name}'.")
+
+        ensure_shareable_manifest(manifest, manifests)
+
+        visiting.add(skill_name)
+        for dependency_name in manifest.requires:
+            visit(dependency_name)
+        visiting.remove(skill_name)
+
+        visited.add(skill_name)
+        resolved.append(manifest)
+
+    for requested_name in requested_names:
+        visit(requested_name)
+
+    return resolved
+
+
+def describe_skills(manifests: dict[str, SkillManifest]) -> str:
+    if not manifests:
+        return "No skills found."
+
+    lines: list[str] = []
+    for skill_name in sorted(manifests):
+        manifest = manifests[skill_name]
+        visibility = manifest.visibility or "missing"
+        requires = " ".join(manifest.requires) if manifest.requires else "-"
+        line = f"{manifest.name}: visibility {visibility}; requires {requires}"
+        if manifest.reason:
+            line = f"{line}; reason {manifest.reason}"
+        lines.append(line)
+
+    return "\n".join(lines)
+
+
+def resolve_existing_symlink_target(path: Path) -> Path:
+    target = path.readlink()
+    if target.is_absolute():
+        return target.resolve(strict=False)
+
+    return (path.parent / target).resolve(strict=False)
+
+
+def link_skill_directory(
+    manifest: SkillManifest,
+    destination_skills_dir: Path,
+    *,
+    dry_run: bool,
+    force: bool,
+) -> str:
+    destination = destination_skills_dir / manifest.name
+    target = manifest.directory.resolve()
+
+    if dry_run:
+        return f"Would link {destination} -> {target}"
+
+    destination_skills_dir.mkdir(parents=True, exist_ok=True)
+
+    if destination.is_symlink():
+        existing_target = resolve_existing_symlink_target(destination)
+        if existing_target == target:
+            return f"Already linked {destination} -> {target}"
+        if not force:
+            raise SkillsSharingError(
+                f"Destination '{destination}' already points to '{existing_target}'. Use --force to replace it."
+            )
+        destination.unlink()
+    elif destination.exists():
+        raise SkillsSharingError(
+            f"Destination '{destination}' already exists and is not a symlink. Remove it manually before linking."
+        )
+
+    try:
+        destination.symlink_to(target, target_is_directory=True)
+    except OSError as error:
+        if os.name == "nt" and getattr(error, "winerror", None) == 1314:
+            raise SkillsSharingError(
+                "Windows refused to create the symlink. Enable Developer Mode or rerun the command from an elevated shell."
+            ) from error
+        raise SkillsSharingError(
+            f"Could not create symlink '{destination}' -> '{target}': {error}"
+        ) from error
+
+    return f"Linked {destination} -> {target}"
+
+
+def resolve_source_skill_directory(source_path: Path, skill_name: str) -> Path:
+    skill_directory = resolve_source_skills_root(source_path) / skill_name
+    if not (skill_directory / "SKILL.md").exists():
+        raise SkillsSharingError(
+            f"Could not find source skill '{skill_name}' at {skill_directory}"
+        )
+    return skill_directory.resolve(strict=False)
+
+
+def unlink_skill_directory(
+    skill_name: str,
+    destination_skills_dir: Path,
+    *,
+    dry_run: bool,
+    expected_target: Path | None,
+) -> str:
+    destination = destination_skills_dir / skill_name
+
+    if dry_run:
+        if expected_target is None:
+            return f"Would unlink {destination}"
+        return f"Would unlink {destination} -> {expected_target}"
+
+    if not destination.is_symlink():
+        if destination.exists():
+            raise SkillsSharingError(
+                f"Destination '{destination}' exists and is not a symlink. Remove it manually if that is intended."
+            )
+        raise SkillsSharingError(
+            f"Skill '{skill_name}' is not linked at '{destination}'."
+        )
+
+    existing_target = resolve_existing_symlink_target(destination)
+    if expected_target is not None and existing_target != expected_target.resolve(
+        strict=False
+    ):
+        raise SkillsSharingError(
+            f"Destination '{destination}' points to '{existing_target}', not '{expected_target}'."
+        )
+
+    destination.unlink()
+    return f"Unlinked {destination} -> {existing_target}"
+
+
+def add_source_argument(parser: ArgumentParser) -> None:
+    parser.add_argument(
+        "-f",
+        "--from",
+        dest="source",
+        help="Source repository root or exact .agents/skills directory. Defaults to the current working directory.",
+    )
+
+
+def add_destination_arguments(parser: ArgumentParser) -> None:
+    add_source_argument(parser)
+    parser.add_argument(
+        "-t",
+        "--to",
+        dest="destination",
+        help="Destination repository root or exact .agents/skills directory. Defaults to the current working directory.",
+    )
+    parser.add_argument(
+        "-g",
+        "--global",
+        dest="use_global",
+        action="store_true",
+        help="Use ~/.agents/skills as the destination.",
+    )
+
+
+def build_parser() -> ArgumentParser:
+    parser = ArgumentParser(description=__doc__)
+    subparsers = parser.add_subparsers(dest="command", required=True)
+
+    list_parser = subparsers.add_parser("list", help="List skills from a source repo.")
+    add_source_argument(list_parser)
+
+    link_parser = subparsers.add_parser("link", help="Link skills from a source repo.")
+    link_parser.add_argument("skills", nargs="+", help="Skill names to link")
+    add_destination_arguments(link_parser)
+    link_parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Print the link plan without creating any symlinks.",
+    )
+    link_parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Replace an existing symlink that points somewhere else.",
+    )
+
+    unlink_parser = subparsers.add_parser(
+        "unlink", help="Remove linked skills from a destination repo."
+    )
+    unlink_parser.add_argument("skills", nargs="+", help="Skill names to unlink")
+    add_destination_arguments(unlink_parser)
+    unlink_parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Print the unlink plan without removing any symlinks.",
+    )
+
+    return parser
+
+
+def deduplicate_preserving_order(items: Sequence[str]) -> list[str]:
+    seen: set[str] = set()
+    ordered: list[str] = []
+    for item in items:
+        if item in seen:
+            continue
+        seen.add(item)
+        ordered.append(item)
+    return ordered
+
+
+def validate_destination_flags(
+    parser: ArgumentParser, *, use_global: bool, destination: str | None
+) -> None:
+    if use_global and destination is not None:
+        parser.error("cannot combine --global with --to")
+
+
+def handle_list_command(source: str | None) -> int:
+    manifests = discover_skill_manifests(resolve_path(source))
+    print(describe_skills(manifests))
+    return 0
+
+
+def handle_link_command(
+    parser: ArgumentParser,
+    *,
+    skills: Sequence[str],
+    source: str | None,
+    destination: str | None,
+    use_global: bool,
+    dry_run: bool,
+    force: bool,
+) -> int:
+    validate_destination_flags(parser, use_global=use_global, destination=destination)
+
+    manifests = discover_skill_manifests(resolve_path(source))
+    destination_skills_dir = resolve_destination_skills_root(
+        resolve_path(destination),
+        use_global=use_global,
+    )
+
+    for manifest in resolve_selected_skills(
+        manifests,
+        deduplicate_preserving_order(skills),
+    ):
+        print(
+            link_skill_directory(
+                manifest,
+                destination_skills_dir,
+                dry_run=dry_run,
+                force=force,
+            )
+        )
+
+    return 0
+
+
+def handle_unlink_command(
+    parser: ArgumentParser,
+    *,
+    skills: Sequence[str],
+    source: str | None,
+    destination: str | None,
+    use_global: bool,
+    dry_run: bool,
+) -> int:
+    validate_destination_flags(parser, use_global=use_global, destination=destination)
+
+    source_path = resolve_path(source)
+    destination_skills_dir = resolve_destination_skills_root(
+        resolve_path(destination),
+        use_global=use_global,
+    )
+
+    for skill_name in deduplicate_preserving_order(skills):
+        expected_target = resolve_source_skill_directory(source_path, skill_name)
+        print(
+            unlink_skill_directory(
+                skill_name,
+                destination_skills_dir,
+                dry_run=dry_run,
+                expected_target=expected_target,
+            )
+        )
+
+    return 0
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    parser = build_parser()
+    args = parser.parse_args(argv)
+
+    try:
+        if args.command == "list":
+            return handle_list_command(args.source)
+        if args.command == "link":
+            return handle_link_command(
+                parser,
+                skills=args.skills,
+                source=args.source,
+                destination=args.destination,
+                use_global=args.use_global,
+                dry_run=args.dry_run,
+                force=args.force,
+            )
+        return handle_unlink_command(
+            parser,
+            skills=args.skills,
+            source=args.source,
+            destination=args.destination,
+            use_global=args.use_global,
+            dry_run=args.dry_run,
+        )
+    except SkillsSharingError as error:
+        print(error)
+        return 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

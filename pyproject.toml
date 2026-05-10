@@ -22,10 +22,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = [
-    "src/swiftpost_shareable_skills",
-    "scripts",
-]
+packages = ["src/swiftpost_shareable_skills", "scripts"]
 
 [tool.pytest.ini_options]
 minversion = "9.0"
@@ -52,7 +49,7 @@ reportUnnecessaryTypeIgnoreComment = "warning"
 main = "swiftpost_shareable_skills.main:main"
 sync-ai-policy = "scripts.sync_ai_policy:main"
 sync-ai-policy-import-vscode = "scripts.sync_ai_policy:import_vscode_main"
-link-shareable-skills = "swiftpost_shareable_skills.shareable_skills.main:main"
+skills-sharing-cli = "swiftpost_shareable_skills.skills_sharing.main:main"
 
 [tool.poe.tasks]
 lint = "python -m black --check ./src"
