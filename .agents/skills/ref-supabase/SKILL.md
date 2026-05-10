@@ -88,6 +88,8 @@ Provide portable defaults for working with Supabase across local development, re
 
 ## References
 
+- Supabase LLM Reference: <https://supabase.com/llms.txt>
+- Supabase CLI Reference: <https://supabase.com/docs/reference/cli/introduction>
 - Read `./references/checklist.md` for a quick Supabase review pass.
 - Read `./assets/trigger-eval-queries.example.json` when checking trigger quality for Supabase platform requests.
 - Review `./evals/evals.json` when validating output quality for CLI, schema, or Edge Function guidance.

@@ -75,6 +75,8 @@ Provide portable defaults for modern Deno projects, especially when the codebase
 
 ## References
 
+- Deno LLM Summary: <https://docs.deno.com/llms-summary.txt>
+- Deno Configuration Reference: <https://docs.deno.com/runtime/fundamentals/configuration/>
 - Read `./references/checklist.md` for a quick Deno review pass.
 - Read `./assets/trigger-eval-queries.example.json` when checking trigger quality for Deno and hybrid-repo prompts.
 - Review `./evals/evals.json` when validating output quality for configuration or migration guidance.

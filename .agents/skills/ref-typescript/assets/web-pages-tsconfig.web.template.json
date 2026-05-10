@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "types": []
+  },
+  "include": ["src/features/**/*.js", "src/features/**/*.mjs"],
+  "exclude": [
+    "node_modules",
+    "out",
+    "dist",
+    "src/features/**/*.user.js",
+    "src/features/debt-tracker-working-in-progress/backend-server.js"
+  ]
+}

@@ -29,6 +29,7 @@ Provide portable defaults for maintainable JavaScript when full TypeScript is no
 ## Defaults
 
 - Prefer modern ESM syntax.
+- Prefer `.js` for most plain JavaScript modules and `.mjs` when explicit ESM extensions help the runtime or repo conventions stay unambiguous.
 - Prefer JSDoc on exported helpers, shared objects, and non-obvious callbacks.
 - Prefer named constants and helpers over repeated inline logic.
 - Prefer explicit input validation at I/O boundaries.
@@ -41,6 +42,7 @@ Provide portable defaults for maintainable JavaScript when full TypeScript is no
 | Add JSDoc where it earns its keep | Document exported shapes, callbacks, and shared objects without turning the file into comment soup. | JavaScript stays maintainable when the implicit contracts are surfaced selectively. | When editor help or object shapes are getting hard to follow. | The file is still plain JavaScript, but the important contracts are explicit. |
 | Split browser or script responsibilities | Separate DOM access, state changes, parsing, and I/O into named helpers or modules. | JavaScript gets hard to debug quickly when everything is inline and anonymous. | When a script starts mixing too many concerns. | The code reads in layers instead of as one giant callback. |
 | Choose a package-level layout | Keep feature code under a package-owned `src/` tree when the repo is multi-package or monorepo-style. | Package ownership is easy to lose when scripts, shared code, and app code sit at the same level. | When introducing a reusable JS package or tool in a monorepo. | The package has a clear root and feature slices stay local to it. |
+| Split linting by runtime surface | Give scripts, browser modules, and userscripts their own ESLint file globs and language options. | One lint config rarely fits Node scripts, browser code, and userscript globals equally well. | When a repo mixes plain JS, `.mjs`, and userscript files. | The lint config matches the runtime instead of forcing false positives or broad exceptions. |
 
 ## Core Rules
 
@@ -61,6 +63,12 @@ Provide portable defaults for maintainable JavaScript when full TypeScript is no
 - Use consistent flag names and help text when a JS file acts like a CLI.
 - Keep script inputs explicit rather than reaching into ambient globals unless the platform requires it.
 - Validate file, network, or user-provided input before acting on it.
+
+### File extensions and linting
+
+- Use `.mjs` for explicit ESM entrypoints when the runtime executes the file directly and the extension clarifies intent.
+- Keep ordinary feature modules on `.js` unless the repo has a strong reason to make ESM extensions explicit everywhere.
+- When a repo mixes browser modules, repo scripts, and userscripts, split the ESLint flat config by file globs rather than diluting one config with many exceptions.
 
 ## Example Layouts
 
@@ -85,6 +93,15 @@ src/features/report-viewer/
     storage.js
 ```
 
+### Mixed repo with explicit ESM scripts
+
+```text
+scripts/
+  build-static-site.mts
+src/features/json-text-into-csv/
+  csv_script_skyscanner.mjs
+```
+
 ## Validation
 
 - Exported helpers and shared objects have useful JSDoc where needed.
@@ -94,5 +111,10 @@ src/features/report-viewer/
 
 ## References
 
+- MDN JavaScript Guide: <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide>
+- MDN JavaScript Modules: <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules>
+- TypeScript JSDoc Reference: <https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html>
 - Read `./references/checklist.md` for a quick JavaScript and JSDoc review pass.
+- Read `./references/config-templates.md` when you need the `web-pages` flat ESLint template for scripts, browser modules, and userscript slices.
 - Read `./assets/trigger-eval-queries.example.json` when testing the description against plain JavaScript and browser-script requests.
+- Review `./evals/evals.json` when validating output quality for JS structure, JSDoc, or mixed-runtime config guidance.

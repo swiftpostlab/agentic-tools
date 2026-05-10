@@ -29,6 +29,7 @@ Provide portable defaults for self-contained web pages and browser-only tools th
 
 - Start with one self-contained HTML file for small and medium tools.
 - Use semantic HTML before reaching for generic containers.
+- Prefer `.js` for ordinary local browser scripts and `.mjs` when explicit browser-module boundaries improve clarity.
 - Keep styles and scripts local unless extraction clearly improves readability.
 - Treat each standalone tool as an independent unit.
 - Avoid introducing frameworks or shared build infrastructure unless the user asks for them.
@@ -48,6 +49,12 @@ Provide portable defaults for self-contained web pages and browser-only tools th
 - Use semantic sections such as `header`, `main`, `section`, `form`, and `dialog` where they fit.
 - Keep the page layout obvious from the markup alone.
 - Extract CSS or JS into local sibling files only when the inline version becomes hard to scan.
+
+### File conventions
+
+- Keep the main page on `.html`.
+- Use `.mjs` for extracted browser modules only when the module boundary is real and helpful, not just because ESM is available.
+- If a page ships with a related userscript, keep the userscript beside it and use `.user.js` or `.user.ts` explicitly.
 
 ### JavaScript organization
 
@@ -89,6 +96,9 @@ src/features/report-viewer/
 
 ## References
 
+- MDN HTML Element Reference: <https://developer.mozilla.org/en-US/docs/Web/HTML/Element>
+- MDN JavaScript Modules: <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules>
+- Optional MDUI AI reference when the page intentionally uses MDUI: <https://www.mdui.org/en/docs/2/llms.txt>
 - Read `./references/checklist.md` for a quick standalone-page review pass.
 - Read `./assets/trigger-eval-queries.example.json` when testing trigger quality for page, browser-tool, and single-file app prompts.
 - Review `./evals/evals.json` when validating output quality for structure or extraction guidance.

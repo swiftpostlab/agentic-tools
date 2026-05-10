@@ -27,6 +27,7 @@ Provide portable defaults for userscripts that are resilient to DOM changes, sco
 ## Defaults
 
 - Keep the metadata block explicit and minimal.
+- Prefer `.user.js` for plain JavaScript userscripts and `.user.ts` only when the repo has a deliberate TypeScript or build flow for userscripts.
 - Use the narrowest `@match` or `@include` patterns that still fit the task.
 - Declare grants deliberately; do not request APIs you do not use.
 - Keep startup idempotent so re-runs do not duplicate UI or listeners.
@@ -52,6 +53,12 @@ Provide portable defaults for userscripts that are resilient to DOM changes, sco
 - Keep selectors and mutation rules centralized so page changes are easier to repair.
 - Fail softly when the page no longer matches expectations.
 
+### File and type support
+
+- Use `.user.js` or `.user.ts` in the filename so the userscript role is obvious in code search and tooling.
+- If TypeScript or strict linting checks the userscript, keep a small `userscript-globals.d.ts` or similar ambient declaration file beside it rather than scattering missing-global suppressions.
+- Keep userscript-specific config separate from ordinary browser modules so grants and globals do not leak into unrelated code.
+
 ## Task Framing
 
 | Command or action | What | Why | When | Expected outcome |
@@ -75,6 +82,9 @@ Provide portable defaults for userscripts that are resilient to DOM changes, sco
 
 ## References
 
+- Tampermonkey Documentation: <https://www.tampermonkey.net/documentation.php>
+- Violentmonkey Metadata Block: <https://violentmonkey.github.io/api/metadata-block/>
 - Read `./references/checklist.md` for a quick userscript review pass.
+- Read `./references/types-and-config.md` when you need naming, ambient global, or config examples for `.user.js` and `.user.ts` workflows.
 - Read `./assets/trigger-eval-queries.example.json` when testing whether the description activates on userscript and DOM-automation prompts.
 - Review `./evals/evals.json` when checking output quality for high-risk page automation work.

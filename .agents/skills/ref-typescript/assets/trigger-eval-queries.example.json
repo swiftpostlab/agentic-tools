@@ -16,6 +16,10 @@
     "should_trigger": true
   },
   {
+    "query": "How should I split tsconfig files for Node scripts, browser modules, and userscripts in one TypeScript-aware repo?",
+    "should_trigger": true
+  },
+  {
     "query": "Add JSDoc to this plain JavaScript file.",
     "should_trigger": false
   },

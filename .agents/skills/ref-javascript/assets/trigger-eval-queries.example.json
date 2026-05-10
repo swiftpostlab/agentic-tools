@@ -16,6 +16,10 @@
     "should_trigger": true
   },
   {
+    "query": "Show me an ESLint flat config for browser modules, Node scripts, and userscripts in a mostly-JavaScript repo.",
+    "should_trigger": true
+  },
+  {
     "query": "Tighten these TypeScript generics and conditional types.",
     "should_trigger": false
   },
