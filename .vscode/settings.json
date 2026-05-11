@@ -27,8 +27,7 @@
     "rmdir": false,
     "del": false,
     "curl": false,
-    "wget": false,
-    "uv": true
+    "wget": false
   },
   "chat.tools.edits.autoApprove": {
     "**/*.{py,json,yml,yaml,css,md}": true,
