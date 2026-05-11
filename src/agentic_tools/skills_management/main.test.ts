@@ -1,12 +1,12 @@
+import { describe, expect, test } from "@jest/globals";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { describe, expect, test } from "@jest/globals";
 
 import {
-  discoverSkillManifests,
-  resolvePackageSourceRoot,
-  runSkillsManagement,
+    discoverSkillManifests,
+    resolvePackageSourceRoot,
+    runSkillsManagement,
 } from "./main.ts";
 
 function createTempDir(): string {

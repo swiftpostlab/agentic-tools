@@ -1,8 +1,8 @@
+import { consola, createConsola } from "consola";
 import fs from "node:fs";
 import { createRequire } from "node:module";
 import os from "node:os";
 import path from "node:path";
-import { consola, createConsola } from "consola";
 
 export class ToolError extends Error {}
 

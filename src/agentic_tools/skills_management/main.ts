@@ -1,26 +1,26 @@
+import { defineCommand, renderUsage, runCommand } from "citty";
 import fs from "node:fs";
 import path from "node:path";
-import { defineCommand, renderUsage, runCommand } from "citty";
 import {
-  DEFAULT_GLOBAL_SKILLS_DIR,
-  PACKAGE_SOURCE_PREFIX,
-  SYNC_CONFIG_FILENAME,
-  ToolError,
-  createDirectoryLink,
-  createExecutionOptions,
-  deduplicatePreservingOrder,
-  ensureJsonObject,
-  isDirectory,
-  isDirectoryLink,
-  isFile,
-  parseFrontmatter,
-  pathExists,
-  removeDirectoryLink,
-  resolveExistingLinkTarget,
-  resolvePackageRoot,
-  resolvePath,
-  type ExecutionOptions,
-  type RunOptions,
+    DEFAULT_GLOBAL_SKILLS_DIR,
+    PACKAGE_SOURCE_PREFIX,
+    SYNC_CONFIG_FILENAME,
+    ToolError,
+    createDirectoryLink,
+    createExecutionOptions,
+    deduplicatePreservingOrder,
+    ensureJsonObject,
+    isDirectory,
+    isDirectoryLink,
+    isFile,
+    parseFrontmatter,
+    pathExists,
+    removeDirectoryLink,
+    resolveExistingLinkTarget,
+    resolvePackageRoot,
+    resolvePath,
+    type ExecutionOptions,
+    type RunOptions,
 } from "../node_cli/common.ts";
 
 const SHAREABLE_VISIBILITY = "shareable";
