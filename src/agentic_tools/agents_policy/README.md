@@ -15,7 +15,9 @@ uv run agents-policy
 Node install example:
 
 ```sh
-npx agents-policy
+corepack enable
+yarn add --dev github:swiftpostlab/agentic-tools
+yarn agents-policy
 ```
 
 This reads `.agents/policy.json` and updates the supported generated outputs for the enabled services.
@@ -29,7 +31,7 @@ uv run agents-policy-import-vscode
 Or, from the Node package:
 
 ```sh
-npx agents-policy-import-vscode
+yarn agents-policy-import-vscode
 ```
 
 Use the import command when you want to pull the current VS Code approval maps back into `.agents/policy.json` before resyncing.

@@ -22,28 +22,29 @@ uv run skills-management sync
 Node install example:
 
 ```sh
-npm install --save-dev github:swiftpostlab/agentic-tools
-npx skills-management sync
+corepack enable
+yarn add --dev github:swiftpostlab/agentic-tools
+yarn skills-management sync
 ```
 
 Example config:
 
 ```json
 {
-	"sources": [
-		{
-			"from": "package:agentic-tools",
-			"skills": [
-				"ref-agents-persona",
-				"ref-coding-patterns",
-				"ref-python"
-			]
-		}
-	]
+ "sources": [
+  {
+   "from": "package:agentic-tools",
+   "skills": [
+    "ref-agents-persona",
+    "ref-coding-patterns",
+    "ref-python"
+   ]
+  }
+ ]
 }
 ```
 
-When `from` uses `package:agentic-tools`, `sync` resolves the installed package in the current environment and links skill folders from the packaged skill tree shipped by that install, including Python virtual environments and `node_modules` installs.
+When `from` uses `package:agentic-tools`, `sync` resolves the installed package in the current environment and links skill folders from the packaged skill tree shipped by that install, including Python virtual environments and Yarn-managed `node_modules` installs. The Node package is published as plain ESM source, so installing from GitHub does not require a separate build step.
 
 ### Key Behavior
 

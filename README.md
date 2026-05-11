@@ -20,10 +20,11 @@ Python repos can install the package with uv:
 uv add --dev "agentic-tools @ git+https://github.com/swiftpostlab/agentic-tools.git"
 ```
 
-Node repos can install the same repository as a development dependency with npm:
+Node repos should prefer Yarn for Node-managed installs and commands:
 
 ```sh
-npm install --save-dev github:swiftpostlab/agentic-tools
+corepack enable
+yarn add --dev github:swiftpostlab/agentic-tools
 ```
 
 Then declare which shared skills you want in `.agents/skills.json`:
@@ -53,10 +54,12 @@ uv run skills-management sync
 Or, in a Node-managed repo:
 
 ```sh
-npx skills-management sync
+yarn skills-management sync
 ```
 
 When the source uses `package:agentic-tools`, the linked skill directories come from the installed package location in the current environment, such as `.venv` for Python installs or `node_modules/agentic-tools/.agents/skills` for Node installs.
+
+The Node package ships plain ESM source, so installing it from GitHub works without a separate build step.
 
 ### Manage Agent Policy
 
@@ -69,7 +72,7 @@ uv run agents-policy
 Or, in a Node-managed repo:
 
 ```sh
-npx agents-policy
+yarn agents-policy
 ```
 
 ### Focused Docs
@@ -85,7 +88,7 @@ or
 
 uv can manage Python versions directly. To install Python 3.13 via uv: `uv python install 3.13`
 
-For Node-based usage, use Node.js 22 or newer.
+For Node-based usage, use Node.js 22 or newer. Prefer Yarn for Node-managed installs and command execution. Deno-owned repos should keep using Deno's native tooling instead of adding Yarn just for this package.
 
 ## For Developers
 

@@ -67,6 +67,12 @@ Provide portable defaults for maintainable JavaScript when full TypeScript is no
 - Keep script inputs explicit rather than reaching into ambient globals unless the platform requires it.
 - Validate file, network, or user-provided input before acting on it.
 
+### Library recommendations
+
+- Prefer `citty` for Node-facing JavaScript CLIs that need argument parsing, subcommands, help text, and a maintainable command surface.
+- Prefer `consola` for Node-facing JavaScript CLI logging so success, warning, and error output stay consistent without hand-rolled terminal formatting.
+- Keep CLI-specific dependencies narrow: if a local helper plus native APIs are enough, do not add a framework just because it is popular.
+
 ### File extensions and linting
 
 - Use `.mjs` for explicit ESM entrypoints when the runtime executes the file directly and the extension clarifies intent.
@@ -111,6 +117,7 @@ src/features/example-data-transform/
 - Repeated or complex logic has been named and isolated.
 - Browser code keeps responsibilities readable.
 - Script inputs and outputs are explicit and predictable.
+- Node-based package installs and CLI invocations stay on Yarn unless the repo is intentionally Deno-owned.
 
 ## References
 
