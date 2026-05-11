@@ -28,8 +28,9 @@ Document the stable behavior of this repository's `skills-management` CLI, its s
 ## Stable Surface
 
 - Distribution name: `agentic-tools`
-- Entry points: `uv run skills-management` and `uv run skills-management-cli`
+- Entry points: `uv run skills-management` and the Node package command `skills-management`
 - Implementation path: `src/agentic_tools/skills_management/main.py`
+- Node runtime shim: `scripts/skills-management.mts`
 - Default global destination: `~/.agents/skills`
 
 ## Commands

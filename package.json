@@ -5,16 +5,13 @@
   "license": "MIT",
   "type": "module",
   "bin": {
-    "agents-policy": "./bin/agents-policy.mts",
-    "agents-policy-import-vscode": "./bin/agents-policy-import-vscode.mts",
-    "sync-ai-policy": "./bin/agents-policy.mts",
-    "sync-ai-policy-import-vscode": "./bin/agents-policy-import-vscode.mts",
-    "skills-management": "./bin/skills-management.mts",
-    "skills-management-cli": "./bin/skills-management.mts"
+    "agents-policy": "./scripts/agents-policy.mts",
+    "agents-policy-import-vscode": "./scripts/agents-policy-import-vscode.mts",
+    "skills-management": "./scripts/skills-management.mts"
   },
   "files": [
     ".agents/skills",
-    "bin",
+    "scripts/*.mts",
     "src/agentic_tools/node_cli/common.ts",
     "src/agentic_tools/agents_policy/main.ts",
     "src/agentic_tools/skills_management/main.ts",
