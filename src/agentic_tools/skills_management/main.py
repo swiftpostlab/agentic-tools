@@ -1,13 +1,15 @@
 """Manage skills between repositories by listing, linking, and unlinking skill directories.
 
-Usage:
-- List skills in the current repository: `uv run skills-management list`
-- Link one skill to the global skills directory: `uv run skills-management link ref-skills-authoring --global`
-- Link one skill from another repo into the current repo: `uv run skills-management link ref-skills-authoring --from ../python-uv-template`
-- Sync all configured skills into the current repo: `uv run skills-management sync`
-"""
+Canonical usage:
+- List skills in the current repository: `uv run agentic-tools skills list`
+- Link one skill to the global skills directory: `uv run agentic-tools skills link ref-skills-authoring --global`
+- Link one skill from another repo into the current repo: `uv run agentic-tools skills link ref-skills-authoring --from ../python-uv-template`
+- Sync all configured skills into the current repo: `uv run agentic-tools skills sync`
 
-from __future__ import annotations
+Compatibility aliases:
+- `uv run skills-management ...`
+- `skills-management ...`
+"""
 
 from argparse import ArgumentParser
 import json

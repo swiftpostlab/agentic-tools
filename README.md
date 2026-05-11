@@ -9,8 +9,8 @@ Use this repo when you want to install shared agent tooling into another reposit
 It provides:
 
 - Shareable skill definitions under `.agents/skills/`
-- A packaged `skills-management` CLI for listing, linking, syncing, and unlinking skills
-- A packaged `agents-policy` CLI for syncing agent-specific policy files from `.agents/policy.json`
+- A packaged `agentic-tools` CLI with grouped `skills` and `policy` scopes
+- Compatibility aliases for the standalone `skills-management` and `agents-policy` commands during the transition
 
 ### Install In Another Repo
 
@@ -48,13 +48,15 @@ Then declare which shared skills you want in `.agents/skills.json`:
 Sync the configured skills into the current repo:
 
 ```sh
-uv run skills-management sync
+uv run agentic-tools skills sync
 ```
+
+If you run the command from a subdirectory, add `--workspace <repo-root>` so the grouped CLI resolves policy and skills paths from the intended repo root.
 
 Or, in a Node-managed repo:
 
 ```sh
-yarn skills-management sync
+yarn agentic-tools skills sync
 ```
 
 When the source uses `package:agentic-tools`, the linked skill directories come from the installed package location in the current environment, such as `.venv` for Python installs or `node_modules/agentic-tools/.agents/skills` for Node installs.
@@ -66,19 +68,19 @@ The Node package ships native TypeScript ESM source, so installing it from GitHu
 After adding or updating `.agents/policy.json`, sync the generated agent files with:
 
 ```sh
-uv run agents-policy
+uv run agentic-tools policy sync
 ```
 
 To enforce that generated policy files are already in sync during CI or before committing, run:
 
 ```sh
-uv run agents-policy --check
+uv run agentic-tools policy check
 ```
 
 Or, in a Node-managed repo:
 
 ```sh
-yarn agents-policy
+yarn agentic-tools policy sync
 ```
 
 ### Focused Docs
@@ -116,11 +118,11 @@ The shipped Node command shims now live in `scripts/*.mts`, while the actual imp
 ### Skills Management
 
 ```sh
-uv run skills-management list
+uv run agentic-tools skills list
 ```
 
 ```sh
-uv run skills-management sync
+uv run agentic-tools skills sync
 ```
 
 `sync` also removes dead skill links already present in the destination `.agents/skills` directory and reports configured skill names that are missing from a source before changing anything.
@@ -148,7 +150,7 @@ To declare shared skill sources for `sync`, add `.agents/skills.json` to the tar
 }
 ```
 
-Relative `from` paths resolve from the target repo root. Package sources use `package:<name>` and resolve by looking up the installed package location. When the source package is installed instead of cloned, `skills-management sync` resolves packaged skills from the active environment, including the Python package's `agentic_tools/shareable_skills` directory and the Node package's `.agents/skills` directory.
+Relative `from` paths resolve from the target repo root. Package sources use `package:<name>` and resolve by looking up the installed package location. When the source package is installed instead of cloned, `agentic-tools skills sync` resolves packaged skills from the active environment, including the Python package's `agentic_tools/shareable_skills` directory and the Node package's `.agents/skills` directory.
 
 ### Tests
 
@@ -166,7 +168,9 @@ corepack yarn test:node
 uv run poe lint
 ```
 
-This now includes `uv run agents-policy --check` before the Python lint step so generated policy files fail fast in the standard validation flow.
+This now includes `uv run agentic-tools policy check` before the Python lint step so generated policy files fail fast in the standard validation flow.
+
+The standalone `agents-policy`, `agents-policy-import-vscode`, and `skills-management` commands remain available as compatibility aliases, but new docs and consuming repos should prefer `agentic-tools policy ...` and `agentic-tools skills ...`.
 
 ### Typechecking
 

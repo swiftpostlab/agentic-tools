@@ -4,7 +4,7 @@ This feature packages the CLI that lists, links, syncs, and unlinks skill folder
 
 ## For Users
 
-Use `skills-management` when you want a repo to consume shared skills from another clone or from an installed package.
+Use `agentic-tools skills` when you want a repo to consume shared skills from another clone or from an installed package.
 
 ### Install And Sync Shared Skills
 
@@ -16,7 +16,7 @@ Python install example:
 
 ```sh
 uv add --dev "agentic-tools @ git+https://github.com/swiftpostlab/agentic-tools.git"
-uv run skills-management sync
+uv run agentic-tools skills sync
 ```
 
 Node install example:
@@ -24,7 +24,7 @@ Node install example:
 ```sh
 corepack enable
 yarn add --dev github:swiftpostlab/agentic-tools
-yarn skills-management sync
+yarn agentic-tools skills sync
 ```
 
 Example config:
@@ -63,6 +63,13 @@ When `from` uses `package:agentic-tools`, `sync` resolves the installed package 
 - `main.test.ts` covers the focused Node CLI behavior through Jest.
 
 ## Canonical commands
+
+- `uv run agentic-tools skills list`
+- `uv run agentic-tools skills link <skill> --from <repo>`
+- `uv run agentic-tools skills sync`
+- `uv run agentic-tools skills unlink <skill> --from <repo>`
+
+## Compatibility aliases
 
 - `uv run skills-management list`
 - `uv run skills-management link <skill> --from <repo>`

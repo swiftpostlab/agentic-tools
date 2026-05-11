@@ -1,15 +1,16 @@
 """Synchronize the shared agents policy into agent-specific config files.
 
 Canonical usage:
-- Sync policy-managed files: `uv run agents-policy`
-- Import VS Code approvals first: `uv run agents-policy-import-vscode`
+- Sync policy-managed files: `uv run agentic-tools policy sync`
+- Check policy-managed files: `uv run agentic-tools policy check`
+- Import VS Code approvals first: `uv run agentic-tools policy import-vscode`
 
 Compatibility aliases:
 - `uv run sync-ai-policy`
 - `uv run sync-ai-policy-import-vscode`
+- `uv run agents-policy`
+- `uv run agents-policy-import-vscode`
 """
-
-from __future__ import annotations
 
 from argparse import ArgumentParser
 from collections.abc import Callable
@@ -473,9 +474,9 @@ def build_check_mode_error(paths: PolicyPaths, drift_paths: list[Path]) -> str:
     )
     return (
         f"Managed policy files are out of sync: {drift_summary}. "
-        "Run `uv run agents-policy` to sync them. "
+        "Run `uv run agentic-tools policy sync` to sync them. "
         "If you intended to keep VS Code approval edits instead, run "
-        "`uv run agents-policy-import-vscode`."
+        "`uv run agentic-tools policy import-vscode`."
     )
 
 
@@ -485,7 +486,7 @@ def sync_policy_file(
     if import_vscode and check:
         raise AgentsPolicyError(
             "`--check` cannot be combined with `--import-vscode`. "
-            "Run `uv run agents-policy-import-vscode` instead."
+            "Run `uv run agentic-tools policy import-vscode` instead."
         )
 
     paths = resolve_policy_paths(policy_file)

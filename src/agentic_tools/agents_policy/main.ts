@@ -1,23 +1,23 @@
+import { defineCommand, runCommand } from "citty";
 import fs from "node:fs";
 import path from "node:path";
-import { defineCommand, runCommand } from "citty";
 import {
-  ToolError,
-  createExecutionOptions,
-  ensureJsonObject,
-  getBooleanRecord,
-  getStringList,
-  getStringRecord,
-  pathExists,
-  readJsonFile,
-  resolvePath,
-  syncJsonFile,
-  toPosixPath,
-  writeJsonFile,
-  writeTextFile,
-  type ExecutionOptions,
-  type JsonObject,
-  type RunOptions,
+    ToolError,
+    createExecutionOptions,
+    ensureJsonObject,
+    getBooleanRecord,
+    getStringList,
+    getStringRecord,
+    pathExists,
+    readJsonFile,
+    resolvePath,
+    syncJsonFile,
+    toPosixPath,
+    writeJsonFile,
+    writeTextFile,
+    type ExecutionOptions,
+    type JsonObject,
+    type RunOptions,
 } from "../node_cli/common.ts";
 
 const CANONICAL_POLICY_PATH = path.join(".agents", "policy.json");
@@ -366,9 +366,9 @@ function buildCheckModeError(
     .join(", ");
   return (
     `Managed policy files are out of sync: ${driftSummary}. ` +
-    "Run `uv run agents-policy` to sync them. " +
+    "Run `uv run agentic-tools policy sync` to sync them. " +
     "If you intended to keep VS Code approval edits instead, run " +
-    "`uv run agents-policy-import-vscode`."
+    "`uv run agentic-tools policy import-vscode`."
   );
 }
 
@@ -378,7 +378,7 @@ export function syncPolicyFile(
 ): string[] {
   if (importVscode && check) {
     throw new ToolError(
-      "`--check` cannot be combined with `--import-vscode`. Run `uv run agents-policy-import-vscode` instead.",
+      "`--check` cannot be combined with `--import-vscode`. Run `uv run agentic-tools policy import-vscode` instead.",
     );
   }
 

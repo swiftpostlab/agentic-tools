@@ -4,12 +4,12 @@ This feature packages the repository policy sync logic that turns `.agents/polic
 
 ## For Users
 
-Use `agents-policy` when a repo keeps its agent access rules in `.agents/policy.json` and wants the generated files for Gemini, Claude Code, and Copilot to stay in sync.
+Use `agentic-tools policy` when a repo keeps its agent access rules in `.agents/policy.json` and wants the generated files for Gemini, Claude Code, and Copilot to stay in sync.
 
 ### Sync Generated Policy Files
 
 ```sh
-uv run agents-policy
+uv run agentic-tools policy sync
 ```
 
 Node install example:
@@ -17,7 +17,7 @@ Node install example:
 ```sh
 corepack enable
 yarn add --dev github:swiftpostlab/agentic-tools
-yarn agents-policy
+yarn agentic-tools policy sync
 ```
 
 This reads `.agents/policy.json` and updates the supported generated outputs for the enabled services.
@@ -25,21 +25,21 @@ This reads `.agents/policy.json` and updates the supported generated outputs for
 ### Check Generated Policy Files
 
 ```sh
-uv run agents-policy --check
+uv run agentic-tools policy check
 ```
 
-Use check mode in CI or before committing when generated policy files should already be current. It exits with an error instead of rewriting files, and its message points to `uv run agents-policy` or `uv run agents-policy-import-vscode` depending on whether you want to regenerate outputs or keep local VS Code approval edits.
+Use check mode in CI or before committing when generated policy files should already be current. It exits with an error instead of rewriting files, and its message points to `uv run agentic-tools policy sync` or `uv run agentic-tools policy import-vscode` depending on whether you want to regenerate outputs or keep local VS Code approval edits.
 
 ### Import VS Code Approvals
 
 ```sh
-uv run agents-policy-import-vscode
+uv run agentic-tools policy import-vscode
 ```
 
 Or, from the Node package:
 
 ```sh
-yarn agents-policy-import-vscode
+yarn agentic-tools policy import-vscode
 ```
 
 Use the import command when you want to pull the current VS Code approval maps back into `.agents/policy.json` before resyncing.
@@ -56,9 +56,16 @@ Use the import command when you want to pull the current VS Code approval maps b
 
 ## Canonical commands
 
+- `uv run agentic-tools policy sync`
+- `uv run agentic-tools policy check`
+- `uv run agentic-tools policy import-vscode`
+
+## Compatibility aliases
+
 - `uv run agents-policy`
-- `uv run agents-policy --check`
 - `uv run agents-policy-import-vscode`
+- `uv run sync-ai-policy`
+- `uv run sync-ai-policy-import-vscode`
 
 ## Responsibilities
 
@@ -79,5 +86,5 @@ corepack yarn test:node --runTestsByPath src/agentic_tools/agents_policy/main.te
 ```
 
 ```sh
-uv run agents-policy --check
+uv run agentic-tools policy check
 ```

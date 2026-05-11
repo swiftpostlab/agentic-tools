@@ -206,8 +206,8 @@ def test_sync_policy_file_check_detects_drift(tmp_path: Path) -> None:
     assert ".aiexclude" in message
     assert ".claude/settings.json" in message
     assert ".vscode/settings.json" in message
-    assert "uv run agents-policy" in message
-    assert "uv run agents-policy-import-vscode" in message
+    assert "uv run agentic-tools policy sync" in message
+    assert "uv run agentic-tools policy import-vscode" in message
 
 
 def test_sync_policy_file_check_passes_when_outputs_are_current(tmp_path: Path) -> None:

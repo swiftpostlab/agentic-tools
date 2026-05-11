@@ -1,7 +1,7 @@
+import { describe, expect, test } from "@jest/globals";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { describe, expect, test } from "@jest/globals";
 
 import { runAgentsPolicy, runAgentsPolicyImportVscode } from "./main.ts";
 
@@ -161,8 +161,8 @@ describe("agents-policy Node CLI", () => {
 
       expect(exitCode).toBe(1);
       expect(messages.join("\n")).toMatch(/Managed policy files are out of sync/u);
-      expect(messages.join("\n")).toMatch(/uv run agents-policy/u);
-      expect(messages.join("\n")).toMatch(/uv run agents-policy-import-vscode/u);
+      expect(messages.join("\n")).toMatch(/uv run agentic-tools policy sync/u);
+      expect(messages.join("\n")).toMatch(/uv run agentic-tools policy import-vscode/u);
     } finally {
       cleanupTempDir(tempDir);
     }
