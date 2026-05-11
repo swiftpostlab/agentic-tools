@@ -125,6 +125,36 @@ def test_resolve_package_source_root_prefers_packaged_skills_root(
     assert resolved_path == package_root / "shareable_skills"
 
 
+def test_resolve_package_source_root_prefers_repo_root_over_stale_packaged_copy(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    package_root = tmp_path / "site-packages" / "agentic_tools"
+    write_skill_in_root(
+        package_root / "shareable_skills",
+        "ref-stale",
+        metadata={"shareable-skills.visibility": "shareable"},
+    )
+
+    repo_root = tmp_path / "repo"
+    write_skill(
+        repo_root,
+        "ref-alpha",
+        metadata={"shareable-skills.visibility": "shareable"},
+    )
+    source_root = repo_root / "src" / "agentic_tools"
+    source_root.mkdir(parents=True)
+
+    spec = ModuleSpec("agentic_tools", loader=None, is_package=True)
+    spec.submodule_search_locations = [str(package_root), str(source_root)]
+
+    monkeypatch.setattr(skills_management_main, "find_spec", lambda name: spec)
+
+    resolved_path = skills_management_main.resolve_package_source_root("agentic-tools")
+
+    assert resolved_path == repo_root
+
+
 def test_resolve_selected_skills_includes_dependencies_first(tmp_path: Path) -> None:
     write_skill(
         tmp_path,
@@ -556,3 +586,90 @@ def test_main_sync_dry_run_reports_dead_links_before_linking(
     assert exit_code == 0
     assert f"Would remove dead link {dead_destination} -> {dead_target}" in output
     assert str(destination_repo / ".agents" / "skills" / "ref-alpha") in output
+
+
+def test_cleanup_unconfigured_skill_links_reports_only_obsolete_links(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    destination_skills_dir = tmp_path / "destination" / ".agents" / "skills"
+    destination_skills_dir.mkdir(parents=True)
+
+    configured_link = destination_skills_dir / "ref-alpha"
+    obsolete_link = destination_skills_dir / "ref-stale"
+    local_directory = destination_skills_dir / "ref-project-setup"
+    configured_link.mkdir()
+    obsolete_link.mkdir()
+    local_directory.mkdir()
+
+    target_by_path = {
+        configured_link: tmp_path / "targets" / "ref-alpha",
+        obsolete_link: tmp_path / "targets" / "ref-stale",
+    }
+
+    monkeypatch.setattr(
+        skills_management_main,
+        "is_directory_link",
+        lambda path: path in target_by_path,
+    )
+    monkeypatch.setattr(
+        skills_management_main,
+        "resolve_existing_link_target",
+        lambda path: target_by_path[path],
+    )
+
+    messages = skills_management_main.cleanup_unconfigured_skill_links(
+        destination_skills_dir,
+        configured_skill_names={"ref-alpha"},
+        dry_run=True,
+    )
+
+    assert messages == [
+        f"Would remove unconfigured link {obsolete_link} -> {target_by_path[obsolete_link]}"
+    ]
+
+
+def test_cleanup_unconfigured_skill_links_removes_obsolete_links(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    destination_skills_dir = tmp_path / "destination" / ".agents" / "skills"
+    destination_skills_dir.mkdir(parents=True)
+
+    configured_link = destination_skills_dir / "ref-alpha"
+    obsolete_link = destination_skills_dir / "ref-stale"
+    configured_link.mkdir()
+    obsolete_link.mkdir()
+
+    target_by_path = {
+        configured_link: tmp_path / "targets" / "ref-alpha",
+        obsolete_link: tmp_path / "targets" / "ref-stale",
+    }
+    removed_paths: list[Path] = []
+
+    monkeypatch.setattr(
+        skills_management_main,
+        "is_directory_link",
+        lambda path: path in target_by_path,
+    )
+    monkeypatch.setattr(
+        skills_management_main,
+        "resolve_existing_link_target",
+        lambda path: target_by_path[path],
+    )
+    monkeypatch.setattr(
+        skills_management_main,
+        "remove_directory_link",
+        lambda path: removed_paths.append(path),
+    )
+
+    messages = skills_management_main.cleanup_unconfigured_skill_links(
+        destination_skills_dir,
+        configured_skill_names={"ref-alpha"},
+        dry_run=False,
+    )
+
+    assert messages == [
+        f"Removed unconfigured link {obsolete_link} -> {target_by_path[obsolete_link]}"
+    ]
+    assert removed_paths == [obsolete_link]

@@ -149,7 +149,7 @@ All project skills are located in `.agents/skills/` and automatically load in Co
 **`tool-handle-agents-local-tasks`** — Guided workflow for reading and handling the local `.agents/tasks/` backlog
 - Use when: the user asks to check `.agents/tasks/TODO.md`, continue remaining local tasks, or work through the repo's local task backlog
 
-**`ref-agent-local-tasks`** — Maintain local agent task tracking under `.agents/tasks/`
+**`ref-agents-local-tasks`** — Maintain local agent task tracking under `.agents/tasks/`
 - Use when: a task needs local planning, temporary task notes, or structured tracking under `.agents/tasks/`
 
 ## Workflow
@@ -188,7 +188,7 @@ Use the Poe validation tasks above as the default way to run tests, lint, and ty
 - For README structure, docs audience, and concrete documentation examples: use `ref-docs-authoring`.
 - For generic architecture and feature-boundary decisions: use `ref-projects-architecture`.
 - For security policy config and generated restriction files: use `ref-agents-security`.
-- For local `.agents/tasks/` conventions and task-file structure: use `ref-agent-local-tasks`.
+- For local `.agents/tasks/` conventions and task-file structure: use `ref-agents-local-tasks`.
 - For working through the local backlog under `.agents/tasks/TODO.md`: use `tool-handle-agents-local-tasks`.
 - For this repo's `agents-policy` feature, `.agents/policy.json`, and generated vendor outputs: use `ref-swiftpost-agents-policy`.
 - For writing and maintaining `.github/copilot-instructions.md`, `GEMINI.md`, and `.claude/CLAUDE.md`: use `ref-agents-instructions-authoring`.

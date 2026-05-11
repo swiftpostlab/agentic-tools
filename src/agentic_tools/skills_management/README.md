@@ -49,7 +49,7 @@ When `from` uses `package:agentic-tools`, `sync` resolves the installed package 
 ### Key Behavior
 
 - `sync` resolves both filesystem sources and installed package sources.
-- `sync` removes dead destination links before relinking the configured set.
+- `sync` removes dead destination links and obsolete linked skills that are no longer declared in `.agents/skills.json` before relinking the configured set.
 - `sync` reports missing configured skills by source before changing anything.
 - On Windows, directory-link creation falls back to junctions when symlink privileges are unavailable.
 

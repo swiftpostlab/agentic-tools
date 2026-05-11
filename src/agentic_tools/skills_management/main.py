@@ -12,6 +12,7 @@ Compatibility aliases:
 """
 
 from argparse import ArgumentParser
+from collections.abc import Collection
 import json
 from json import JSONDecodeError
 from dataclasses import dataclass
@@ -317,13 +318,16 @@ def resolve_package_source_root(package_name: str) -> Path:
         for search_root in search_roots:
             start_path = resolve_search_root(search_root)
 
-            packaged_skills_root = resolve_packaged_skills_root(start_path)
-            if packaged_skills_root is not None:
-                return packaged_skills_root
-
             repo_root = resolve_repo_skills_root(start_path)
             if repo_root is not None:
                 return repo_root
+
+        for search_root in search_roots:
+            start_path = resolve_search_root(search_root)
+
+            packaged_skills_root = resolve_packaged_skills_root(start_path)
+            if packaged_skills_root is not None:
+                return packaged_skills_root
 
     attempted_names = ", ".join(candidate_names)
     raise SkillsManagementError(
@@ -785,6 +789,36 @@ def cleanup_dead_skill_links(
     return messages
 
 
+def cleanup_unconfigured_skill_links(
+    destination_skills_dir: Path,
+    *,
+    configured_skill_names: Collection[str],
+    dry_run: bool,
+) -> list[str]:
+    if not destination_skills_dir.exists():
+        return []
+    if not destination_skills_dir.is_dir():
+        raise SkillsManagementError(
+            f"Destination skills path is not a directory: {destination_skills_dir}"
+        )
+
+    configured_names = set(configured_skill_names)
+    messages: list[str] = []
+    for child in sorted(destination_skills_dir.iterdir(), key=lambda path: path.name):
+        if child.name in configured_names or not is_directory_link(child):
+            continue
+
+        target = resolve_existing_link_target(child)
+        if dry_run:
+            messages.append(f"Would remove unconfigured link {child} -> {target}")
+            continue
+
+        remove_directory_link(child)
+        messages.append(f"Removed unconfigured link {child} -> {target}")
+
+    return messages
+
+
 def validate_destination_flags(
     parser: ArgumentParser, *, use_global: bool, destination: str | None
 ) -> None:
@@ -892,6 +926,13 @@ def handle_sync_command(
 
     for message in cleanup_dead_skill_links(
         destination_skills_dir,
+        dry_run=dry_run,
+    ):
+        print(message)
+
+    for message in cleanup_unconfigured_skill_links(
+        destination_skills_dir,
+        configured_skill_names=linked_skill_names,
         dry_run=dry_run,
     ):
         print(message)

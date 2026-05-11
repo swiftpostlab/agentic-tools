@@ -125,7 +125,7 @@ uv run agentic-tools skills list
 uv run agentic-tools skills sync
 ```
 
-`sync` also removes dead skill links already present in the destination `.agents/skills` directory and reports configured skill names that are missing from a source before changing anything.
+`sync` also removes dead skill links and linked skills that are no longer declared in the destination `.agents/skills.json`, then reports configured skill names that are missing from a source before changing anything.
 
 To declare shared skill sources for `sync`, add `.agents/skills.json` to the target repo:
 
