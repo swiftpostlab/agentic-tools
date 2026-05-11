@@ -14,10 +14,16 @@ It provides:
 
 ### Install In Another Repo
 
-Install the package as a development dependency:
+Python repos can install the package with uv:
 
 ```sh
 uv add --dev "agentic-tools @ git+https://github.com/swiftpostlab/agentic-tools.git"
+```
+
+Node repos can install the same repository as a development dependency with npm:
+
+```sh
+npm install --save-dev github:swiftpostlab/agentic-tools
 ```
 
 Then declare which shared skills you want in `.agents/skills.json`:
@@ -44,7 +50,13 @@ Sync the configured skills into the current repo:
 uv run skills-management sync
 ```
 
-When the source uses `package:agentic-tools`, the linked skill directories come from the installed package inside the current repo's `.venv`.
+Or, in a Node-managed repo:
+
+```sh
+npx skills-management sync
+```
+
+When the source uses `package:agentic-tools`, the linked skill directories come from the installed package location in the current environment, such as `.venv` for Python installs or `node_modules/agentic-tools/.agents/skills` for Node installs.
 
 ### Manage Agent Policy
 
@@ -52,6 +64,12 @@ After adding or updating `.agents/policy.json`, sync the generated agent files w
 
 ```sh
 uv run agents-policy
+```
+
+Or, in a Node-managed repo:
+
+```sh
+npx agents-policy
 ```
 
 ### Focused Docs
@@ -66,6 +84,8 @@ or
 - Windows: `powershell -c "irm https://astral.sh/uv/install.ps1 | iex"`
 
 uv can manage Python versions directly. To install Python 3.13 via uv: `uv python install 3.13`
+
+For Node-based usage, use Node.js 22 or newer.
 
 ## For Developers
 
@@ -112,7 +132,7 @@ To declare shared skill sources for `sync`, add `.agents/skills.json` to the tar
 }
 ```
 
-Relative `from` paths resolve from the target repo root. Package sources use `package:<name>` and resolve by looking up the installed package location. When the source package is installed instead of cloned, `skills-management sync` resolves the packaged skills under `agentic_tools/shareable_skills` inside the environment and links from there.
+Relative `from` paths resolve from the target repo root. Package sources use `package:<name>` and resolve by looking up the installed package location. When the source package is installed instead of cloned, `skills-management sync` resolves packaged skills from the active environment, including the Python package's `agentic_tools/shareable_skills` directory and the Node package's `.agents/skills` directory.
 
 ### Tests
 

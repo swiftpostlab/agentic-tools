@@ -12,12 +12,24 @@ Use `agents-policy` when a repo keeps its agent access rules in `.agents/policy.
 uv run agents-policy
 ```
 
+Node install example:
+
+```sh
+npx agents-policy
+```
+
 This reads `.agents/policy.json` and updates the supported generated outputs for the enabled services.
 
 ### Import VS Code Approvals
 
 ```sh
 uv run agents-policy-import-vscode
+```
+
+Or, from the Node package:
+
+```sh
+npx agents-policy-import-vscode
 ```
 
 Use the import command when you want to pull the current VS Code approval maps back into `.agents/policy.json` before resyncing.
@@ -45,4 +57,8 @@ Use the import command when you want to pull the current VS Code approval maps b
 
 ```sh
 uv run python -m pytest src/agentic_tools/agents_policy/main_test.py -q
+```
+
+```sh
+node --test node/test/agents-policy.test.js
 ```

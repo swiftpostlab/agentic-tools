@@ -10,7 +10,21 @@ Use `skills-management` when you want a repo to consume shared skills from anoth
 
 1. Install `agentic-tools` in the target repo.
 2. Add `.agents/skills.json` with one or more configured sources.
-3. Run `uv run skills-management sync` in the target repo.
+3. Run the synced CLI from the package manager you installed with.
+
+Python install example:
+
+```sh
+uv add --dev "agentic-tools @ git+https://github.com/swiftpostlab/agentic-tools.git"
+uv run skills-management sync
+```
+
+Node install example:
+
+```sh
+npm install --save-dev github:swiftpostlab/agentic-tools
+npx skills-management sync
+```
 
 Example config:
 
@@ -29,7 +43,7 @@ Example config:
 }
 ```
 
-When `from` uses `package:agentic-tools`, `sync` resolves the installed package in the current environment and links skill folders from `agentic_tools/shareable_skills` inside `.venv`.
+When `from` uses `package:agentic-tools`, `sync` resolves the installed package in the current environment and links skill folders from the packaged skill tree shipped by that install, including Python virtual environments and `node_modules` installs.
 
 ### Key Behavior
 
@@ -64,4 +78,8 @@ When `from` uses `package:agentic-tools`, `sync` resolves the installed package 
 
 ```sh
 uv run python -m pytest src/agentic_tools/skills_management/main_test.py -q
+```
+
+```sh
+node --test node/test/skills-management.test.js
 ```
