@@ -1,6 +1,10 @@
 # Agent only dirs
 .agents/tasks
 
+# Node
+node_modules/
+*.tgz
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

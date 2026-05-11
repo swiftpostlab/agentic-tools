@@ -1,0 +1,28 @@
+{
+  "name": "agentic-tools",
+  "version": "0.1.0",
+  "description": "Shared agent skills and CLI tools for Node-based repositories.",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "agents-policy": "./node/bin/agents-policy.js",
+    "agents-policy-import-vscode": "./node/bin/agents-policy-import-vscode.js",
+    "sync-ai-policy": "./node/bin/agents-policy.js",
+    "sync-ai-policy-import-vscode": "./node/bin/agents-policy-import-vscode.js",
+    "skills-management": "./node/bin/skills-management.js",
+    "skills-management-cli": "./node/bin/skills-management.js"
+  },
+  "files": [
+    ".agents/skills",
+    "node",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test:node": "node --test node/test/*.test.js",
+    "pack:node": "npm pack --dry-run"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
