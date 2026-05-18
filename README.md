@@ -10,7 +10,6 @@ It provides:
 
 - Shareable skill definitions under `.agents/skills/`
 - A packaged `agentic-tools` CLI with grouped `skills` and `policy` scopes
-- Compatibility aliases for the standalone `skills-management` and `agents-policy` commands during the transition
 
 ### Install In Another Repo
 
@@ -115,7 +114,7 @@ yarn install
 After this step you may want to close and reopen your terminal or IDE to ensure that the uv-managed virtual environment is activated correctly.
 
 The Node CLI source is a no-build JavaScript/JSDoc port that lives with the owning features under `src/agentic_tools/<feature>/main.mjs`, with colocated Jest coverage in `main.test.mjs`.
-The shipped Node command shims live in `scripts/*.mjs`, while shared helpers belong under `src/agentic_tools/utils/` when duplication would make the Python and Node ports harder to keep aligned.
+The shipped Node command shim is `scripts/agentic-tools.mjs`; feature-specific CLIs route through the grouped `agentic-tools` command instead of standalone package bins.
 
 ### Skills Management
 
@@ -233,8 +232,6 @@ yarn typecheck
 ```
 
 This now includes `uv run agentic-tools policy check` before the Python lint step so generated policy files fail fast in the standard validation flow.
-
-The standalone `agents-policy`, `agents-policy-import-vscode`, and `skills-management` commands remain available as compatibility aliases, but new docs and consuming repos should prefer `agentic-tools policy ...` and `agentic-tools skills ...`.
 
 ### Typechecking
 

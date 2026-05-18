@@ -30,10 +30,9 @@ Document the stable behavior of this repository's grouped `agentic-tools skills`
 
 - Distribution name: `agentic-tools`
 - Canonical entry points: `uv run agentic-tools skills ...` and the Node package command `agentic-tools skills ...`
-- Compatibility aliases: `uv run skills-management ...` and `skills-management ...`
 - Python implementation path: `src/agentic_tools/skills_management/main.py`
 - Node implementation path: `src/agentic_tools/skills_management/main.mjs`
-- Node runtime shim: `scripts/skills-management.mjs`
+- Packaged CLI entrypoint: `agentic-tools`; standalone skills-management bins are not exported.
 - Default global destination: `~/.agents/skills`
 
 ## Commands

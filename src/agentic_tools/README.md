@@ -52,10 +52,10 @@ agentic-tools [--workspace <path>] skills sync [--config <path>] [--to <repo> | 
 agentic-tools [--workspace <path>] skills unlink <skill...> [--from <source>] [--to <repo> | --global] [--dry-run]
 ```
 
-### Compatibility plan
+### Entry Point Policy
 
-- Keep `agents-policy`, `agents-policy-import-vscode`, and `skills-management` available as compatibility aliases during the transition.
-- Treat `agentic-tools ...` as the canonical documentation surface for new repos, READMEs, and consumer-repo tasks.
+- `agentic-tools ...` is the only packaged command surface.
+- Policy and skills workflows route through the grouped CLI instead of standalone `agents-policy` or `skills-management` bins.
 - Keep the grouped CLI behavior aligned across Python and Node installs.
 
 ## For Developers
@@ -71,7 +71,7 @@ This README is the command spec for the merged CLI.
 
 - The umbrella CLI should delegate to the existing feature implementations instead of duplicating policy or skills logic.
 - The grouped CLI should return the same exit codes and error messages as the underlying feature commands where practical.
-- The grouped CLI should preserve the existing standalone commands as thin compatibility wrappers.
+- Do not add standalone package entrypoints for feature CLIs; add subcommands under `agentic-tools` instead.
 - Python and Node should expose the same subcommand names and behavior.
 
 ### Focused validation

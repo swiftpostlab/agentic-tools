@@ -27,14 +27,9 @@ Document this repository's concrete AI policy implementation: the canonical poli
   - `uv run agentic-tools policy sync`
   - `uv run agentic-tools policy check`
   - `uv run agentic-tools policy import-vscode`
-- Compatibility aliases still supported:
-  - `uv run agents-policy`
-  - `uv run agents-policy-import-vscode`
-  - `uv run sync-ai-policy`
-  - `uv run sync-ai-policy-import-vscode`
 - Python implementation path: `src/agentic_tools/agents_policy/main.py`
 - Node implementation path: `src/agentic_tools/agents_policy/main.mjs`
-- Node runtime shims: `scripts/agents-policy.mjs` and `scripts/agents-policy-import-vscode.mjs`
+- Packaged CLI entrypoint: `agentic-tools`; standalone policy bins are not exported.
 
 ## Policy Model
 
@@ -82,7 +77,7 @@ If `services` is omitted, the implementation defaults to all supported services.
 - Prefer `services` to control vendor coverage instead of hand-editing generated files.
 - Keep `.aiexclude` at the repo root; do not replace it with a made-up Gemini-only ignore file.
 - Treat `.claude/settings.json` and `.vscode/settings.json` as partially managed outputs, not primary authoring surfaces for policy-owned sections.
-- Keep docs and CI on the canonical `agentic-tools policy` command family even though compatibility aliases still exist.
+- Keep docs and CI on the canonical `agentic-tools policy` command family; do not add standalone policy entrypoints.
 
 ## Validation
 

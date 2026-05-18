@@ -94,8 +94,7 @@ If the target repo wants the same protected-file and exclusion workflow, copy an
 The target repo should also copy the corresponding command wiring:
 
 - `[project.scripts]`
-   - `agents-policy = "agentic_tools.agents_policy.main:main"`
-   - `agents-policy-import-vscode = "agentic_tools.agents_policy.main:import_vscode_main"`
+   - `agentic-tools = "agentic_tools.main:main"`
 - CI drift enforcement that runs the sync command and fails if generated files changed.
 
 If the target repo does not use Python or `uv`, adapt the sync invocation to its real runtime and package manager instead of copying the command names blindly.
@@ -152,7 +151,7 @@ Do not copy repo-specific skills unchanged into another repo. Treat them as exam
 Adapt these to the target repo's package manager if it does not use `uv`:
 
 ```sh
-uv run agents-policy
+uv run agentic-tools policy sync
 git diff --exit-code -- .aiexclude .claude/settings.json .vscode/settings.json
 ```
 

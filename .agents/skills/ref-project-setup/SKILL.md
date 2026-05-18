@@ -96,11 +96,10 @@ dev = [
 Defines CLI entry points installed as shell commands:
 ```toml
 [project.scripts]
-main = "agentic_tools.main:main"
-skills-management = "agentic_tools.skills_management.main:main"
+agentic-tools = "agentic_tools.main:main"
 ```
 
-This is where installed commands are wired. In this repo, the packaged skills CLI is exposed from `src/agentic_tools/skills_management/main.py`.
+This is where installed commands are wired. In this repo, feature CLIs route through the grouped `agentic-tools` entrypoint instead of standalone package scripts.
 
 #### `[tool.poe.tasks]`
 Defines development tasks (not distributed to users):
@@ -151,7 +150,7 @@ Use the smallest skill that owns the decision:
 
 | Question | Start here | Why |
 |----------|------------|-----|
-| Where is the installed skills CLI wired? | This skill, then `pyproject.toml` and `src/agentic_tools/skills_management/main.py` | This is repo wiring, not a generic language rule. |
+| Where is the installed skills CLI wired? | This skill, then `pyproject.toml`, `src/agentic_tools/main.py`, and `src/agentic_tools/skills_management/main.py` | This is repo wiring, not a generic language rule. |
 | Should a new reusable parser live in a feature folder or a shared utility area? | `.agents/skills/ref-projects-architecture/SKILL.md` | That is a portable boundary decision. |
 | Where should a new Python feature live? | `.agents/skills/ref-python/SKILL.md` | Python feature layout belongs to the Python skill. |
 | Should a new repo helper live in `scripts/` or under `src/agentic_tools/`? | This skill first, then `.agents/skills/ref-projects-architecture/SKILL.md` if the boundary is unclear | The top-level folder choice is repo-specific, but the product-vs-maintenance rule is architectural. |
@@ -169,7 +168,7 @@ Prefer these commands over calling the underlying tools directly during normal w
 | **Black** | `uv run poe lint-fix` | Poe task | Auto-format code |
 | **Pyright** | `uv run poe typecheck` | Poe task | Type-check in strict mode |
 | **AI policy sync** | `uv run agentic-tools policy sync` | Project script | Regenerate agent config from `.agents/config.json` |
-| **AI policy import** | `uv run agents-policy-import-vscode` | Project script | Import VS Code approvals into policy, then sync |
+| **AI policy import** | `uv run agentic-tools policy import-vscode` | Project script | Import VS Code approvals into policy, then sync |
 | **Update script** | `uv run poe update-from-upstream` | Poe task | Fetch updates from template |
 
 All commands use `uv run` to execute in the managed environment.

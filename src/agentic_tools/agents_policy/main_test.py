@@ -119,7 +119,7 @@ def test_sync_policy_file_respects_selected_services(tmp_path: Path) -> None:
             "services": ["copilot", "claude"],
             "protectedFiles": ["*.env"],
             "excludedFiles": ["dist/"],
-            "terminalAutoApprove": {"/^uv run agents-policy$/": True},
+            "terminalAutoApprove": {"/^uv run agentic-tools policy sync$/": True},
             "editAutoApprove": {"**/*.py": True},
         },
     )
@@ -137,7 +137,7 @@ def test_sync_policy_file_respects_selected_services(tmp_path: Path) -> None:
 
     vscode_settings = read_json(repo_root / ".vscode" / "settings.json")
     assert vscode_settings["chat.tools.terminal.autoApprove"] == {
-        "/^uv run agents-policy$/": True
+        "/^uv run agentic-tools policy sync$/": True
     }
     assert vscode_settings["chat.tools.edits.autoApprove"] == {"**/*.py": True}
     assert vscode_settings["files.associations"] == {
@@ -265,7 +265,7 @@ def test_sync_policy_file_check_detects_drift(tmp_path: Path) -> None:
         {
             "services": ["gemini", "claude", "copilot"],
             "protectedFiles": ["*.env"],
-            "terminalAutoApprove": {"/^uv run agents-policy$/": True},
+            "terminalAutoApprove": {"/^uv run agentic-tools policy sync$/": True},
         },
     )
 
@@ -294,7 +294,7 @@ def test_sync_policy_file_check_passes_when_outputs_are_current(tmp_path: Path) 
         {
             "services": ["gemini", "claude", "copilot"],
             "protectedFiles": ["*.env"],
-            "terminalAutoApprove": {"/^uv run agents-policy$/": True},
+            "terminalAutoApprove": {"/^uv run agentic-tools policy sync$/": True},
         },
     )
 

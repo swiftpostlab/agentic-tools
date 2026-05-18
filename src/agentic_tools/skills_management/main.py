@@ -6,9 +6,6 @@ Canonical usage:
 - Link one skill from another repo into the current repo: `uv run agentic-tools skills link ref-skills-authoring --from ../python-uv-template`
 - Sync all skills declared in `.agents/config.json` into the current repo: `uv run agentic-tools skills sync`
 
-Compatibility aliases:
-- `uv run skills-management ...`
-- `skills-management ...`
 """
 
 from argparse import ArgumentParser

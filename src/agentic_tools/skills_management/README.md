@@ -71,13 +71,6 @@ When `from` uses `package:agentic-tools`, `sync` resolves the installed package 
 - `uv run agentic-tools skills sync`
 - `uv run agentic-tools skills unlink <skill> --from <repo>`
 
-## Compatibility aliases
-
-- `uv run skills-management list`
-- `uv run skills-management link <skill> --from <repo>`
-- `uv run skills-management sync`
-- `uv run skills-management unlink <skill> --from <repo>`
-
 ## Responsibilities
 
 - read category and shareability metadata from skill frontmatter

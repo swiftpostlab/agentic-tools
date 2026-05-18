@@ -48,24 +48,16 @@ Use the import command when you want to pull the current VS Code approval maps b
 
 ## Files
 
-- `main.py` contains the Python policy discovery, service selection, sync behavior, and CLI entrypoints.
+- `main.py` contains the Python policy discovery, service selection, and sync behavior used by the grouped CLI.
 - `main_test.py` covers the focused Python behavior of the sync logic.
-- `main.mjs` contains the Node policy sync implementation and Node CLI entrypoints.
+- `main.mjs` contains the Node policy sync implementation used by the grouped CLI.
 - `main.test.mjs` covers the focused Node CLI behavior through Jest.
-- `scripts/agents-policy.mjs` and `scripts/agents-policy-import-vscode.mjs` are thin Node runtime shims that call into the feature-local implementation.
 
 ## Canonical commands
 
 - `uv run agentic-tools policy sync`
 - `uv run agentic-tools policy check`
 - `uv run agentic-tools policy import-vscode`
-
-## Compatibility aliases
-
-- `uv run agents-policy`
-- `uv run agents-policy-import-vscode`
-- `uv run sync-ai-policy`
-- `uv run sync-ai-policy-import-vscode`
 
 ## Responsibilities
 

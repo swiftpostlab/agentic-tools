@@ -5,11 +5,6 @@ Canonical usage:
 - Check policy-managed files: `uv run agentic-tools policy check`
 - Import VS Code approvals first: `uv run agentic-tools policy import-vscode`
 
-Compatibility aliases:
-- `uv run sync-ai-policy`
-- `uv run sync-ai-policy-import-vscode`
-- `uv run agents-policy`
-- `uv run agents-policy-import-vscode`
 """
 
 from argparse import ArgumentParser
