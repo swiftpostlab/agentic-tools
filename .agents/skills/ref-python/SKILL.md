@@ -53,6 +53,8 @@ Provide portable Python defaults that emphasize explicit typing, simple structur
 - Type function parameters and shared return values clearly.
 - On modern Python baselines, use standard annotation syntax directly instead of future-compatibility imports for postponed annotations.
 - Prefer precise container types like `list[str]` or `dict[str, int]`.
+- Prefer `object` plus narrowing, focused casts, or type guards at unknown input boundaries instead of defaulting to `Any`.
+- Reserve `Any` for rare interoperability gaps that cannot be expressed cleanly with narrower types.
 - Use `Protocol`, `TypedDict`, dataclasses, or type aliases when they improve readability.
 - Prefer type guards and restructuring over `# type: ignore`.
 

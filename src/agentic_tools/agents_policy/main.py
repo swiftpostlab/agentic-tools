@@ -15,7 +15,7 @@ from json import JSONDecodeError
 import json
 import re
 from pathlib import Path
-from typing import Any, TypeAlias, cast
+from typing import TypeAlias, cast
 
 CANONICAL_AGENTS_CONFIG_PATH = Path(".agents") / "config.json"
 CANONICAL_POLICY_PATH = Path(".agents") / "policy.json"
@@ -37,10 +37,10 @@ SERVICE_ALIASES = {
     "github-copilot": SERVICE_COPILOT,
 }
 
-TerminalApprovalSetting: TypeAlias = bool | dict[str, Any]
-AiPolicy: TypeAlias = dict[str, Any]
-VscodeSettings: TypeAlias = dict[str, Any]
-JsonLoader: TypeAlias = Callable[[str], Any]
+JsonObject: TypeAlias = dict[str, object]
+AiPolicy: TypeAlias = JsonObject
+VscodeSettings: TypeAlias = JsonObject
+JsonLoader: TypeAlias = Callable[[str], object]
 
 
 class AgentsPolicyError(Exception):
@@ -58,7 +58,7 @@ class PolicyPaths:
 
 @dataclass(frozen=True)
 class PolicyDocument:
-    raw_config: dict[str, Any]
+    raw_config: JsonObject
     policy: AiPolicy
     uses_unified_config: bool
 
@@ -76,13 +76,18 @@ def load_optional_json5_loader() -> JsonLoader | None:
 JSON5_LOADS = load_optional_json5_loader()
 
 
-def require_json_object(value: Any, *, context: str) -> dict[str, Any]:
+def require_json_object(value: object, *, context: str) -> JsonObject:
     if not isinstance(value, dict):
         raise AgentsPolicyError(f"{context} must be a JSON object.")
-    return value
+
+    items = cast(dict[object, object], value)
+    if not all(isinstance(key, str) for key in items):
+        raise AgentsPolicyError(f"{context} must use string keys.")
+
+    return {key: item for key, item in items.items() if isinstance(key, str)}
 
 
-def read_json_file(path: Path, fallback: Any) -> Any:
+def read_json_file(path: Path, fallback: object) -> object:
     if not path.exists():
         return fallback
 
@@ -100,7 +105,7 @@ def read_json_file(path: Path, fallback: Any) -> Any:
         return json.loads(cleaned)
 
 
-def read_json_object(path: Path, *, context: str) -> dict[str, Any]:
+def read_json_object(path: Path, *, context: str) -> JsonObject:
     return require_json_object(read_json_file(path, {}), context=context)
 
 
@@ -196,7 +201,7 @@ def strip_jsonc(text: str) -> str:
     return re.sub(r",\s*(?=[}\]])", "", remove_comments(text))
 
 
-def write_json_file(path: Path, data: Any) -> None:
+def write_json_file(path: Path, data: object) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8") as file_handle:
         json.dump(data, file_handle, indent=2)
@@ -208,7 +213,7 @@ def write_text_file(path: Path, content: str) -> None:
     path.write_text(content, encoding="utf-8")
 
 
-def build_json_file_content(data: dict[str, Any]) -> str | None:
+def build_json_file_content(data: JsonObject) -> str | None:
     if not data:
         return None
 
@@ -222,7 +227,7 @@ def read_optional_text_file(path: Path) -> str | None:
     return path.read_text(encoding="utf-8")
 
 
-def sync_json_file(path: Path, data: dict[str, Any]) -> None:
+def sync_json_file(path: Path, data: JsonObject) -> None:
     if data:
         write_json_file(path, data)
         return
@@ -231,19 +236,19 @@ def sync_json_file(path: Path, data: dict[str, Any]) -> None:
         path.unlink()
 
 
-def get_string_list(value: Any) -> list[str]:
+def get_string_list(value: object) -> list[str]:
     if not isinstance(value, list):
         return []
 
-    items = cast(list[Any], value)
+    items = cast(list[object], value)
     return [item for item in items if isinstance(item, str)]
 
 
-def get_string_mapping(value: Any) -> dict[str, str]:
+def get_string_mapping(value: object) -> dict[str, str]:
     if not isinstance(value, dict):
         return {}
 
-    items = cast(dict[Any, Any], value)
+    items = cast(dict[object, object], value)
     return {
         key: item
         for key, item in items.items()
@@ -251,11 +256,11 @@ def get_string_mapping(value: Any) -> dict[str, str]:
     }
 
 
-def get_boolean_mapping(value: Any) -> dict[str, bool]:
+def get_boolean_mapping(value: object) -> dict[str, bool]:
     if not isinstance(value, dict):
         return {}
 
-    items = cast(dict[Any, Any], value)
+    items = cast(dict[object, object], value)
     return {
         key: item
         for key, item in items.items()
@@ -263,11 +268,11 @@ def get_boolean_mapping(value: Any) -> dict[str, bool]:
     }
 
 
-def get_terminal_approval_mapping(value: Any) -> dict[str, TerminalApprovalSetting]:
+def get_terminal_approval_mapping(value: object) -> JsonObject:
     if not isinstance(value, dict):
         return {}
 
-    items = cast(dict[Any, Any], value)
+    items = cast(dict[object, object], value)
     return {key: item for key, item in items.items() if isinstance(key, str)}
 
 
@@ -299,7 +304,7 @@ def get_services(policy: AiPolicy) -> list[str]:
         raise AgentsPolicyError("Policy 'services' must be an array of strings.")
 
     services: list[str] = []
-    for entry in raw_services:
+    for entry in cast(list[object], raw_services):
         if not isinstance(entry, str) or entry.strip() == "":
             raise AgentsPolicyError(
                 "Policy 'services' must contain only non-empty strings."
@@ -323,13 +328,12 @@ def replace_managed_claude_deny_rules(
     return preserved_rules + build_protected_read_rules(protected_files)
 
 
-def apply_policy_to_claude_settings(
-    claude: dict[str, Any], policy: AiPolicy
-) -> dict[str, Any]:
+def apply_policy_to_claude_settings(claude: JsonObject, policy: AiPolicy) -> JsonObject:
     updated = dict(claude)
+    raw_permissions = claude.get("permissions", {})
     permissions = (
-        dict(claude.get("permissions", {}))
-        if isinstance(claude.get("permissions"), dict)
+        dict(require_json_object(raw_permissions, context="Claude permissions"))
+        if isinstance(raw_permissions, dict)
         else {}
     )
     existing_deny = get_string_list(permissions.get("deny", []))
@@ -562,7 +566,9 @@ def sync_policy_file(
         else None
     )
 
-    claude_policy = effective if SERVICE_CLAUDE in services else {"protectedFiles": []}
+    claude_policy: AiPolicy = (
+        effective if SERVICE_CLAUDE in services else {"protectedFiles": []}
+    )
     claude_settings = require_json_object(
         read_json_file(paths.claude_settings, {}),
         context="Claude settings",
@@ -573,7 +579,7 @@ def sync_policy_file(
     )
     expected_claude_settings = build_json_file_content(updated_claude_settings)
 
-    copilot_policy = (
+    copilot_policy: AiPolicy = (
         effective
         if SERVICE_COPILOT in services
         else {
