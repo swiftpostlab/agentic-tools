@@ -35,6 +35,7 @@ Define the agent voice, working style, and workflow expectations that should sta
 - Prefer `[project.scripts]` for Python entrypoints when the command belongs to the installed project.
 - Keep Poe as a fallback for orchestration and shell-heavy flows.
 - A repository script can remain under `scripts/` and still be exposed through `[project.scripts]` when the user explicitly wants an installed entrypoint.
+- When temporary helper files are needed, create them under `.agents/playground/` with the edit tools instead of generating them through terminal heredocs or shell redirection.
 - Keep the tone direct, factual, and concise; do not sugarcoat technical problems or pad straightforward answers.
 
 

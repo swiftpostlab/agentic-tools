@@ -28,17 +28,21 @@ Read `.agents/skills/ref-agents-local-tasks/SKILL.md`, then inspect `.agents/tas
 
 1. Read `.agents/tasks/TODO.md` and identify the unchecked or still-active items.
 2. If the user mentioned a specific task, repo area, or local task folder, inspect that slice first.
-3. Turn the active items into a short ordered plan, preserving the existing TODO priority unless the repo state clearly contradicts it.
-4. Execute one task slice at a time using the normal local-anchor, edit, and validation workflow.
-5. Update `.agents/tasks/TODO.md` and any active `.agents/tasks/<task-name>/` notes when an item is completed, superseded, or blocked.
-6. Re-read `.agents/tasks/TODO.md` after each completed slice so newly added items or scope changes are not missed.
-7. Stop only when no actionable items remain or a concrete blocker requires user input.
+3. Triage the first active item: execute it directly if it is simple and well-defined, or clarify and refine it first if it is broad, ambiguous, or based on shaky assumptions.
+4. When refinement is needed, create or update `.agents/tasks/<task-name>/README.md` with the clarified goal, assumptions, and subtasks before execution.
+5. Turn the active items into a short ordered plan, preserving the existing TODO priority unless the repo state clearly contradicts it.
+6. Execute one task slice at a time using the normal local-anchor, edit, and validation workflow.
+7. Update `.agents/tasks/TODO.md` and any active `.agents/tasks/<task-name>/` notes when an item is completed, superseded, clarified, or blocked.
+8. Re-read `.agents/tasks/TODO.md` after each completed slice so newly added items or scope changes are not missed.
+9. Stop only when no actionable items remain or a concrete blocker requires user input.
 
 ## Defaults
 
 - Default to the first unchecked item in `.agents/tasks/TODO.md` unless the user explicitly reprioritizes the work.
 - Default to execution, not just triage, unless the user asked only for planning or review.
+- Do not rush every TODO item straight into implementation; simple items can be acted on directly, but complex or underdefined ones should be clarified first.
 - When a TODO item points to a file, symbol, or neighboring repo, use that as the first anchor before broader exploration.
+- When a TODO item remains too broad after the first read, switch into refinement mode with the user and record the task breakdown in `.agents/tasks/<task-name>/README.md`.
 - Keep local task files synchronized with real progress as part of the task, not as an afterthought.
 - Re-read `.agents/tasks/TODO.md` before concluding the overall session.
 
@@ -47,7 +51,8 @@ Read `.agents/skills/ref-agents-local-tasks/SKILL.md`, then inspect `.agents/tas
 - Do not treat stale local notes as more authoritative than the code, tests, or current repo state.
 - Do not silently skip unchecked TODO items just because one slice is inconvenient; either handle them or surface the blocker.
 - Do not delete or rewrite unrelated local task folders while working on the current item.
-- If a TODO item is ambiguous, resolve the ambiguity from nearby code or notes when possible before asking the user.
+- If a TODO item is ambiguous, resolve the ambiguity from nearby code or notes when possible; if the missing detail still controls the outcome, ask the user before implementing.
+- If a TODO item contains a wrong assumption, correct the premise explicitly with the user instead of executing the wrong task cleanly.
 
 ## Validation
 

@@ -21,10 +21,11 @@ Define how this repo uses `.agents/tasks/` as a gitignored local workspace for b
 ## Core Workflow
 
 1. Check `.agents/tasks/TODO.md` when the work belongs to a larger local backlog or set of follow-up items.
-2. Use one kebab-case folder per active task under `.agents/tasks/<task-name>/`.
-3. Keep one anchor file for the task when the work is complex enough to need a running brief.
-4. Update progress, blockers, and next steps as the task changes.
-5. Remove or refresh stale local files once the task is done or no longer relevant.
+2. Decide whether the item is simple enough to execute directly or whether it needs clarification or refinement first.
+3. Use one kebab-case folder per active task under `.agents/tasks/<task-name>/` when the work is complex enough to need a dedicated local workspace.
+4. Keep one anchor file for the task when the work is broad enough to need a running brief, explicit subtasks, or a refinement record.
+5. Update progress, blockers, assumptions, and next steps as the task changes.
+6. Remove or refresh stale local files once the task is done or no longer relevant.
 
 ## Directory Model
 
@@ -35,12 +36,14 @@ Define how this repo uses `.agents/tasks/` as a gitignored local workspace for b
 | `.agents/tasks/<task-name>/README.md` | Preferred living brief when the task needs ongoing status, plan, and context. |
 | `.agents/tasks/<task-name>/pr-description.md` | Temporary draft content for a PR or summary. |
 | `.agents/tasks/<task-name>/notes.md`, `validation.md`, `plan.md` | Scratch notes, validation results, or a focused local plan. |
+| `.agents/playground/` | Scratch space for temporary helper scripts or generated local artifacts that should be created with edit tools instead of terminal file-writing commands. |
 
 ## Task Framing
 
 | Command or action | What | Why | When | Expected outcome |
 | --- | --- | --- | --- | --- |
 | Update `.agents/tasks/TODO.md` | Refresh the local backlog across active work. | The top-level TODO should reflect the current local priority list. | When new follow-up work appears, priorities change, or an item is completed. | The top-level backlog matches the real state of the work. |
+| Triage one TODO item | Decide whether the item can be done directly or needs clarification first. | Simple tasks should not be over-processed, while broad or underdefined tasks should not be executed on guesswork. | When starting a new unchecked item from `.agents/tasks/TODO.md`. | The next step is explicit: execute immediately, ask clarifying questions, or open a local task brief first. |
 | Create `.agents/tasks/<task-name>/` | Open a local workspace for one task or PR-sized slice. | Keeping one folder per task prevents unrelated notes from mixing together. | When a task is large enough to need its own running notes or temporary artifacts. | The task has a clearly named local workspace. |
 | Add or update an anchor file such as `README.md` or `plan.md` | Keep a running summary of objective, status, blockers, and next steps. | Multi-step work becomes hard to recover if the local context is scattered across chat only. | When the task has enough moving parts that a single summary file will reduce drift. | Another pass can resume the task from the local file without reconstructing context from scratch. |
 | Store a temporary artifact such as `pr-description.md` or `validation.md` | Save work product that is useful during the task but does not belong in the committed repo. | Temporary drafts and scratch outputs should stay near the task they support. | When you need a local draft, notes, or validation log for the active task. | The artifact is easy to find and scoped to the right task folder. |
@@ -50,7 +53,13 @@ Define how this repo uses `.agents/tasks/` as a gitignored local workspace for b
 
 - Treat `.agents/tasks/` as local working state, not as committed product documentation.
 - Keep `.agents/tasks/` gitignored and promote durable guidance elsewhere instead of relying on local notes to survive cloning or review.
+- If a TODO item is simple and well-defined, execute it directly instead of forcing a planning ritual first.
+- If a TODO item is broad, ambiguous, or underdefined, ask the missing questions first and treat that clarification as part of the task rather than guessing.
+- If a TODO item needs refinement before implementation, create `.agents/tasks/<task-name>/README.md` and capture the clarified goal, assumptions, and subtasks there before starting execution.
+- If the work still cannot be executed cleanly after initial clarification, run an interactive breakdown with the user and record the resulting subtasks in the task `README.md`.
+- If a TODO item relies on an incorrect assumption, state the problem calmly, explain the misunderstanding, and correct it with the user before proceeding.
 - Prefer task- or PR-style, kebab-case folder names such as `.agents/tasks/add-button-for-language/`.
+- When a temporary helper script or generated scratch file is needed, put it under `.agents/playground/` and create or edit it with the edit tools rather than shell heredocs, redirection, or inline terminal-generated files.
 - Do not require every task folder to have a `README.md`. Use one only when the work needs a durable running brief.
 - If the folder only needs a narrow temporary artifact, store that file directly without inventing extra structure.
 - If a local note becomes durable repo guidance, promote it into a committed doc, skill, or code comment instead of leaving it only under `.agents/tasks/`.
@@ -61,6 +70,8 @@ Define how this repo uses `.agents/tasks/` as a gitignored local workspace for b
 - `.agents/tasks/` is normally gitignored, so other collaborators and future clones will not see it unless the content is promoted elsewhere.
 - Local tracking can drift from the code if it is not updated after scope changes.
 - A temporary draft under `.agents/tasks/` is not a substitute for updating the actual repo source of truth when the information becomes permanent.
+- Broad TODO text is not authorization to improvise missing requirements; refine it first when the scope is unclear.
+- A broken premise in a TODO item should be corrected, not silently worked around.
 
 ## Validation
 
