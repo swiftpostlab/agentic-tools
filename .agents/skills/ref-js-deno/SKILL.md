@@ -27,6 +27,8 @@ Provide portable defaults for modern Deno projects, especially when the codebase
 - Keep `tsconfig.json` only for Node-owned paths or for TypeScript project-graph cases that Deno workspaces and directory scopes cannot express cleanly.
 - Remember that modern Node also runs TypeScript directly through built-in type stripping; choose Deno for its runtime, permissions, dependency, and tooling model, not merely to avoid `tsc` or `ts-node`.
 - Prefer `deno lint` and `deno fmt` for Deno-owned files; add ESLint only when the repo or editor truly needs the ESLint ecosystem.
+- When replacing ESLint with `deno lint`, inspect and carry forward the existing ESLint intent into `deno.json` includes, excludes, lint rules, or documented exceptions instead of discarding the config wholesale.
+- When replacing `tsc` with `deno check`, inspect the existing `tsconfig.json` and translate relevant compiler options, includes, excludes, libs, and strictness expectations into `deno.json` or a clearly scoped retained `tsconfig.json`.
 - When npm-backed editor tooling such as ESLint must run inside a Deno repo, set `nodeModulesDir: "auto"` and wrap the command in `deno task`.
 - Prefer `.ts` modules by default in Deno-owned code; do not drop to JavaScript just to avoid a build step that Deno does not require.
 - Prefer JSR packages, `npm:` specifiers, or explicit import-map entries over scattered legacy URL imports.
@@ -52,6 +54,7 @@ Provide portable defaults for modern Deno projects, especially when the codebase
 - Put Deno compiler settings in `deno.json` under `compilerOptions`; do not copy a full Node `tsconfig.json` just to make `deno check` run.
 - Existing Node plus TypeScript workspaces can keep `tsconfig.json`; Deno probes it when a directory also contains `deno.json` or `package.json`.
 - If a parent `deno.json` defines `compilerOptions`, those take precedence over overlapping `tsconfig.json` options.
+- If the goal is to replace `tsc`, first inventory the current `tsconfig.json` behavior. Preserve meaningful strictness, module resolution, JSX, library, include, and exclude decisions in the Deno config or document why they no longer apply.
 - Use `compilerOptions.lib` in `deno.json` to model the real runtime surface. For SSR or browser plus Deno code, prefer combinations like `["dom", "dom.iterable", "dom.asynciterable", "deno.ns"]`; for Deno workers, prefer `["deno.worker"]`.
 - Use `compilerOptions.checkJs`, `// @ts-check`, `@ts-types`, `@ts-self-types`, or `compilerOptions.types` when JavaScript modules need explicit type checking or declarations.
 - Keep `tsconfig.json` only when Node-owned folders, TS project references, or include or exclude granularity still require it.
@@ -61,6 +64,7 @@ Provide portable defaults for modern Deno projects, especially when the codebase
 - Use `deno lint` and the `lint` section in `deno.json` as the default linting owner for Deno-owned code.
 - Use `deno fmt` and the `fmt` section in `deno.json` as the default formatter for Deno-owned code.
 - `deno lint` already covers a recommended ruleset inspired by ESLint; do not keep ESLint just out of habit.
+- If the goal is to replace ESLint, first inventory the current `eslint.config.*` behavior. Preserve meaningful file scopes, globals, ignores, and rule intent in Deno lint/fmt config or document which rules are intentionally dropped because Deno already covers or rejects them.
 - If custom Deno-only rules are required, consider `lint.plugins`; note that the lint-plugin API is experimental and requires Deno 2.2 or newer.
 - If the repo or editor still needs ESLint, make it an explicit secondary tool: set `nodeModulesDir: "auto"`, create `eslint.config.js`, and wrap the invocation in `deno task`, for example `deno task eslint`.
 - Keep one lint owner per file set wherever possible. If both `deno lint` and ESLint run on the same files, document why or expect duplicate and conflicting diagnostics.
@@ -109,6 +113,7 @@ Provide portable defaults for modern Deno projects, especially when the codebase
 
 - `deno.json` owns Deno configuration and tasks.
 - Any retained `tsconfig.json` or ESLint ownership is explicit and scoped to the right files.
+- Replacing ESLint or `tsc` preserves the useful behavior from the existing config or documents why it was intentionally dropped.
 - The Deno and Node parts of a hybrid repo do not fight over tooling.
 - Dependency specifiers are modern and explicit.
 - `nodeModulesDir`, editor activation, and any npm-backed Deno tooling are configured intentionally.

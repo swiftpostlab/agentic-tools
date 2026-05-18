@@ -2,6 +2,8 @@
 
 - `deno.json` owns tasks, config, and dependency conventions.
 - Any retained `tsconfig.json` or ESLint ownership is explicit and scoped to the correct files.
+- If Deno replaces ESLint, the useful existing `eslint.config.*` behavior was translated into Deno config or explicitly discarded with a reason.
+- If Deno replaces `tsc`, the useful existing `tsconfig.json` behavior was translated into Deno config or explicitly retained with a scoped reason.
 - Hybrid repos keep Deno-owned files and Node-owned files clearly separated.
 - `nodeModulesDir`, `deno.enablePaths`, and npm-backed tooling behavior are configured intentionally.
 - Permissions are explicit and scoped to the actual runtime needs.
