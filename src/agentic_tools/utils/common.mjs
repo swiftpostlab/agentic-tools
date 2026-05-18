@@ -2,7 +2,6 @@
 import { consola, createConsola } from "consola";
 import fs from "node:fs";
 import { createRequire } from "node:module";
-import os from "node:os";
 import path from "node:path";
 
 /** @typedef {Record<string, unknown>} JsonObject */
@@ -12,14 +11,6 @@ import path from "node:path";
 /** @typedef {{ cwd: string, output: OutputFn, logger: LoggerLike }} ExecutionOptions */
 
 export class ToolError extends Error {}
-
-export const DEFAULT_GLOBAL_SKILLS_DIR = path.join(
-  os.homedir(),
-  ".agents",
-  "skills",
-);
-export const PACKAGE_SOURCE_PREFIX = "package:";
-export const SYNC_CONFIG_FILENAME = "skills.json";
 
 /**
  * @param {string | null | undefined} rawPath
@@ -145,7 +136,7 @@ export function deduplicatePreservingOrder(items) {
  * @param {string} value
  * @returns {string}
  */
-export function stripYamlString(value) {
+function stripYamlString(value) {
   const trimmed = value.trim();
   if (
     trimmed.length >= 2 &&
@@ -224,7 +215,7 @@ export function parseFrontmatter(text) {
  * @param {string} text
  * @returns {string}
  */
-export function stripJsonc(text) {
+function stripJsonc(text) {
   let output = "";
   let index = 0;
   let inString = false;
@@ -343,7 +334,7 @@ export function syncJsonFile(targetPath, data) {
 /**
  * @param {string} [cwd]
  */
-export function createConsumerRequire(cwd = process.cwd()) {
+function createConsumerRequire(cwd = process.cwd()) {
   return createRequire(path.join(path.resolve(cwd), "__agentic_tools__.js"));
 }
 
@@ -457,7 +448,7 @@ function formatLogArg(value) {
  * @param {OutputFn} [output]
  * @returns {LoggerLike}
  */
-export function createLogger(output) {
+function createLogger(output) {
   if (typeof output !== "function") {
     return consola;
   }

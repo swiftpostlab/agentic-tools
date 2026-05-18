@@ -1,8 +1,9 @@
 // @ts-check
 import { defineCommand, renderUsage, runCommand } from "citty";
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
-import { DEFAULT_GLOBAL_SKILLS_DIR, PACKAGE_SOURCE_PREFIX, SYNC_CONFIG_FILENAME, ToolError, createDirectoryLink, createExecutionOptions, deduplicatePreservingOrder, ensureJsonObject, isDirectory, isDirectoryLink, isFile, parseFrontmatter, pathExists, removeDirectoryLink, resolveExistingLinkTarget, resolvePackageRoot, resolvePath, } from "../utils/common.mjs";
+import { ToolError, createDirectoryLink, createExecutionOptions, deduplicatePreservingOrder, ensureJsonObject, isDirectory, isDirectoryLink, isFile, parseFrontmatter, pathExists, removeDirectoryLink, resolveExistingLinkTarget, resolvePackageRoot, resolvePath, } from "../utils/common.mjs";
 
 /** @typedef {import("../utils/common.mjs").ExecutionOptions} ExecutionOptions */
 /** @typedef {import("../utils/common.mjs").RunOptions} RunOptions */
@@ -14,6 +15,9 @@ import { DEFAULT_GLOBAL_SKILLS_DIR, PACKAGE_SOURCE_PREFIX, SYNC_CONFIG_FILENAME,
 
 const SHAREABLE_VISIBILITY = "shareable";
 const SHAREABILITY_WIZARD = "tool-make-skill-shareable";
+const DEFAULT_GLOBAL_SKILLS_DIR = path.join(os.homedir(), ".agents", "skills");
+const PACKAGE_SOURCE_PREFIX = "package:";
+const SYNC_CONFIG_FILENAME = "skills.json";
 const AGENTS_CONFIG_FILENAME = "config.json";
 const SKILLS_CONFIG_SECTION = "skills";
 /**

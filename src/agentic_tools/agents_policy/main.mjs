@@ -2,7 +2,7 @@
 import { defineCommand, runCommand } from "citty";
 import fs from "node:fs";
 import path from "node:path";
-import { ToolError, createExecutionOptions, ensureJsonObject, getBooleanRecord, getStringList, getStringRecord, pathExists, readJsonFile, resolvePath, syncJsonFile, toPosixPath, writeJsonFile, writeTextFile, } from "../utils/common.mjs";
+import { ToolError, createExecutionOptions, ensureJsonObject, getBooleanRecord, getStringList, getStringRecord, isFile, pathExists, readJsonFile, resolvePath, syncJsonFile, toPosixPath, writeJsonFile, writeTextFile, } from "../utils/common.mjs";
 
 /** @typedef {import("../utils/common.mjs").JsonObject} JsonObject */
 /** @typedef {import("../utils/common.mjs").RunOptions} RunOptions */
@@ -353,18 +353,6 @@ function discoverPolicyPath(startPath) {
         currentPath = parentPath;
     }
     return null;
-}
-/**
- * @param {string} targetPath
- * @returns {boolean}
- */
-function isFile(targetPath) {
-    try {
-        return fs.statSync(targetPath).isFile();
-    }
-    catch {
-        return false;
-    }
 }
 /**
  * @param {string | null} rawConfig
