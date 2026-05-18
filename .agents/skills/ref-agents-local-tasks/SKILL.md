@@ -38,6 +38,24 @@ Define how this repo uses `.agents/tasks/` as a gitignored local workspace for b
 | `.agents/tasks/<task-name>/notes.md`, `validation.md`, `plan.md` | Scratch notes, validation results, or a focused local plan. |
 | `.agents/playground/` | Scratch space for temporary helper scripts or generated local artifacts that should be created with edit tools instead of terminal file-writing commands. |
 
+## Backlog Syntax
+
+Unfinished top-level items in `.agents/tasks/TODO.md` may use any of these forms:
+
+```markdown
+- todo item description
+- [] todo item description
+- [ ] todo item description
+```
+
+Completed items should use `[x]`:
+
+```markdown
+- [x] completed todo item description
+```
+
+When a helper script needs to find the next open task, treat plain bullets, empty brackets, and spaced empty brackets as open items, and skip `[x]` or `[X]` items.
+
 ## Task Framing
 
 | Command or action | What | Why | When | Expected outcome |
@@ -73,7 +91,94 @@ Define how this repo uses `.agents/tasks/` as a gitignored local workspace for b
 - Broad TODO text is not authorization to improvise missing requirements; refine it first when the scope is unclear.
 - A broken premise in a TODO item should be corrected, not silently worked around.
 
+## Example Next-Todo Readers
+
+Use examples like these as temporary helpers under `.agents/playground/` when manual scanning is noisy. Keep them simple and delete them when they are no longer useful.
+
+```python
+from pathlib import Path
+import re
+
+
+TODO_PATH = Path(".agents/tasks/TODO.md")
+DONE_LINE = re.compile(r"^-\s*\[[xX]\]\s+")
+OPEN_LINE = re.compile(r"^-\s*(?:\[\s*\]\s*)?(?P<text>\S.*)$")
+
+
+def find_next_todo(todo_path: Path) -> tuple[int, str] | None:
+    for line_number, line in enumerate(
+        todo_path.read_text(encoding="utf-8").splitlines(), start=1
+    ):
+        if DONE_LINE.match(line):
+            continue
+
+        match = OPEN_LINE.match(line)
+        text = match.group("text").strip() if match else ""
+        if text:
+            return line_number, text
+
+    return None
+
+
+def main() -> None:
+    todo_item = find_next_todo(TODO_PATH)
+    if todo_item is None:
+        print("No open todos found.")
+        return
+
+    line_number, text = todo_item
+    print(f"{TODO_PATH}:{line_number}: {text}")
+
+
+if __name__ == "__main__":
+    main()
+```
+
+```typescript
+import { readFileSync } from "node:fs";
+
+type TodoItem = {
+  lineNumber: number;
+  text: string;
+};
+
+const todoPath = ".agents/tasks/TODO.md";
+const doneLine = /^-\s*\[[xX]\]\s+/;
+const openLine = /^-\s*(?:\[\s*\]\s*)?(?<text>\S.*)$/;
+
+const findNextTodo = (content: string): TodoItem | null => {
+  const lines = content.split(/\r?\n/);
+
+  for (const [index, line] of lines.entries()) {
+    if (doneLine.test(line)) {
+      continue;
+    }
+
+    const match = openLine.exec(line);
+    const text = match?.groups?.text?.trim();
+    if (text) {
+      return { lineNumber: index + 1, text };
+    }
+  }
+
+  return null;
+};
+
+const main = (): void => {
+  const todoItem = findNextTodo(readFileSync(todoPath, "utf8"));
+  if (!todoItem) {
+    console.log("No open todos found.");
+    return;
+  }
+
+  console.log(`${todoPath}:${todoItem.lineNumber}: ${todoItem.text}`);
+};
+
+main();
+```
+
 ## Validation
 
+- Any helper or workflow that scans `.agents/tasks/TODO.md` recognizes plain bullets, `[]`, and `[ ]` as open items, and skips `[x]` or `[X]` items.
 - After a major shift in scope, confirm that `.agents/tasks/TODO.md` and the active task folder still describe the same task you are actually performing.
 - Before concluding a task, check whether any durable guidance discovered in local notes should be moved into committed repo files.
