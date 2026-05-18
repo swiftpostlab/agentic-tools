@@ -36,7 +36,9 @@
     "rmdir": false,
     "del": false,
     "curl": false,
-    "wget": false
+    "wget": false,
+    "uv": true,
+    "Out-Null": true
   },
   "editAutoApprove": {
     "**/*.{py,json,yml,yaml,css,md}": true,
