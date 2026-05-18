@@ -21,14 +21,24 @@ const MANAGED_COPILOT_LANGUAGE_ID = "copilot-restricted-file";
 const SERVICE_GEMINI = "gemini";
 const SERVICE_CLAUDE = "claude";
 const SERVICE_COPILOT = "copilot";
-const SUPPORTED_SERVICES = [SERVICE_GEMINI, SERVICE_CLAUDE, SERVICE_COPILOT];
-/** @type {Record<string, string>} */
-const SERVICE_ALIASES = {
+const SUPPORTED_SERVICES = /** @type {const} */ ([
+    SERVICE_GEMINI,
+    SERVICE_CLAUDE,
+    SERVICE_COPILOT,
+]);
+const SERVICE_ALIASES = /** @type {const} */ ({
     gemini: SERVICE_GEMINI,
     claude: SERVICE_CLAUDE,
     "claude-code": SERVICE_CLAUDE,
     copilot: SERVICE_COPILOT,
     "github-copilot": SERVICE_COPILOT,
+});
+/**
+ * @param {string} rawName
+ * @returns {rawName is keyof typeof SERVICE_ALIASES}
+ */
+const isSupportedServiceAlias = (rawName) => {
+    return Object.hasOwn(SERVICE_ALIASES, rawName);
 };
 /**
  * @param {CommandArgs} args
@@ -131,13 +141,12 @@ const getExcludedFiles = (policy) => {
  */
 const normalizeServiceName = (rawName) => {
     const normalized = rawName.trim().toLowerCase();
-    const serviceName = SERVICE_ALIASES[normalized];
-    if (serviceName === undefined) {
+    if (!isSupportedServiceAlias(normalized)) {
         throw new ToolError(`Unsupported policy service '${rawName}'. Supported values: ${Object.keys(SERVICE_ALIASES)
             .sort()
             .join(", ")}.`);
     }
-    return serviceName;
+    return SERVICE_ALIASES[normalized];
 };
 /**
  * @param {PolicyState} policy

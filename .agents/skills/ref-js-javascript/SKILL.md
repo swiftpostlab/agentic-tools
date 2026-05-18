@@ -38,6 +38,7 @@ Provide portable defaults for maintainable JavaScript when full TypeScript is no
 - Use plain JavaScript intentionally for browser-delivered code, JSDoc-first modules, or repos that have already chosen JS as the local default.
 - When code intentionally stays JavaScript, prefer `.js` for most modules and `.mjs` for executable ESM scripts or entrypoints where the runtime boundary should be unambiguous.
 - Prefer JSDoc on exported helpers, shared objects, and non-obvious callbacks.
+- Prefer `/** @type {const} */` on fixed literal maps and tuples when the exact keys or values matter; do not widen them to broad `Record<string, ...>` or `string[]` annotations just to make indexing easier.
 - Prefer named constants and helpers over repeated inline logic.
 - Prefer `const` arrow functions for JavaScript helpers, callbacks, and script-local functions.
 - Prefer explicit input validation at I/O boundaries.
@@ -60,6 +61,8 @@ Provide portable defaults for maintainable JavaScript when full TypeScript is no
 - Before choosing JSDoc-backed JavaScript for Node scripts, check whether the repo can use direct TypeScript execution in its supported Node version.
 - Use `@typedef`, `@param`, and `@returns` where they materially improve editor tooling and readability.
 - Document object shapes and callback contracts that would otherwise be implicit.
+- For fixed literal lookup objects or tuples, prefer `/** @type {const} */` so TypeScript infers the specific keys and values from the literal.
+- If a dynamic string needs to index a const-typed lookup object, narrow the key first with a guard or a targeted cast instead of widening the whole object to `Record<string, ...>`.
 - Keep JSDoc synchronized with the code; stale type comments are worse than no comments.
 
 ### Structure

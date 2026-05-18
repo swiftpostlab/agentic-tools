@@ -35,6 +35,7 @@ Provide portable TypeScript defaults that keep types honest, runtime boundaries 
 - Prefer discriminated unions for stateful variants.
 - Prefer explicit runtime validation at trust boundaries.
 - Prefer inference inside small local scopes and explicit annotations at exported or shared boundaries.
+- Prefer `as const` for fixed literal maps and tuples when the exact keys or values matter; do not widen them to `Record<string, ...>` or `string[]` unless the surface is intentionally open-ended.
 - Prefer TypeScript over plain JavaScript in modern Node and Deno codebases because current runtimes can execute `.ts` and `.mts` directly.
 - Modern Node can run TypeScript directly through built-in type stripping; do not add `ts-node`, `tsx`, or a build step just to execute ordinary Node-owned `.ts` or `.mts` scripts.
 - Prefer `.ts` for ordinary TypeScript modules, colocated feature tests, and most feature code.
@@ -56,6 +57,7 @@ Provide portable TypeScript defaults that keep types honest, runtime boundaries 
 
 - Model states and variants with unions instead of optional-property soup.
 - Use utility types sparingly and only when they clarify intent.
+- Keep literal lookup tables precise with `as const`, then narrow dynamic keys with `keyof typeof ...` or a guard instead of throwing away the literal information.
 - Avoid deep type-level cleverness when a simple domain type would read better.
 
 ### Runtime boundaries
