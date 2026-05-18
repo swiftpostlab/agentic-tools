@@ -14,6 +14,8 @@ import { DEFAULT_GLOBAL_SKILLS_DIR, PACKAGE_SOURCE_PREFIX, SYNC_CONFIG_FILENAME,
 
 const SHAREABLE_VISIBILITY = "shareable";
 const SHAREABILITY_WIZARD = "tool-make-skill-shareable";
+const AGENTS_CONFIG_FILENAME = "config.json";
+const SKILLS_CONFIG_SECTION = "skills";
 /**
  * @param {unknown} value
  * @returns {string[]}
@@ -318,7 +320,18 @@ function resolveSyncConfigPath(destinationPath, useGlobal, rawConfig) {
     if (useGlobal) {
         throw new ToolError("sync with --global requires --config");
     }
-    return path.join(toRepoRoot(destinationPath), ".agents", SYNC_CONFIG_FILENAME);
+    const agentsDir = path.join(toRepoRoot(destinationPath), ".agents");
+    const agentsConfig = path.join(agentsDir, AGENTS_CONFIG_FILENAME);
+    const legacySkillsConfig = path.join(agentsDir, SYNC_CONFIG_FILENAME);
+    if (isFile(agentsConfig)) {
+        if (agentsConfigHasSkills(agentsConfig) || !isFile(legacySkillsConfig)) {
+            return agentsConfig;
+        }
+    }
+    if (isFile(legacySkillsConfig)) {
+        return legacySkillsConfig;
+    }
+    return agentsConfig;
 }
 /**
  * @param {string} packageName
@@ -377,10 +390,13 @@ function parseConfiguredSkillSources(text) {
         throw new ToolError(`Skills config is not valid JSON: ${error}`);
     }
     const config = ensureJsonObject(parsed, "Skills config");
-    if (!Array.isArray(config.sources) || config.sources.length === 0) {
+    const skillsConfig = config[SKILLS_CONFIG_SECTION] === undefined
+        ? config
+        : ensureJsonObject(config[SKILLS_CONFIG_SECTION], "Agents config skills");
+    if (!Array.isArray(skillsConfig.sources) || skillsConfig.sources.length === 0) {
         throw new ToolError("Skills config must define a non-empty 'sources' array.");
     }
-    return config.sources.map((rawSource, index) => {
+    return skillsConfig.sources.map((rawSource, index) => {
         const sourceObject = ensureJsonObject(rawSource, `Skills config source #${index + 1}`);
         if (typeof sourceObject.from !== "string" || sourceObject.from.trim() === "") {
             throw new ToolError(`Skills config source #${index + 1} is missing a non-empty 'from' value.`);
@@ -390,6 +406,25 @@ function parseConfiguredSkillSources(text) {
             skills: requireStringList(sourceObject.skills, `Skills config source '${sourceObject.from}' skills`),
         };
     });
+}
+/**
+ * @param {string} configPath
+ * @returns {boolean}
+ */
+function agentsConfigHasSkills(configPath) {
+    try {
+        const parsed = ensureJsonObject(
+            JSON.parse(fs.readFileSync(configPath, "utf8")),
+            "Agents config",
+        );
+        const skillsConfig = parsed[SKILLS_CONFIG_SECTION];
+        return skillsConfig !== null &&
+            !Array.isArray(skillsConfig) &&
+            typeof skillsConfig === "object";
+    }
+    catch {
+        return true;
+    }
 }
 /**
  * @param {string} configPath
@@ -653,7 +688,7 @@ function createSkillsManagementCommand(options) {
             sync: defineCommand({
                 meta: {
                     name: "sync",
-                    description: "Sync skills declared in .agents/skills.json.",
+                    description: "Sync skills declared in .agents/config.json.",
                 },
                 args: createSharedTargetArgs(true),
                 /** @param {{ args: CommandArgs }} context */

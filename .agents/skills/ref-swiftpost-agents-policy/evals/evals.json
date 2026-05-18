@@ -4,10 +4,10 @@
     {
       "id": 1,
       "prompt": "Explain this repo's agents-policy feature, including the policy file location, canonical commands, and how vendor outputs are selected.",
-      "expected_output": "An explanation that names .agents/policy.json, the agents-policy commands, and the services-driven output model for Gemini, Claude Code, and Copilot.",
+      "expected_output": "An explanation that names .agents/config.json, the agentic-tools policy commands, and the services-driven output model for Gemini, Claude Code, and Copilot.",
       "assertions": [
-        "The response names .agents/policy.json as the canonical file",
-        "The response names agents-policy as the canonical command",
+        "The response names .agents/config.json as the canonical file",
+        "The response names agentic-tools policy as the canonical command",
         "The response explains that services control which vendor outputs are generated or cleaned"
       ]
     },

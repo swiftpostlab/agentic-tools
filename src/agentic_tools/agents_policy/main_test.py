@@ -145,6 +145,82 @@ def test_sync_policy_file_respects_selected_services(tmp_path: Path) -> None:
     }
 
 
+def test_sync_policy_file_reads_unified_agents_config(tmp_path: Path) -> None:
+    repo_root = tmp_path / "repo"
+    config_path = repo_root / ".agents" / "config.json"
+    write_json(
+        config_path,
+        {
+            "policy": {
+                "services": ["copilot"],
+                "protectedFiles": ["*.env"],
+                "terminalAutoApprove": {"uv run poe test": True},
+            },
+            "skills": {"sources": []},
+        },
+    )
+
+    messages = agents_policy_main.sync_policy_file(config_path, import_vscode=False)
+
+    assert "Synced: Copilot local policy (.vscode/settings.json)" in messages
+    vscode_settings = read_json(repo_root / ".vscode" / "settings.json")
+    assert vscode_settings["chat.tools.terminal.autoApprove"] == {
+        "uv run poe test": True
+    }
+
+
+def test_import_policy_from_vscode_preserves_unified_agents_config_sections(
+    tmp_path: Path,
+) -> None:
+    repo_root = tmp_path / "repo"
+    config_path = repo_root / ".agents" / "config.json"
+    write_json(
+        config_path,
+        {
+            "policy": {
+                "services": ["copilot"],
+                "terminalAutoApprove": {"stale": True},
+            },
+            "skills": {
+                "sources": [{"from": "package:agentic-tools", "skills": ["ref-alpha"]}]
+            },
+        },
+    )
+    write_json(
+        repo_root / ".vscode" / "settings.json",
+        {
+            "chat.tools.terminal.autoApprove": {"uv run poe test": True},
+            "chat.tools.edits.autoApprove": {"**/*.md": True},
+        },
+    )
+
+    messages = agents_policy_main.sync_policy_file(config_path, import_vscode=True)
+
+    assert "Imported: VS Code approvals into .agents/config.json" in messages
+    config = read_json(config_path)
+    policy = config["policy"]
+    skills = config["skills"]
+    assert isinstance(policy, dict)
+    assert isinstance(skills, dict)
+    assert policy["terminalAutoApprove"] == {"uv run poe test": True}
+    assert policy["editAutoApprove"] == {"**/*.md": True}
+    assert skills == {
+        "sources": [{"from": "package:agentic-tools", "skills": ["ref-alpha"]}]
+    }
+
+
+def test_discover_policy_path_prefers_unified_agents_config(
+    tmp_path: Path,
+) -> None:
+    repo_root = tmp_path / "repo"
+    config_path = repo_root / ".agents" / "config.json"
+    legacy_path = repo_root / ".agents" / "policy.json"
+    write_json(config_path, {"policy": {"services": ["copilot"]}})
+    write_json(legacy_path, {"services": ["claude"]})
+
+    assert agents_policy_main.discover_policy_path(repo_root) == config_path.resolve()
+
+
 def test_sync_policy_file_cleans_disabled_copilot_settings(tmp_path: Path) -> None:
     repo_root = tmp_path / "repo"
     policy_path = repo_root / ".agents" / "policy.json"

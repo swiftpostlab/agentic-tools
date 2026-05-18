@@ -22,6 +22,7 @@ import re
 from pathlib import Path
 from typing import Any, TypeAlias, cast
 
+CANONICAL_AGENTS_CONFIG_PATH = Path(".agents") / "config.json"
 CANONICAL_POLICY_PATH = Path(".agents") / "policy.json"
 LEGACY_POLICY_PATH = Path(".ai-policy.json")
 AI_EXCLUDE_PATH = Path(".aiexclude")
@@ -60,6 +61,13 @@ class PolicyPaths:
     claude_settings: Path
 
 
+@dataclass(frozen=True)
+class PolicyDocument:
+    raw_config: dict[str, Any]
+    policy: AiPolicy
+    uses_unified_config: bool
+
+
 def load_optional_json5_loader() -> JsonLoader | None:
     try:
         json5_module = import_module("json5")
@@ -71,16 +79,6 @@ def load_optional_json5_loader() -> JsonLoader | None:
 
 
 JSON5_LOADS = load_optional_json5_loader()
-
-
-def build_default_policy() -> AiPolicy:
-    return {
-        "services": list(SUPPORTED_SERVICES),
-        "protectedFiles": [],
-        "excludedFiles": [],
-        "terminalAutoApprove": {},
-        "editAutoApprove": {},
-    }
 
 
 def require_json_object(value: Any, *, context: str) -> dict[str, Any]:
@@ -105,6 +103,49 @@ def read_json_file(path: Path, fallback: Any) -> Any:
     except JSONDecodeError:
         cleaned = strip_jsonc(text)
         return json.loads(cleaned)
+
+
+def read_json_object(path: Path, *, context: str) -> dict[str, Any]:
+    return require_json_object(read_json_file(path, {}), context=context)
+
+
+def load_policy_document(path: Path) -> PolicyDocument:
+    raw_config = read_json_object(path, context="Policy file")
+    if "policy" not in raw_config:
+        return PolicyDocument(
+            raw_config=raw_config,
+            policy=raw_config,
+            uses_unified_config=False,
+        )
+
+    raw_policy = raw_config["policy"]
+
+    return PolicyDocument(
+        raw_config=raw_config,
+        policy=require_json_object(raw_policy, context="Agents config policy"),
+        uses_unified_config=True,
+    )
+
+
+def write_policy_document(
+    path: Path, document: PolicyDocument, policy: AiPolicy
+) -> None:
+    if not document.uses_unified_config:
+        write_json_file(path, policy)
+        return
+
+    updated_config = dict(document.raw_config)
+    updated_config["policy"] = policy
+    write_json_file(path, updated_config)
+
+
+def agents_config_has_policy(path: Path) -> bool:
+    try:
+        raw_config = read_json_object(path, context="Agents config")
+    except json.JSONDecodeError, AgentsPolicyError:
+        return True
+
+    return isinstance(raw_config.get("policy"), dict)
 
 
 def strip_jsonc(text: str) -> str:
@@ -411,6 +452,12 @@ def import_policy_from_vscode(policy: AiPolicy, vscode_settings_path: Path) -> A
 def discover_policy_path(start_path: Path) -> Path | None:
     search_roots = [start_path, *start_path.parents]
     for candidate_root in search_roots:
+        agents_config_path = candidate_root / CANONICAL_AGENTS_CONFIG_PATH
+        if agents_config_path.is_file() and agents_config_has_policy(
+            agents_config_path
+        ):
+            return agents_config_path.resolve()
+
         canonical_path = candidate_root / CANONICAL_POLICY_PATH
         if canonical_path.is_file():
             return canonical_path.resolve()
@@ -436,7 +483,8 @@ def resolve_policy_paths(policy_file: Path) -> PolicyPaths:
     resolved_policy = policy_file.expanduser().resolve()
 
     if (
-        resolved_policy.name == CANONICAL_POLICY_PATH.name
+        resolved_policy.name
+        in {CANONICAL_AGENTS_CONFIG_PATH.name, CANONICAL_POLICY_PATH.name}
         and resolved_policy.parent.name == CANONICAL_POLICY_PATH.parent.name
     ):
         repo_root = resolved_policy.parent.parent
@@ -490,10 +538,8 @@ def sync_policy_file(
         )
 
     paths = resolve_policy_paths(policy_file)
-    policy = require_json_object(
-        read_json_file(paths.policy_file, build_default_policy()),
-        context="Policy file",
-    )
+    document = load_policy_document(paths.policy_file)
+    policy = document.policy
     effective = (
         import_policy_from_vscode(policy, paths.vscode_settings)
         if import_vscode
@@ -503,7 +549,7 @@ def sync_policy_file(
     policy_label = format_policy_label(paths)
     messages: list[str] = []
     if import_vscode:
-        write_json_file(paths.policy_file, effective)
+        write_policy_document(paths.policy_file, document, effective)
         messages.append(f"Imported: VS Code approvals into {policy_label}")
 
     services = get_services(effective)
@@ -592,15 +638,16 @@ def sync_policy_file(
 
 def run(arguments: list[str] | None = None) -> int:
     parser = ArgumentParser(
-        description="Sync .agents/policy.json into agent-specific configuration files."
+        description="Sync .agents/config.json policy into agent-specific configuration files."
     )
     parser.add_argument(
         "-c",
         "--config",
         dest="config",
         help=(
-            "Path to the policy file. Defaults to the nearest .agents/policy.json, "
-            "with legacy .ai-policy.json fallback."
+            "Path to an agents config or policy file. Defaults to the nearest "
+            ".agents/config.json with a policy section, then .agents/policy.json, "
+            "then legacy .ai-policy.json."
         ),
     )
     parser.add_argument(
@@ -619,7 +666,7 @@ def run(arguments: list[str] | None = None) -> int:
         policy_path = resolve_policy_path(args.config)
         if policy_path is None:
             print(
-                "No .agents/policy.json or legacy .ai-policy.json found. Nothing to sync."
+                "No .agents/config.json policy, .agents/policy.json, or legacy .ai-policy.json found. Nothing to sync."
             )
             return 0
 

@@ -182,7 +182,7 @@ When working on this project:
 - `uv run poe lint-filter` — Run lint and filter output.
 - `uv run poe typecheck-filter` — Run type-checking and filter output.
 - `uv run agentic-tools skills list` — List skills available from the current repo or a specified source.
-- `uv run agentic-tools policy sync` — Regenerate agent config from `.agents/policy.json`.
+- `uv run agentic-tools policy sync` — Regenerate agent config from `.agents/config.json`.
 - `uv run agentic-tools policy import-vscode` — Import VS Code approvals into policy, then sync.
 
 Use the Poe validation tasks above as the default way to run tests, lint, and type-checking in this repo. Only call the underlying tools directly when a task needs flags or behavior that the Poe wrapper does not expose.
@@ -199,7 +199,7 @@ Use the Poe validation tasks above as the default way to run tests, lint, and ty
 - For security policy config and generated restriction files: use `ref-agents-security`.
 - For local `.agents/tasks/` conventions and task-file structure: use `ref-agents-local-tasks`.
 - For working through the local backlog under `.agents/tasks/TODO.md`: use `tool-handle-agents-local-tasks`.
-- For this repo's `agents-policy` feature, `.agents/policy.json`, and generated vendor outputs: use `ref-swiftpost-agents-policy`.
+- For this repo's `agents-policy` feature, `.agents/config.json` policy section, and generated vendor outputs: use `ref-swiftpost-agents-policy`.
 - For writing and maintaining `.github/copilot-instructions.md`, `GEMINI.md`, and `.claude/CLAUDE.md`: use `ref-agents-instructions-authoring`.
 - For GitHub Actions workflow design, CI structure, and workflow hardening: use `ref-github-actions-ci`.
 - For Dependabot config, schedules, grouping, and GitHub Actions dependency updates: use `ref-github-dependabot`.
@@ -216,7 +216,7 @@ Use the Poe validation tasks above as the default way to run tests, lint, and ty
 - For browser userscripts: use `ref-js-userscript`.
 - For Deno runtime, tsconfig or ESLint adoption, and hybrid Deno or Node repos: use `ref-js-deno`.
 - For Supabase CLI, schema, CRUD API, edge functions, and ORM boundaries: use `ref-supabase`.
-- For this repo's skills-management CLI and `.agents/skills.json` sync model: use `ref-swiftpost-skills-management`.
+- For this repo's skills-management CLI and `.agents/config.json` skills sync model: use `ref-swiftpost-skills-management`.
 - For deciding whether a skill should be shared, exported, or kept repo-local: use `ref-shareable-skills`.
 - For exporting selected skills from this repo into another repo, a copied bundle, an AI conversation, or a Gemini Gem: use `tool-export-skills`.
 - For creating a new skill through a guided intake flow: use `tool-create-skill`.

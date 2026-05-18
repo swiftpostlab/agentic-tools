@@ -77,6 +77,50 @@ describe("agents-policy Node CLI", () => {
     }
   });
 
+  test("runAgentsPolicy syncs generated files from .agents/config.json policy", async () => {
+    const tempDir = createTempDir();
+    try {
+      fs.mkdirSync(path.join(tempDir, ".agents"), { recursive: true });
+      fs.writeFileSync(
+        path.join(tempDir, ".agents", "config.json"),
+        JSON.stringify(
+          {
+            policy: {
+              services: ["copilot"],
+              protectedFiles: ["*.env"],
+              terminalAutoApprove: { "uv run poe test": true },
+            },
+            skills: { sources: [] },
+          },
+          null,
+          2,
+        ),
+        "utf8",
+      );
+
+      /** @type {string[]} */
+      const messages = [];
+      const exitCode = await runAgentsPolicy([], {
+        cwd: tempDir,
+        output: (message) => {
+          messages.push(message);
+        },
+      });
+
+      const vscodeSettings = /** @type {Record<string, unknown>} */ (JSON.parse(
+        fs.readFileSync(path.join(tempDir, ".vscode", "settings.json"), "utf8"),
+      ));
+
+      expect(exitCode).toBe(0);
+      expect(vscodeSettings["chat.tools.terminal.autoApprove"]).toEqual({
+        "uv run poe test": true,
+      });
+      expect(messages.join("\n")).toMatch(/Synced: Copilot local policy/u);
+    } finally {
+      cleanupTempDir(tempDir);
+    }
+  });
+
   test("runAgentsPolicyImportVscode imports approvals back into the policy file", async () => {
     const tempDir = createTempDir();
     try {
@@ -116,6 +160,60 @@ describe("agents-policy Node CLI", () => {
     }
   });
 
+  test("runAgentsPolicyImportVscode preserves other unified config sections", async () => {
+    const tempDir = createTempDir();
+    try {
+      fs.mkdirSync(path.join(tempDir, ".agents"), { recursive: true });
+      fs.mkdirSync(path.join(tempDir, ".vscode"), { recursive: true });
+      fs.writeFileSync(
+        path.join(tempDir, ".agents", "config.json"),
+        JSON.stringify(
+          {
+            policy: buildDefaultPolicyFixture(),
+            skills: {
+              sources: [
+                { from: "package:agentic-tools", skills: ["ref-alpha"] },
+              ],
+            },
+          },
+          null,
+          2,
+        ),
+        "utf8",
+      );
+      fs.writeFileSync(
+        path.join(tempDir, ".vscode", "settings.json"),
+        JSON.stringify(
+          {
+            "chat.tools.terminal.autoApprove": { "uv run poe test": true },
+            "chat.tools.edits.autoApprove": { "**/*.md": true },
+          },
+          null,
+          2,
+        ),
+        "utf8",
+      );
+
+      const exitCode = await runAgentsPolicyImportVscode({
+        cwd: tempDir,
+        output: () => {},
+      });
+      const config = /** @type {Record<string, unknown>} */ (JSON.parse(
+        fs.readFileSync(path.join(tempDir, ".agents", "config.json"), "utf8"),
+      ));
+      const policy = /** @type {Record<string, unknown>} */ (config.policy);
+
+      expect(exitCode).toBe(0);
+      expect(policy.terminalAutoApprove).toEqual({ "uv run poe test": true });
+      expect(policy.editAutoApprove).toEqual({ "**/*.md": true });
+      expect(config.skills).toEqual({
+        sources: [{ from: "package:agentic-tools", skills: ["ref-alpha"] }],
+      });
+    } finally {
+      cleanupTempDir(tempDir);
+    }
+  });
+
   test("runAgentsPolicy reports no work when no policy file exists", async () => {
     const tempDir = createTempDir();
     try {
@@ -131,7 +229,7 @@ describe("agents-policy Node CLI", () => {
 
       expect(exitCode).toBe(0);
       expect(messages).toEqual([
-        "No .agents/policy.json or legacy .ai-policy.json found. Nothing to sync.",
+        "No .agents/config.json policy, .agents/policy.json, or legacy .ai-policy.json found. Nothing to sync.",
       ]);
     } finally {
       cleanupTempDir(tempDir);

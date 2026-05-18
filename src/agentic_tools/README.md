@@ -64,7 +64,7 @@ This README is the command spec for the merged CLI.
 
 ### Scope mapping
 
-- `policy` owns sync, drift checking, and VS Code approval import for `.agents/policy.json`.
+- `policy` owns sync, drift checking, and VS Code approval import for the `policy` section in `.agents/config.json`, with legacy `.agents/policy.json` fallback.
 - `skills` owns listing, linking, syncing, and unlinking shared skills.
 
 ### Design rules

@@ -1,6 +1,6 @@
 ---
 name: ref-swiftpost-skills-management
-description: "Repository-specific guidance for the skills-management CLI and .agents/skills.json workflow in this repo. Use when: working on src/agentic_tools/skills_management, updating skills-management docs, or debugging skill linking and sync behavior in a consuming repo."
+description: "Repository-specific guidance for the skills-management CLI and .agents/config.json skills workflow in this repo. Use when: working on src/agentic_tools/skills_management, updating skills-management docs, or debugging skill linking and sync behavior in a consuming repo."
 metadata:
   shareable-skills.visibility: "repo-local"
   shareable-skills.reason: "This reference documents the repository-specific agentic-tools package, skills-management CLI surface, and sync conventions implemented in this repo."
@@ -10,14 +10,14 @@ metadata:
 
 ## Purpose
 
-Document the stable behavior of this repository's grouped `agentic-tools skills` CLI surface, its shareability enforcement rules, and the `.agents/skills.json` sync model used to materialize shared skills into another repository.
+Document the stable behavior of this repository's grouped `agentic-tools skills` CLI surface, its shareability enforcement rules, and the `.agents/config.json` skills sync model used to materialize shared skills into another repository.
 
 ## When to use this skill
 
 - Editing `src/agentic_tools/skills_management/`.
 - Updating README or repo guidance for skill linking and syncing.
 - Debugging why a skill cannot be linked, synced, or unlinked.
-- Explaining how a consuming repo should configure `.agents/skills.json`.
+- Explaining how a consuming repo should configure the `skills` section in `.agents/config.json`.
 
 ## Scope Boundaries
 
@@ -55,7 +55,7 @@ Document the stable behavior of this repository's grouped `agentic-tools skills`
 ### `sync`
 
 - Reads a JSON config and links all declared skills into the destination repo.
-- Default config path is `<destination>/.agents/skills.json`.
+- Default config path is `<destination>/.agents/config.json` when it contains a `skills` section, with `<destination>/.agents/skills.json` fallback.
 - With `--global`, `--config` is required because there is no repo root from which to infer a default config file.
 - Each configured source declares a `from` location and a list of `skills` to materialize.
 - Reports missing configured skill names grouped by source before changing the destination.
@@ -80,24 +80,26 @@ Document the stable behavior of this repository's grouped `agentic-tools skills`
 ## Sync Config Model
 
 - The sync file is JSON, not YAML.
-- The expected repo-local location is `.agents/skills.json`.
+- The expected repo-local location is `.agents/config.json`.
 - The top-level shape is:
 
 ```json
 {
-  "sources": [
-    {
-      "from": "package:agentic-tools",
-      "skills": ["ref-skills-authoring", "ref-projects-architecture"]
-    }
-  ]
+  "skills": {
+    "sources": [
+      {
+        "from": "package:agentic-tools",
+        "skills": ["ref-skills-authoring", "ref-projects-architecture"]
+      }
+    ]
+  }
 }
 ```
 
 - `from` supports two durable source forms:
   - relative or absolute filesystem paths
   - `package:<name>` package references
-- Relative paths resolve from the target repo root when the config lives under `.agents/skills.json`.
+- Relative paths resolve from the target repo root when the config lives under `.agents/config.json` or `.agents/skills.json`.
 - Package sources are resolved by locating the installed package and walking upward until a repo root with `.agents/skills` is found.
 
 ## Windows Behavior
@@ -125,7 +127,7 @@ Document the stable behavior of this repository's grouped `agentic-tools skills`
 ## References
 
 - Read `./references/checklist.md` for a quick maintenance or debugging pass.
-- Read `./references/config-shape.md` for the `.agents/skills.json` contract and source-resolution rules.
+- Read `./references/config-shape.md` for the `.agents/config.json` skills contract and source-resolution rules.
 - Read `README.md` for the repo's user-facing examples.
 - Read `src/agentic_tools/skills_management/main.py` for the implementation surface and `src/agentic_tools/skills_management/main_test.py` for the guarded behavior.
 - Read `./assets/trigger-eval-queries.example.json` when testing trigger quality for CLI and sync prompts.

@@ -1,6 +1,6 @@
 [
   {
-    "query": "Explain how the agentic-tools skills sync command and .agents/skills.json work in this repo.",
+    "query": "Explain how the agentic-tools skills sync command and .agents/config.json work in this repo.",
     "should_trigger": true
   },
   {
@@ -8,7 +8,7 @@
     "should_trigger": true
   },
   {
-    "query": "What does package:agentic-tools mean in skills.json and how is it resolved?",
+    "query": "What does package:agentic-tools mean in .agents/config.json and how is it resolved?",
     "should_trigger": true
   },
   {

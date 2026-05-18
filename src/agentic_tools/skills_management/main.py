@@ -4,7 +4,7 @@ Canonical usage:
 - List skills in the current repository: `uv run agentic-tools skills list`
 - Link one skill to the global skills directory: `uv run agentic-tools skills link ref-skills-authoring --global`
 - Link one skill from another repo into the current repo: `uv run agentic-tools skills link ref-skills-authoring --from ../python-uv-template`
-- Sync all configured skills into the current repo: `uv run agentic-tools skills sync`
+- Sync all skills declared in `.agents/config.json` into the current repo: `uv run agentic-tools skills sync`
 
 Compatibility aliases:
 - `uv run skills-management ...`
@@ -30,7 +30,9 @@ SHAREABILITY_WIZARD = "tool-make-skill-shareable"
 PACKAGE_SOURCE_PREFIX = "package:"
 PACKAGED_SKILLS_DIRNAME = "shareable_skills"
 PACKAGE_INSTALL_BOUNDARY_DIRS = frozenset({"site-packages", "dist-packages"})
+AGENTS_CONFIG_FILENAME = "config.json"
 SYNC_CONFIG_FILENAME = "skills.json"
+SKILLS_CONFIG_SECTION = "skills"
 
 
 class SkillsManagementError(Exception):
@@ -237,7 +239,14 @@ def parse_configured_skill_sources(text: str) -> tuple[ConfiguredSkillSource, ..
         ) from error
 
     config = require_json_object(parsed, context="Skills config")
-    raw_sources = config.get("sources")
+    skills_config = (
+        require_json_object(
+            config[SKILLS_CONFIG_SECTION], context="Agents config skills"
+        )
+        if SKILLS_CONFIG_SECTION in config
+        else config
+    )
+    raw_sources = skills_config.get("sources")
     if not isinstance(raw_sources, list) or not raw_sources:
         raise SkillsManagementError(
             "Skills config must define a non-empty 'sources' array."
@@ -269,6 +278,18 @@ def parse_configured_skill_sources(text: str) -> tuple[ConfiguredSkillSource, ..
     return tuple(configured_sources)
 
 
+def agents_config_has_skills(config_path: Path) -> bool:
+    try:
+        parsed = json.loads(config_path.read_text(encoding="utf-8"))
+    except OSError, JSONDecodeError:
+        return True
+
+    if not isinstance(parsed, dict):
+        return True
+
+    return isinstance(parsed.get(SKILLS_CONFIG_SECTION), dict)
+
+
 def load_configured_skill_sources(
     config_path: Path,
 ) -> tuple[ConfiguredSkillSource, ...]:
@@ -298,7 +319,20 @@ def resolve_sync_config_path(
     if use_global:
         raise SkillsManagementError("sync with --global requires --config")
 
-    return to_repo_root(destination_path) / ".agents" / SYNC_CONFIG_FILENAME
+    agents_dir = to_repo_root(destination_path) / ".agents"
+    agents_config = agents_dir / AGENTS_CONFIG_FILENAME
+    legacy_skills_config = agents_dir / SYNC_CONFIG_FILENAME
+    if agents_config.is_file():
+        if (
+            agents_config_has_skills(agents_config)
+            or not legacy_skills_config.is_file()
+        ):
+            return agents_config
+
+    if legacy_skills_config.is_file():
+        return legacy_skills_config
+
+    return agents_config
 
 
 def resolve_package_source_root(package_name: str) -> Path:
@@ -709,7 +743,10 @@ def build_parser() -> ArgumentParser:
         "-c",
         "--config",
         dest="config",
-        help="Path to a skills config file. Defaults to <destination>/.agents/skills.json.",
+        help=(
+            "Path to an agents config or skills config file. Defaults to "
+            "<destination>/.agents/config.json, with .agents/skills.json fallback."
+        ),
     )
     sync_parser.add_argument(
         "--dry-run",

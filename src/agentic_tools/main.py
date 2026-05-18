@@ -31,7 +31,7 @@ def add_config_argument(parser: ArgumentParser) -> None:
         "-c",
         "--config",
         dest="config",
-        help="Path to the policy file.",
+        help="Path to an agents config or policy file.",
     )
 
 
@@ -51,7 +51,7 @@ def build_root_parser() -> ArgumentParser:
 
     policy_sync_parser = policy_subparsers.add_parser(
         "sync",
-        help="Sync generated policy files from .agents/policy.json.",
+        help="Sync generated policy files from .agents/config.json.",
     )
     add_config_argument(policy_sync_parser)
 

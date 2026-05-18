@@ -9,7 +9,7 @@ Use `agentic-tools skills` when you want a repo to consume shared skills from an
 ### Install And Sync Shared Skills
 
 1. Install `agentic-tools` in the target repo.
-2. Add `.agents/skills.json` with one or more configured sources.
+2. Add a `skills` section to `.agents/config.json` with one or more configured sources.
 3. Run the synced CLI from the package manager you installed with.
 
 Python install example:
@@ -31,25 +31,27 @@ Example config:
 
 ```json
 {
- "sources": [
-  {
-   "from": "package:agentic-tools",
-   "skills": [
-    "ref-agents-persona",
-    "ref-coding-patterns",
-    "ref-python"
-   ]
-  }
- ]
+ "skills": {
+  "sources": [
+   {
+    "from": "package:agentic-tools",
+    "skills": [
+     "ref-agents-persona",
+     "ref-coding-patterns",
+     "ref-python"
+    ]
+   }
+  ]
+ }
 }
 ```
 
-When `from` uses `package:agentic-tools`, `sync` resolves the installed package in the current environment and links skill folders from the packaged skill tree shipped by that install, including Python virtual environments and Yarn-managed `node_modules` installs. The Node package is published as native TypeScript ESM source, so installing from GitHub does not require a separate build step on modern Node.
+When `from` uses `package:agentic-tools`, `sync` resolves the installed package in the current environment and links skill folders from the packaged skill tree shipped by that install, including Python virtual environments and Yarn-managed `node_modules` installs. The Node package is published as JavaScript/JSDoc ESM source, so installing from GitHub does not require a separate build step on modern Node.
 
 ### Key Behavior
 
 - `sync` resolves both filesystem sources and installed package sources.
-- `sync` removes dead destination links and obsolete linked skills that are no longer declared in `.agents/skills.json` before relinking the configured set.
+- `sync` removes dead destination links and obsolete linked skills that are no longer declared in `.agents/config.json` before relinking the configured set. Legacy `.agents/skills.json` files still work as a fallback.
 - `sync` reports missing configured skills by source before changing anything.
 - On Windows, directory-link creation falls back to junctions when symlink privileges are unavailable.
 
@@ -81,7 +83,7 @@ When `from` uses `package:agentic-tools`, `sync` resolves the installed package 
 - read shareability metadata from skill frontmatter
 - enforce `shareable-skills.visibility` and hard dependencies
 - link skills into another repo or the global skills directory
-- resolve package and filesystem sources for `.agents/skills.json`
+- resolve package and filesystem sources for `.agents/config.json` skills sections and legacy `.agents/skills.json`
 - fall back to a Windows directory junction when symlink creation is blocked
 
 ## Focused validation

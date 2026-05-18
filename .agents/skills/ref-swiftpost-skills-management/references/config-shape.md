@@ -2,35 +2,38 @@
 
 ## Expected file location
 
-- Default repo-local config path: `.agents/skills.json`
+- Default repo-local config path: `.agents/config.json`
+- Legacy fallback path: `.agents/skills.json`
 - `sync --global` requires an explicit `--config`
 
 ## JSON structure
 
 ```json
 {
-  "sources": [
-    {
-      "from": "../shared-skills-repo",
-      "skills": [
-        "ref-skills-authoring",
-        "ref-projects-architecture",
-        "ref-coding-patterns"
-      ]
-    },
-    {
-      "from": "package:agentic-tools",
-      "skills": [
-        "ref-github-actions-ci"
-      ]
-    }
-  ]
+  "skills": {
+    "sources": [
+      {
+        "from": "../shared-skills-repo",
+        "skills": [
+          "ref-skills-authoring",
+          "ref-projects-architecture",
+          "ref-coding-patterns"
+        ]
+      },
+      {
+        "from": "package:agentic-tools",
+        "skills": [
+          "ref-github-actions-ci"
+        ]
+      }
+    ]
+  }
 }
 ```
 
 ## Resolution rules
 
-- Relative `from` values resolve from the repo root inferred from the config file location.
+- Relative `from` values resolve from the destination repo root.
 - Absolute `from` values are used directly.
 - `package:<name>` values resolve by locating the installed package module and walking upward until a repo root with `.agents/skills` is found.
 - A configured skill name may appear only once across all sync sources.

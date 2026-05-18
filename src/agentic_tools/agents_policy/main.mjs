@@ -8,8 +8,10 @@ import { ToolError, createExecutionOptions, ensureJsonObject, getBooleanRecord, 
 /** @typedef {import("../utils/common.mjs").RunOptions} RunOptions */
 /** @typedef {import("../utils/common.mjs").ExecutionOptions} ExecutionOptions */
 /** @typedef {JsonObject & { services?: unknown, protectedFiles?: unknown, excludedFiles?: unknown, terminalAutoApprove?: unknown, editAutoApprove?: unknown }} PolicyState */
+/** @typedef {{ rawConfig: JsonObject, policy: PolicyState, usesUnifiedConfig: boolean }} PolicyDocument */
 /** @typedef {{ _: string[], [key: string]: unknown }} CommandArgs */
 
+const CANONICAL_AGENTS_CONFIG_PATH = path.join(".agents", "config.json");
 const CANONICAL_POLICY_PATH = path.join(".agents", "policy.json");
 const LEGACY_POLICY_PATH = ".ai-policy.json";
 const AI_EXCLUDE_PATH = ".aiexclude";
@@ -45,15 +47,59 @@ function getOptionalStringArg(args, key) {
 function getBooleanArg(args, key) {
     return args[key] === true;
 }
-/** @returns {PolicyState} */
-function buildDefaultPolicy() {
+/**
+ * @param {string} targetPath
+ * @param {string} context
+ * @returns {JsonObject}
+ */
+function readJsonObject(targetPath, context) {
+    return ensureJsonObject(readJsonFile(targetPath, {}), context);
+}
+/**
+ * @param {string} targetPath
+ * @returns {PolicyDocument}
+ */
+function loadPolicyDocument(targetPath) {
+    const rawConfig = readJsonObject(targetPath, "Policy file");
+    const rawPolicy = rawConfig.policy;
+    if (rawPolicy === undefined) {
+        return {
+            rawConfig,
+            policy: /** @type {PolicyState} */ (rawConfig),
+            usesUnifiedConfig: false,
+        };
+    }
     return {
-        services: [...SUPPORTED_SERVICES],
-        protectedFiles: [],
-        excludedFiles: [],
-        terminalAutoApprove: {},
-        editAutoApprove: {},
+        rawConfig,
+        policy: /** @type {PolicyState} */ (ensureJsonObject(rawPolicy, "Agents config policy")),
+        usesUnifiedConfig: true,
     };
+}
+/**
+ * @param {string} targetPath
+ * @param {PolicyDocument} document
+ * @param {PolicyState} policy
+ * @returns {void}
+ */
+function writePolicyDocument(targetPath, document, policy) {
+    if (!document.usesUnifiedConfig) {
+        writeJsonFile(targetPath, policy);
+        return;
+    }
+    writeJsonFile(targetPath, { ...document.rawConfig, policy });
+}
+/**
+ * @param {string} targetPath
+ * @returns {boolean}
+ */
+function agentsConfigHasPolicy(targetPath) {
+    try {
+        const policy = readJsonObject(targetPath, "Agents config").policy;
+        return policy !== null && !Array.isArray(policy) && typeof policy === "object";
+    }
+    catch {
+        return true;
+    }
 }
 /**
  * @param {unknown} value
@@ -288,6 +334,10 @@ function importPolicyFromVscode(policy, vscodeSettingsPath) {
 function discoverPolicyPath(startPath) {
     let currentPath = path.resolve(startPath);
     while (true) {
+        const agentsConfigPath = path.join(currentPath, CANONICAL_AGENTS_CONFIG_PATH);
+        if (isFile(agentsConfigPath) && agentsConfigHasPolicy(agentsConfigPath)) {
+            return agentsConfigPath;
+        }
         const canonicalPath = path.join(currentPath, CANONICAL_POLICY_PATH);
         if (isFile(canonicalPath)) {
             return canonicalPath;
@@ -338,7 +388,10 @@ function resolvePolicyPath(rawConfig, cwd) {
 function resolvePolicyPaths(policyFile) {
     const resolvedPolicy = path.resolve(policyFile);
     let repoRoot = path.dirname(resolvedPolicy);
-    if (path.basename(resolvedPolicy) === path.basename(CANONICAL_POLICY_PATH) &&
+    if ([
+        path.basename(CANONICAL_AGENTS_CONFIG_PATH),
+        path.basename(CANONICAL_POLICY_PATH),
+    ].includes(path.basename(resolvedPolicy)) &&
         path.basename(path.dirname(resolvedPolicy)) ===
             path.basename(path.dirname(CANONICAL_POLICY_PATH))) {
         repoRoot = path.dirname(path.dirname(resolvedPolicy));
@@ -392,7 +445,8 @@ export function syncPolicyFile(policyFile, { importVscode = false, check = false
         throw new ToolError("`--check` cannot be combined with `--import-vscode`. Run `uv run agentic-tools policy import-vscode` instead.");
     }
     const paths = resolvePolicyPaths(policyFile);
-    const policy = /** @type {PolicyState} */ (ensureJsonObject(readJsonFile(paths.policyFile, buildDefaultPolicy()), "Policy file"));
+    const document = loadPolicyDocument(paths.policyFile);
+    const policy = document.policy;
     const effective = importVscode
         ? importPolicyFromVscode(policy, paths.vscodeSettings)
         : policy;
@@ -400,7 +454,7 @@ export function syncPolicyFile(policyFile, { importVscode = false, check = false
     const messages = [];
     const policyLabel = formatPolicyLabel(paths);
     if (importVscode) {
-        writeJsonFile(paths.policyFile, effective);
+        writePolicyDocument(paths.policyFile, document, effective);
         messages.push(`Imported: VS Code approvals into ${policyLabel}`);
     }
     const services = getServices(effective);
@@ -415,7 +469,6 @@ export function syncPolicyFile(policyFile, { importVscode = false, check = false
         ? effective
         : { protectedFiles: [] };
     const claudeSettings = ensureJsonObject(readJsonFile(paths.claudeSettings, {}), "Claude settings");
-    syncJsonFile(paths.claudeSettings, applyPolicyToClaudeSettings(claudeSettings, claudePolicy));
     const expectedClaudeSettings = applyPolicyToClaudeSettings(claudeSettings, claudePolicy);
     const expectedClaudeContent = buildJsonFileContent(expectedClaudeSettings);
     /** @type {Pick<PolicyState, "protectedFiles" | "terminalAutoApprove" | "editAutoApprove">} */
@@ -480,13 +533,13 @@ function createAgentsPolicyCommand(options) {
     return defineCommand({
         meta: {
             name: "agents-policy",
-            description: "Sync generated agent policy files from .agents/policy.json.",
+            description: "Sync generated agent policy files from .agents/config.json.",
         },
         args: {
             config: {
                 type: "string",
                 alias: ["c"],
-                description: "Path to a policy file.",
+                description: "Path to an agents config or policy file.",
             },
             "import-vscode": {
                 type: "boolean",
@@ -504,7 +557,7 @@ function createAgentsPolicyCommand(options) {
             }
             const policyPath = resolvePolicyPath(getOptionalStringArg(args, "config"), options.cwd);
             if (policyPath === null) {
-                options.output("No .agents/policy.json or legacy .ai-policy.json found. Nothing to sync.");
+                options.output("No .agents/config.json policy, .agents/policy.json, or legacy .ai-policy.json found. Nothing to sync.");
                 return 0;
             }
             for (const message of syncPolicyFile(policyPath, {

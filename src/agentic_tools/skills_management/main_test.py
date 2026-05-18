@@ -448,6 +448,87 @@ def test_main_sync_dry_run_reads_relative_sources_from_repo_root(
     assert str(source_repo / ".agents" / "skills" / "ref-alpha") in output
 
 
+def test_main_sync_dry_run_reads_unified_agents_config(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    source_repo = tmp_path / "source"
+    destination_repo = tmp_path / "destination"
+    destination_agents_dir = destination_repo / ".agents"
+    destination_agents_dir.mkdir(parents=True)
+
+    write_skill(
+        source_repo,
+        "ref-alpha",
+        metadata={"shareable-skills.visibility": "shareable"},
+    )
+    (destination_agents_dir / "config.json").write_text(
+        json.dumps(
+            {
+                "skills": {
+                    "sources": [
+                        {
+                            "from": "../source",
+                            "skills": ["ref-alpha"],
+                        }
+                    ]
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    exit_code = skills_management_main.main(
+        ["sync", "--to", str(destination_repo), "--dry-run"]
+    )
+    output = capsys.readouterr().out
+
+    assert exit_code == 0
+    assert str(destination_repo / ".agents" / "skills" / "ref-alpha") in output
+    assert str(source_repo / ".agents" / "skills" / "ref-alpha") in output
+
+
+def test_main_sync_dry_run_falls_back_to_legacy_skills_config(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    source_repo = tmp_path / "source"
+    destination_repo = tmp_path / "destination"
+    destination_agents_dir = destination_repo / ".agents"
+    destination_agents_dir.mkdir(parents=True)
+
+    write_skill(
+        source_repo,
+        "ref-alpha",
+        metadata={"shareable-skills.visibility": "shareable"},
+    )
+    (destination_agents_dir / "config.json").write_text(
+        json.dumps({"policy": {"services": ["copilot"]}}),
+        encoding="utf-8",
+    )
+    (destination_agents_dir / "skills.json").write_text(
+        json.dumps(
+            {
+                "sources": [
+                    {
+                        "from": "../source",
+                        "skills": ["ref-alpha"],
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    exit_code = skills_management_main.main(
+        ["sync", "--to", str(destination_repo), "--dry-run"]
+    )
+    output = capsys.readouterr().out
+
+    assert exit_code == 0
+    assert str(destination_repo / ".agents" / "skills" / "ref-alpha") in output
+
+
 def test_main_sync_dry_run_supports_package_sources(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

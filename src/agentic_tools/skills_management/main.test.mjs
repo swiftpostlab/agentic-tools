@@ -153,6 +153,111 @@ describe("skills-management Node CLI", () => {
     }
   });
 
+  test("runSkillsManagement sync reads unified agents config skills", async () => {
+    const tempDir = createTempDir();
+    try {
+      const packageRoot = path.join(tempDir, "node_modules", "agentic-tools");
+      fs.mkdirSync(packageRoot, { recursive: true });
+      fs.writeFileSync(
+        path.join(packageRoot, "package.json"),
+        '{"name":"agentic-tools","version":"0.1.0"}\n',
+        "utf8",
+      );
+      writeRepoSkill(packageRoot, "ref-alpha", {
+        "shareable-skills.visibility": "shareable",
+      });
+
+      const destinationAgentsDir = path.join(tempDir, ".agents");
+      fs.mkdirSync(destinationAgentsDir, { recursive: true });
+      fs.writeFileSync(
+        path.join(destinationAgentsDir, "config.json"),
+        JSON.stringify(
+          {
+            skills: {
+              sources: [
+                {
+                  from: "package:agentic-tools",
+                  skills: ["ref-alpha"],
+                },
+              ],
+            },
+          },
+          null,
+          2,
+        ),
+        "utf8",
+      );
+
+      /** @type {string[]} */
+      const messages = [];
+      const exitCode = await runSkillsManagement(["sync", "--to", tempDir], {
+        cwd: tempDir,
+        output: (message) => {
+          messages.push(message);
+        },
+      });
+
+      expect(exitCode).toBe(0);
+      expect(messages.join("\n")).toMatch(/Linked .*ref-alpha/u);
+    } finally {
+      cleanupTempDir(tempDir);
+    }
+  });
+
+  test("runSkillsManagement sync falls back to legacy skills config", async () => {
+    const tempDir = createTempDir();
+    try {
+      const packageRoot = path.join(tempDir, "node_modules", "agentic-tools");
+      fs.mkdirSync(packageRoot, { recursive: true });
+      fs.writeFileSync(
+        path.join(packageRoot, "package.json"),
+        '{"name":"agentic-tools","version":"0.1.0"}\n',
+        "utf8",
+      );
+      writeRepoSkill(packageRoot, "ref-alpha", {
+        "shareable-skills.visibility": "shareable",
+      });
+
+      const destinationAgentsDir = path.join(tempDir, ".agents");
+      fs.mkdirSync(destinationAgentsDir, { recursive: true });
+      fs.writeFileSync(
+        path.join(destinationAgentsDir, "config.json"),
+        JSON.stringify({ policy: { services: ["copilot"] } }, null, 2),
+        "utf8",
+      );
+      fs.writeFileSync(
+        path.join(destinationAgentsDir, "skills.json"),
+        JSON.stringify(
+          {
+            sources: [
+              {
+                from: "package:agentic-tools",
+                skills: ["ref-alpha"],
+              },
+            ],
+          },
+          null,
+          2,
+        ),
+        "utf8",
+      );
+
+      /** @type {string[]} */
+      const messages = [];
+      const exitCode = await runSkillsManagement(["sync", "--to", tempDir], {
+        cwd: tempDir,
+        output: (message) => {
+          messages.push(message);
+        },
+      });
+
+      expect(exitCode).toBe(0);
+      expect(messages.join("\n")).toMatch(/Linked .*ref-alpha/u);
+    } finally {
+      cleanupTempDir(tempDir);
+    }
+  });
+
   test("runSkillsManagement sync reports missing configured skills by source", async () => {
     const tempDir = createTempDir();
     try {

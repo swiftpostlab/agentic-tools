@@ -48,7 +48,7 @@ Keep important constraints explicit:
 - include hard dependencies from `shareable-skills.requires`
 - warn before including `repo-local` skills
 - preserve full skill folders, frontmatter, and subfiles when exporting actual files
-- suggest `.agents/skills.json` plus `skills-management` when a Copilot project can consume linked skills directly
+- suggest `.agents/config.json` plus `agentic-tools skills sync` when a Copilot project can consume linked skills directly
 - give concrete validation commands for the chosen export path
 
 ## Review Checklist

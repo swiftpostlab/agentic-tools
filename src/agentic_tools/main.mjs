@@ -12,7 +12,7 @@ const ROOT_USAGE_LINES = [
     "",
     "Examples:",
     "  agentic-tools policy sync",
-    "  agentic-tools policy check --config .agents/policy.json",
+    "  agentic-tools policy check --config .agents/config.json",
     "  agentic-tools skills sync",
     "  agentic-tools skills list --from ../agentic-tools",
 ];

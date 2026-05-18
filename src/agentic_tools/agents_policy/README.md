@@ -1,10 +1,10 @@
 # Agents Policy
 
-This feature packages the repository policy sync logic that turns `.agents/policy.json` into the agent-specific files used by the supported tools.
+This feature packages the repository policy sync logic that turns the `policy` section in `.agents/config.json` into the agent-specific files used by the supported tools.
 
 ## For Users
 
-Use `agentic-tools policy` when a repo keeps its agent access rules in `.agents/policy.json` and wants the generated files for Gemini, Claude Code, and Copilot to stay in sync.
+Use `agentic-tools policy` when a repo keeps its agent access rules in `.agents/config.json` and wants the generated files for Gemini, Claude Code, and Copilot to stay in sync.
 
 ### Sync Generated Policy Files
 
@@ -20,7 +20,7 @@ yarn add --dev github:swiftpostlab/agentic-tools
 yarn agentic-tools policy sync
 ```
 
-This reads `.agents/policy.json` and updates the supported generated outputs for the enabled services.
+This reads the `policy` section in `.agents/config.json` and updates the supported generated outputs for the enabled services. Legacy `.agents/policy.json` and `.ai-policy.json` files still work as fallbacks.
 
 ### Check Generated Policy Files
 
@@ -42,7 +42,7 @@ Or, from the Node package:
 yarn agentic-tools policy import-vscode
 ```
 
-Use the import command when you want to pull the current VS Code approval maps back into `.agents/policy.json` before resyncing.
+Use the import command when you want to pull the current VS Code approval maps back into `.agents/config.json` before resyncing.
 
 ## For Developers
 
@@ -69,11 +69,11 @@ Use the import command when you want to pull the current VS Code approval maps b
 
 ## Responsibilities
 
-- discover `.agents/policy.json`, with legacy `.ai-policy.json` fallback
+- discover `.agents/config.json` policy sections, with `.agents/policy.json` and legacy `.ai-policy.json` fallbacks
 - sync `.aiexclude`, `.claude/settings.json`, and `.vscode/settings.json`
 - clean disabled service outputs when `services` excludes a provider
 - report drift without rewriting files when `--check` is used
-- import VS Code approval maps back into the policy file when requested
+- import VS Code approval maps back into the policy section when requested
 
 ## Focused validation
 

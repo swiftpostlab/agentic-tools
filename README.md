@@ -27,21 +27,23 @@ corepack enable
 yarn add --dev github:swiftpostlab/agentic-tools
 ```
 
-Then declare which shared skills you want in `.agents/skills.json`:
+Then declare which shared skills you want in `.agents/config.json`:
 
 ```json
 {
-  "sources": [
-    {
-      "from": "package:agentic-tools",
-      "skills": [
-        "ref-agents-persona",
-        "ref-agents-security",
-        "ref-coding-patterns",
-        "ref-python"
-      ]
-    }
-  ]
+  "skills": {
+    "sources": [
+      {
+        "from": "package:agentic-tools",
+        "skills": [
+          "ref-agents-persona",
+          "ref-agents-security",
+          "ref-coding-patterns",
+          "ref-python"
+        ]
+      }
+    ]
+  }
 }
 ```
 
@@ -61,11 +63,11 @@ yarn agentic-tools skills sync
 
 When the source uses `package:agentic-tools`, the linked skill directories come from the installed package location in the current environment, such as `.venv` for Python installs or `node_modules/agentic-tools/.agents/skills` for Node installs.
 
-The Node package ships native TypeScript ESM source, so installing it from GitHub works without a separate build step on modern Node.
+The Node package ships JavaScript/JSDoc ESM source, so installing it from GitHub works without a separate build step on modern Node.
 
 ### Manage Agent Policy
 
-After adding or updating `.agents/policy.json`, sync the generated agent files with:
+After adding or updating the `policy` section in `.agents/config.json`, sync the generated agent files with:
 
 ```sh
 uv run agentic-tools policy sync
@@ -125,28 +127,30 @@ uv run agentic-tools skills list
 uv run agentic-tools skills sync
 ```
 
-`sync` also removes dead skill links and linked skills that are no longer declared in the destination `.agents/skills.json`, then reports configured skill names that are missing from a source before changing anything.
+`sync` also removes dead skill links and linked skills that are no longer declared in the destination `.agents/config.json`, then reports configured skill names that are missing from a source before changing anything. Legacy `.agents/skills.json` files still work as a fallback.
 
-To declare shared skill sources for `sync`, add `.agents/skills.json` to the target repo:
+To declare shared skill sources for `sync`, add a `skills` section to `.agents/config.json` in the target repo:
 
 ```json
 {
-  "sources": [
-    {
-      "from": "package:agentic-tools",
-      "skills": [
-        "ref-skills-authoring",
-        "ref-projects-architecture",
-        "ref-coding-patterns"
-      ]
-    },
-    {
-      "from": "../another-skill-repo",
-      "skills": [
-        "ref-js-react"
-      ]
-    }
-  ]
+  "skills": {
+    "sources": [
+      {
+        "from": "package:agentic-tools",
+        "skills": [
+          "ref-skills-authoring",
+          "ref-projects-architecture",
+          "ref-coding-patterns"
+        ]
+      },
+      {
+        "from": "../another-skill-repo",
+        "skills": [
+          "ref-js-react"
+        ]
+      }
+    ]
+  }
 }
 ```
 

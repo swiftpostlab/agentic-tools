@@ -36,7 +36,7 @@ Define how agent clients are prevented from reading sensitive files, how noisy o
 
 Read `./references/policy-workflow.md` for the command-oriented workflow and `./references/agent-enforcement.md` for the client-enforcement model.
 
-If you are working in this repository specifically, use `.agents/skills/ref-swiftpost-agents-policy/SKILL.md` for the concrete `.agents/policy.json`, `agents-policy`, and generated-file implementation.
+If you are working in this repository specifically, use `.agents/skills/ref-swiftpost-agents-policy/SKILL.md` for the concrete `.agents/config.json` policy, `agentic-tools policy`, and generated-file implementation.
 
 ## Architecture Overview
 
