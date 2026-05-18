@@ -2,6 +2,7 @@
 name: tool-maintain-agents-instructions
 description: "Review and update repository agent instruction files after code, workflow, or skill changes. Use when: .github/copilot-instructions.md, GEMINI.md, or .claude/CLAUDE.md may be outdated, the skill catalog changed, or a multi-provider repo needs its instruction bridge refreshed."
 metadata:
+  agentic-tools-category: "agents"
   shareable-skills.visibility: "shareable"
   shareable-skills.requires: "ref-agents-instructions-authoring"
 argument-hint: "What changed in the repo and which instruction files or providers need to stay in sync"

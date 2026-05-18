@@ -2,6 +2,7 @@
 name: ref-js-next
 description: "Portable Next.js guidance for App Router structure, client and server boundaries, framework integrations, and Next-friendly library choices. Use when: creating or reviewing Next routes and layouts, deciding where 'use client' belongs, configuring Next.js, or choosing framework-specific integrations like next-intl."
 metadata:
+  agentic-tools-category: "js"
   shareable-skills.visibility: "shareable"
 ---
 

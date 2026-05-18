@@ -5,6 +5,7 @@
 name: ref-my-skill
 description: "Brief description. Use when: trigger condition 1, trigger condition 2."
 metadata:
+  agentic-tools-category: "agents"
   shareable-skills.visibility: "shareable"
 argument-hint: "Optional slash-command hint"
 ---
@@ -67,6 +68,7 @@ Use this table when the skill includes important commands or operational steps:
 Adapt the template to the real repo before keeping it:
 
 - Choose `ref-...` when the skill mainly informs the agent and `tool-...` when the skill mainly drives an action-oriented workflow.
+- Add `agentic-tools-category` as one short lowercase domain category. In this repo, read `.agents/skills/ref-swiftpost-agents-categories/SKILL.md` before inventing a new category.
 - If you use `tool-...`, make the name read like an action rather than a passive topic.
 - If the skill should be exportable, set `shareable-skills.visibility: "shareable"`. If it depends on this repo's concrete layout, policies, or wrappers, set it to `"repo-local"` instead.
 - If the skill has hard dependencies on other skills, add `shareable-skills.requires` as a space-separated list of skill names.

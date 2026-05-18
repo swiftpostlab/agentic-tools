@@ -2,6 +2,7 @@
 name: ref-projects-architecture
 description: "Portable architecture guidance for feature folders, boundaries, shared utilities, and separating product code from maintenance scripts. Use when: deciding where code should live, splitting features, or reviewing repository structure."
 metadata:
+  agentic-tools-category: "project"
   shareable-skills.visibility: "shareable"
 ---
 

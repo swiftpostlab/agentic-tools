@@ -7,7 +7,7 @@ import { ToolError, createDirectoryLink, createExecutionOptions, deduplicatePres
 
 /** @typedef {import("../utils/common.mjs").ExecutionOptions} ExecutionOptions */
 /** @typedef {import("../utils/common.mjs").RunOptions} RunOptions */
-/** @typedef {{ name: string, directory: string, visibility: string | null, requires: string[], reason: string | null }} SkillManifest */
+/** @typedef {{ name: string, directory: string, category: string | null, visibility: string | null, requires: string[], reason: string | null }} SkillManifest */
 /** @typedef {Record<string, SkillManifest>} SkillManifestMap */
 /** @typedef {{ skills: string[], source: string | null, destination: string | null, useGlobal: boolean, dryRun: boolean, force: boolean, config: string | null }} TargetCommandState */
 /** @typedef {{ _: string[], [key: string]: unknown }} CommandArgs */
@@ -121,6 +121,9 @@ const readSkillManifest = (skillDirectory) => {
     return {
         name: rawName,
         directory: skillDirectory,
+        category: typeof metadata["agentic-tools-category"] === "string"
+            ? metadata["agentic-tools-category"]
+            : null,
         visibility: typeof metadata["shareable-skills.visibility"] === "string"
             ? metadata["shareable-skills.visibility"]
             : null,
@@ -226,10 +229,11 @@ const describeSkills = (manifests) => {
     return skillNames
         .map((skillName) => {
         const manifest = manifests[skillName];
+        const category = manifest.category ?? "missing";
         const visibility = manifest.visibility ?? "missing";
         const requires = manifest.requires.length > 0 ? manifest.requires.join(" ") : "-";
         const reason = manifest.reason ? `; reason ${manifest.reason}` : "";
-        return `${manifest.name}: visibility ${visibility}; requires ${requires}${reason}`;
+        return `${manifest.name}: category ${category}; visibility ${visibility}; requires ${requires}${reason}`;
     })
         .join("\n");
 };

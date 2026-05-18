@@ -2,6 +2,7 @@
 name: tool-export-skills
 description: "Help export selected skills from this repository in the right format for another repo, a manual bundle, AI conversations, a Gemini Gem, or a Copilot project. Use when: choosing which skills can leave this repo, preparing a handoff, or packaging a skill set for another environment."
 metadata:
+  agentic-tools-category: "agents"
   shareable-skills.visibility: "repo-local"
   shareable-skills.requires: "ref-shareable-skills ref-swiftpost-skills-management"
   shareable-skills.reason: "This workflow depends on this repo's concrete skill catalog, shareability metadata, and skills-management conventions."

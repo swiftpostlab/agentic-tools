@@ -2,6 +2,7 @@
 name: tool-make-skill-shareable
 description: "Review an existing skill, decide whether it can be made shareable, and update its shareability metadata through a guided workflow. Use when: a skill lacks shareable-skills metadata, a user wants to export or symlink a skill, the current portability is unclear, or a repo-local skill might need to be split into a shared core."
 metadata:
+  agentic-tools-category: "agents"
   shareable-skills.visibility: "shareable"
   shareable-skills.requires: "ref-shareable-skills ref-skills-authoring"
 argument-hint: "Existing skill name or file path and whether the goal is to export it, link it globally, or just review portability"

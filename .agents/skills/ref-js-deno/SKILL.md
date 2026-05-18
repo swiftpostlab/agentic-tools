@@ -2,6 +2,7 @@
 name: ref-js-deno
 description: "Portable Deno guidance for modern runtime usage, deno.json configuration, tsconfig and ESLint adoption, permissions, Node interop, and hybrid Deno or Node repositories. Use when: writing Deno code, configuring deno tasks, or adopting Deno into an existing TypeScript or Node repo."
 metadata:
+  agentic-tools-category: "js"
   shareable-skills.visibility: "shareable"
 ---
 

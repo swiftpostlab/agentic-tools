@@ -2,6 +2,7 @@
 name: ref-js-userscript
 description: "Portable guidance for browser userscripts on Tampermonkey, Violentmonkey, and similar managers. Use when: writing or reviewing .user.js or .user.ts scripts, metadata blocks, permissions, or DOM automation."
 metadata:
+  agentic-tools-category: "js"
   shareable-skills.visibility: "shareable"
 ---
 

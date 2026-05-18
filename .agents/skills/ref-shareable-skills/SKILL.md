@@ -2,6 +2,7 @@
 name: ref-shareable-skills
 description: "Reference guidance for deciding whether a skill is shareable, recording shareability metadata and hard skill dependencies, and validating export readiness. Use when: backfilling shareable-skills metadata, preparing a skill for reuse in another repo, reviewing whether a skill should stay repo-local, or verifying dependency-light skill exports."
 metadata:
+  agentic-tools-category: "agents"
   shareable-skills.visibility: "shareable"
 ---
 

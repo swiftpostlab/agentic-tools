@@ -3,6 +3,7 @@ name: ref-skills-authoring
 description: "Reference guidance for creating and maintaining project skills. Use when: designing new skills, updating existing skills, establishing skill standards, evaluating skill quality, organizing skill subfiles, or adapting copied skill content to the repo's actual stack."
 metadata:
   shareable-skills.visibility: "shareable"
+  agentic-tools-category: "agents"
 ---
 
 # Skills Authoring
@@ -108,6 +109,7 @@ Read `./references/playbook.md` for the detailed workflow and decision rules.
 - **Do not use `tool-...` for passive guidance:** If the skill mostly teaches the agent how to understand or review something rather than execute a user-invoked workflow, it should stay under `ref-...`.
 - **Keep `description` under 1024 chars:** It must describe both what the skill does and when to use it.
 - **Use optional fields only when they add execution value:** `compatibility` is for environment requirements, `license` for licensing, `metadata` for extra client metadata, and `allowed-tools` only when the client supports it.
+- **Add category metadata:** In this repo, every skill should include `metadata.agentic-tools-category` as a short lowercase domain label such as `agents`, `app`, `dev`, `docs`, `github`, `js`, `project`, `py`, or `supabase`.
 - **Name must match folder:** The `name` field must match the skill folder name.
 - **"When to use" section:** Include a clear section so the AI can determine relevance.
 - **Concrete examples:** Provide small examples, templates, or commands where they reduce ambiguity.
@@ -117,6 +119,7 @@ Read `./references/playbook.md` for the detailed workflow and decision rules.
 - **Do not preserve stale stack details:** Remove or replace inherited references to the wrong package manager, framework, language conventions, file extensions, or UI library when they do not match the current repo.
 - **Do not leak foreign repo artifacts into generic examples:** If you copied a template or skill from another repo, replace example paths like feature folders, excluded files, and sample script names with synthetic placeholders unless the skill explicitly says it is documenting the source repo itself.
 - **Name repo-specific skills explicitly:** If a skill depends on repo-only packages, conventions, or wrappers that would not transfer cleanly to another project, prefix or name it in a repo-specific way. Keep transferable guidance under names that clearly advertise their role, such as `ref-code-conventions`, `ref-project-setup`, or `ref-skills-authoring`.
+- **Separate repo namespace from category:** Repo-specific names such as `ref-swiftpost-agents-policy` should still use the domain category, such as `agentic-tools-category: "agents"`, instead of creating organization categories by default.
 - **Make values explicit:** When a skill depends on values like simplicity, clarity, or maintainability, state them directly in the purpose or rules instead of leaving them implicit.
 - **Prefer modern defaults:** When a skill gives coding guidance, prefer modern, intention-revealing language and platform APIs over older sentinel-style patterns when both are supported by the project's runtime targets.
 - **Prefer operational labels:** When naming workflow steps or guidance sections, prefer labels that describe the actual review/update action. Favor concrete labels like `Reflect` or `Capture Lessons` over vaguer labels like `Learn` when the step includes reviewing outcomes, correcting guidance, and updating the source of truth.
@@ -137,9 +140,22 @@ Example:
 
 ```yaml
 metadata:
-	shareable-skills.visibility: "shareable"
-	shareable-skills.requires: "ref-skills-authoring"
+  agentic-tools-category: "agents"
+  shareable-skills.visibility: "shareable"
+  shareable-skills.requires: "ref-skills-authoring"
 ```
+
+## Category Metadata
+
+Use `metadata.agentic-tools-category` to group skills by the domain they help with. This is independent from `ref-...` versus `tool-...`, shareability, and organization-specific naming.
+
+- Use one category per skill.
+- Prefer existing categories before inventing a new one.
+- Pick the domain, not the repository namespace. A Swiftpost-specific agents-policy skill still belongs in `agents`.
+- Pick the action domain for tool skills. For example, commit tooling belongs in `dev`, while local agent task tooling belongs in `agents`.
+- Use `.agents/skills/ref-swiftpost-agents-categories/SKILL.md` for this repo's current category taxonomy and examples.
+
+Common categories in this repo are `agents`, `app`, `dev`, `docs`, `github`, `js`, `project`, `py`, and `supabase`.
 
 ## Description Rules
 

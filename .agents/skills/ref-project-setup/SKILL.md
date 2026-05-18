@@ -2,6 +2,7 @@
 name: ref-project-setup
 description: "Reference guidance for project folder layout, organization, pyproject.toml configuration hub, and tool setup. Use when: understanding the project architecture, locating where code goes, understanding tool configuration, configuring new tools, or explaining the project structure to others."
 metadata:
+   agentic-tools-category: "project"
    shareable-skills.visibility: "repo-local"
 argument-hint: "Optional: aspect to explain (e.g., 'folder structure', 'pyproject.toml', 'poe tasks')"
 ---

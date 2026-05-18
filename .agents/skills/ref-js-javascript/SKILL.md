@@ -2,6 +2,7 @@
 name: ref-js-javascript
 description: "Portable JavaScript guidance for scripts and browser code with JSDoc-based typing. Use when: writing plain JavaScript, adding JSDoc, or keeping JavaScript maintainable without TypeScript."
 metadata:
+  agentic-tools-category: "js"
   shareable-skills.visibility: "shareable"
 ---
 

@@ -2,6 +2,7 @@
 name: ref-python
 description: "Portable Python guidance for typed application code, scripts, CLIs, and tests. Use when: writing or refactoring Python modules, designing Python feature folders, or deciding typing and testing patterns."
 metadata:
+  agentic-tools-category: "py"
   shareable-skills.visibility: "shareable"
 ---
 

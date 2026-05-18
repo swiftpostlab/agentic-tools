@@ -2,6 +2,7 @@
 name: ref-swiftpost-skills-management
 description: "Repository-specific guidance for the skills-management CLI and .agents/config.json skills workflow in this repo. Use when: working on src/agentic_tools/skills_management, updating skills-management docs, or debugging skill linking and sync behavior in a consuming repo."
 metadata:
+  agentic-tools-category: "agents"
   shareable-skills.visibility: "repo-local"
   shareable-skills.reason: "This reference documents the repository-specific agentic-tools package, skills-management CLI surface, and sync conventions implemented in this repo."
 ---
@@ -10,7 +11,7 @@ metadata:
 
 ## Purpose
 
-Document the stable behavior of this repository's grouped `agentic-tools skills` CLI surface, its shareability enforcement rules, and the `.agents/config.json` skills sync model used to materialize shared skills into another repository.
+Document the stable behavior of this repository's grouped `agentic-tools skills` CLI surface, its category and shareability metadata, and the `.agents/config.json` skills sync model used to materialize shared skills into another repository.
 
 ## When to use this skill
 
@@ -42,7 +43,7 @@ Document the stable behavior of this repository's grouped `agentic-tools skills`
 - Lists the discovered skills from a source repo.
 - Default source is the current working directory.
 - Accepts either a repo root or a direct `.agents/skills` path via `--from`.
-- Reports each skill's `shareable-skills.visibility`, dependencies, and optional reason.
+- Reports each skill's `agentic-tools-category`, `shareable-skills.visibility`, dependencies, and optional reason.
 
 ### `link`
 

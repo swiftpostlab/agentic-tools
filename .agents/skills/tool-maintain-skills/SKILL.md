@@ -2,6 +2,7 @@
 name: tool-maintain-skills
 description: "Review, consolidate, and update project skills after repo, workflow, or branch changes. Use when: skills may be outdated after code or tooling changes, guidance is duplicated or misplaced, or the repo's skill catalog needs a maintenance pass."
 metadata:
+  agentic-tools-category: "agents"
   shareable-skills.visibility: "shareable"
   shareable-skills.requires: "ref-skills-authoring"
 argument-hint: "What changed in the repo or branch, and which skills may now be stale"

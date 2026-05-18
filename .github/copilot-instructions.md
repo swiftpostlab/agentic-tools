@@ -125,6 +125,9 @@ All project skills are located in `.agents/skills/` and automatically load in Co
 **`ref-swiftpost-agents-policy`** — Repo-specific agents-policy guidance
 - Use when: working on `src/agentic_tools/agents_policy`, updating policy docs, or debugging generated policy outputs for Copilot, Claude Code, or Gemini in this repo
 
+**`ref-swiftpost-agents-categories`** — Repo-specific skill category metadata guidance
+- Use when: assigning `agentic-tools-category` metadata, reviewing category drift, or deciding whether a new skill category is justified in this repo
+
 **`ref-swiftpost-skills-management`** — Repo-specific skills-management CLI guidance
 - Use when: working on `src/agentic_tools/skills_management`, updating skills-management docs, or debugging linking and sync behavior in a consuming repo
 
@@ -200,6 +203,7 @@ Use the Poe validation tasks above as the default way to run tests, lint, and ty
 - For local `.agents/tasks/` conventions and task-file structure: use `ref-agents-local-tasks`.
 - For working through the local backlog under `.agents/tasks/TODO.md`: use `tool-handle-agents-local-tasks`.
 - For this repo's `agents-policy` feature, `.agents/config.json` policy section, and generated vendor outputs: use `ref-swiftpost-agents-policy`.
+- For this repo's skill category metadata and `agentic-tools-category` taxonomy: use `ref-swiftpost-agents-categories`.
 - For writing and maintaining `.github/copilot-instructions.md`, `GEMINI.md`, and `.claude/CLAUDE.md`: use `ref-agents-instructions-authoring`.
 - For GitHub Actions workflow design, CI structure, and workflow hardening: use `ref-github-actions-ci`.
 - For Dependabot config, schedules, grouping, and GitHub Actions dependency updates: use `ref-github-dependabot`.

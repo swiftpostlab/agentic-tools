@@ -2,6 +2,7 @@
 name: ref-docs-authoring
 description: "Portable README and documentation authoring guidance for top-level and feature-level docs. Use when: writing or restructuring a README, deciding whether user usage or developer setup should come first, adding concrete examples, or splitting long docs into focused follow-up files."
 metadata:
+  agentic-tools-category: "docs"
   shareable-skills.visibility: "shareable"
 ---
 

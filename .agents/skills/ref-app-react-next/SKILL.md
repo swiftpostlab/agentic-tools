@@ -2,6 +2,7 @@
 name: ref-app-react-next
 description: "App-level guidance for building a full React and Next.js application. Use when: scaffolding or reviewing a whole React/Next app, choosing the baseline stack and package manager, deciding app-level structure, or comparing a full app against a simpler standalone browser tool."
 metadata:
+  agentic-tools-category: "app"
   shareable-skills.visibility: "shareable"
   shareable-skills.requires: "ref-js-react ref-js-next ref-js-typescript"
 ---

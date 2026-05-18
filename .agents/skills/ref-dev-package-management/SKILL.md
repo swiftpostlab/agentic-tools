@@ -2,6 +2,7 @@
 name: ref-dev-package-management
 description: "Portable package-management guidance for coordinating versions across multiple manifests, keeping changelogs current, and choosing one source of truth for release metadata. Use when: syncing package versions across pyproject.toml and package.json, defining a changelog workflow, or designing a release-management command for a multi-ecosystem repo."
 metadata:
+  agentic-tools-category: "dev"
   shareable-skills.visibility: "shareable"
   shareable-skills.requires: "ref-dev-semantic-versioning"
 ---

@@ -43,6 +43,7 @@ class SkillsManagementError(Exception):
 class SkillManifest:
     name: str
     directory: Path
+    category: str | None
     visibility: str | None
     requires: tuple[str, ...]
     reason: str | None
@@ -411,6 +412,7 @@ def read_skill_manifest(skill_directory: Path) -> SkillManifest:
 
     metadata = frontmatter.get("metadata", {})
     metadata_mapping = metadata if isinstance(metadata, dict) else {}
+    category = metadata_mapping.get("agentic-tools-category")
     visibility = metadata_mapping.get("shareable-skills.visibility")
     requires = split_requires(metadata_mapping.get("shareable-skills.requires"))
     reason = metadata_mapping.get("shareable-skills.reason")
@@ -418,6 +420,7 @@ def read_skill_manifest(skill_directory: Path) -> SkillManifest:
     return SkillManifest(
         name=raw_name,
         directory=skill_directory,
+        category=category,
         visibility=visibility,
         requires=requires,
         reason=reason,
@@ -532,9 +535,13 @@ def describe_skills(manifests: dict[str, SkillManifest]) -> str:
     lines: list[str] = []
     for skill_name in sorted(manifests):
         manifest = manifests[skill_name]
+        category = manifest.category or "missing"
         visibility = manifest.visibility or "missing"
         requires = " ".join(manifest.requires) if manifest.requires else "-"
-        line = f"{manifest.name}: visibility {visibility}; requires {requires}"
+        line = (
+            f"{manifest.name}: category {category}; "
+            f"visibility {visibility}; requires {requires}"
+        )
         if manifest.reason:
             line = f"{line}; reason {manifest.reason}"
         lines.append(line)

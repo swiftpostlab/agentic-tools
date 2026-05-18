@@ -2,6 +2,7 @@
 name: ref-github-dependabot
 description: "Portable Dependabot guidance for dependabot.yml configuration, ecosystem selection, schedules, grouping, ignore or allow rules, private registries, and GitHub Actions updates. Use when: creating or reviewing .github/dependabot.yml, tuning update volume, or deciding how version and security updates should be grouped and scoped."
 metadata:
+  agentic-tools-category: "github"
   shareable-skills.visibility: "shareable"
 ---
 

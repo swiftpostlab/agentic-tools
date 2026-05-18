@@ -2,6 +2,7 @@
 name: ref-js-typescript
 description: "Portable TypeScript guidance for strict typing, runtime boundaries, and maintainable scripts or apps. Use when: writing or reviewing TypeScript code, types, or configuration decisions."
 metadata:
+  agentic-tools-category: "js"
   shareable-skills.visibility: "shareable"
 ---
 

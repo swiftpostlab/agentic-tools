@@ -2,6 +2,7 @@
 name: ref-dev-semantic-versioning
 description: "Portable semantic-versioning guidance for release numbering, prerelease handling, dependency range selection, and package.json dependency fields. Use when: choosing a version bump, reviewing semver compliance, setting npm version ranges, or deciding between dependencies, devDependencies, peerDependencies, optionalDependencies, and overrides."
 metadata:
+  agentic-tools-category: "dev"
   shareable-skills.visibility: "shareable"
 ---
 

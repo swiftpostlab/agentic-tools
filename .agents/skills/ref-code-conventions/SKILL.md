@@ -2,6 +2,7 @@
 name: ref-code-conventions
 description: "Reference guidance for conventions and workflows in this Python project using Black, Pyright (strict), and pytest, with a feature-first layout. Use when: creating features, updating tests, adjusting project config, or working with source code."
 metadata:
+  agentic-tools-category: "py"
   shareable-skills.visibility: "repo-local"
 ---
 

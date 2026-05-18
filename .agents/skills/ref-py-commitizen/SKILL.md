@@ -2,6 +2,7 @@
 name: ref-py-commitizen
 description: "Python Commitizen release workflow guidance. Use when: configuring commitizen in pyproject.toml, choosing version providers, generating changelogs, validating conventional commits, or designing Commitizen-led release commands for Python or mixed Python/Node repos."
 metadata:
+  agentic-tools-category: "py"
   shareable-skills.visibility: "shareable"
   shareable-skills.requires: "ref-dev-package-management ref-git-commits"
 ---

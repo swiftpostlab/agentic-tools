@@ -2,6 +2,7 @@
 name: ref-agents-persona
 description: "Reference guidance for agent persona, working style, and workflow expectations. Use when: starting a new task, addressing feedback, refreshing agent instruction files, or understanding project communication style."
 metadata:
+  agentic-tools-category: "agents"
   shareable-skills.visibility: "shareable"
 ---
 

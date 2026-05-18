@@ -2,6 +2,7 @@
 name: ref-app-web-standalone
 description: "App-level guidance for standalone HTML, CSS, and JavaScript tools that should run without framework or build-system overhead. Use when: creating or reviewing a whole browser-only app, deciding whether it can stay no-build, or choosing local assets and browser-loadable libraries."
 metadata:
+  agentic-tools-category: "app"
   shareable-skills.visibility: "shareable"
 ---
 

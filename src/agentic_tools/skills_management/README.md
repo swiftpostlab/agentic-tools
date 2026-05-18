@@ -1,6 +1,6 @@
 # Skills Management
 
-This feature packages the CLI that lists, links, syncs, and unlinks skill folders across repositories using the repo's shareability metadata.
+This feature packages the CLI that lists, links, syncs, and unlinks skill folders across repositories using the repo's category and shareability metadata.
 
 ## For Users
 
@@ -80,7 +80,7 @@ When `from` uses `package:agentic-tools`, `sync` resolves the installed package 
 
 ## Responsibilities
 
-- read shareability metadata from skill frontmatter
+- read category and shareability metadata from skill frontmatter
 - enforce `shareable-skills.visibility` and hard dependencies
 - link skills into another repo or the global skills directory
 - resolve package and filesystem sources for `.agents/config.json` skills sections and legacy `.agents/skills.json`

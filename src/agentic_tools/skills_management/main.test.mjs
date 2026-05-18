@@ -71,12 +71,14 @@ describe("skills-management Node CLI", () => {
         "skills",
       );
       writeSkillInRoot(packagedSkillsRoot, "ref-alpha", {
+        "agentic-tools-category": "agents",
         "shareable-skills.visibility": "shareable",
       });
 
       const manifests = discoverSkillManifests(packagedSkillsRoot);
 
       expect(Object.keys(manifests)).toEqual(["ref-alpha"]);
+      expect(manifests["ref-alpha"].category).toBe("agents");
     } finally {
       cleanupTempDir(tempDir);
     }

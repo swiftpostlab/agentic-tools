@@ -2,6 +2,7 @@
 name: ref-swiftpost-agents-policy
 description: "Repository-specific guidance for the agents-policy feature, .agents/config.json policy section, and generated AI restriction outputs in this repo. Use when: editing src/agentic_tools/agents_policy, updating policy docs, or debugging Copilot, Claude Code, or Gemini policy generation here."
 metadata:
+  agentic-tools-category: "agents"
   shareable-skills.visibility: "repo-local"
   shareable-skills.reason: "This reference documents the repository-specific agents-policy implementation, file layout, and generated output contract used in this repo."
 ---

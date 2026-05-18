@@ -66,6 +66,7 @@ def test_discover_skill_manifests_reads_shareability_metadata(tmp_path: Path) ->
         tmp_path,
         "ref-alpha",
         metadata={
+            "agentic-tools-category": "agents",
             "shareable-skills.visibility": "shareable",
             "shareable-skills.requires": "ref-beta ref-gamma",
         },
@@ -74,6 +75,7 @@ def test_discover_skill_manifests_reads_shareability_metadata(tmp_path: Path) ->
     manifests = discover_skill_manifests(tmp_path)
 
     alpha = manifests["ref-alpha"]
+    assert alpha.category == "agents"
     assert alpha.visibility == "shareable"
     assert alpha.requires == ("ref-beta", "ref-gamma")
 
@@ -323,8 +325,8 @@ def test_main_list_prints_all_skills_from_source(
     output = capsys.readouterr().out
 
     assert exit_code == 0
-    assert "ref-alpha: visibility shareable; requires -" in output
-    assert "tool-beta: visibility missing; requires -" in output
+    assert "ref-alpha: category missing; visibility shareable; requires -" in output
+    assert "tool-beta: category missing; visibility missing; requires -" in output
 
 
 def test_main_link_dry_run_defaults_destination_to_current_repo(

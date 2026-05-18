@@ -2,6 +2,7 @@
 name: ref-coding-patterns
 description: "Portable coding defaults for readable, strongly-typed, well-tested code across languages and CLIs. Use when: choosing naming, typing, comments, branching structure, CLI ergonomics, or testing defaults in a new or existing codebase."
 metadata:
+  agentic-tools-category: "dev"
   shareable-skills.visibility: "shareable"
 ---
 

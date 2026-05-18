@@ -2,6 +2,7 @@
 name: ref-agents-security
 description: "Reference guidance for agent security policy, protected file access, exclusion sync, and multi-client enforcement. Use when: modifying a policy source file, updating the sync workflow, reviewing generated restriction files, or changing how agents are prevented from reading sensitive files."
 metadata:
+    agentic-tools-category: "agents"
     shareable-skills.visibility: "shareable"
 ---
 

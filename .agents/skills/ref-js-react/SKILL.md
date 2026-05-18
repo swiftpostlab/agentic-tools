@@ -2,6 +2,7 @@
 name: ref-js-react
 description: "Portable React guidance for components, hooks, client-side state, and React-friendly library choices. Use when: creating or reviewing React components, choosing React libraries, deciding where UI or async state should live, or refactoring a React feature that is getting hard to read."
 metadata:
+  agentic-tools-category: "js"
   shareable-skills.visibility: "shareable"
 ---
 

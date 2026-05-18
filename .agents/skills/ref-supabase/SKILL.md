@@ -2,6 +2,7 @@
 name: ref-supabase
 description: "Portable Supabase guidance for CLI workflows, migrations, supabase-js CRUD usage, Edge Functions, and ORM boundaries. Use when: initializing Supabase, evolving schema, designing CRUD paths, writing Edge Functions, or deciding how ORMs fit with Supabase."
 metadata:
+  agentic-tools-category: "supabase"
   shareable-skills.visibility: "shareable"
 ---
 

@@ -2,6 +2,7 @@
 name: ref-agents-instructions-authoring
 description: "Guidance for structuring and maintaining repository instruction files across major agent entry points such as Copilot, Gemini, and Claude. Use when: designing the repo's instruction system, choosing a source of truth, or updating .github/copilot-instructions.md, GEMINI.md, and .claude/CLAUDE.md together."
 metadata:
+  agentic-tools-category: "agents"
   shareable-skills.visibility: "shareable"
 ---
 

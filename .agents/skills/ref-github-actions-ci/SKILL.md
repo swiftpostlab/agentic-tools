@@ -2,6 +2,7 @@
 name: ref-github-actions-ci
 description: "Portable GitHub Actions CI guidance for workflow triggers, job design, permissions, matrix strategy, concurrency, caching, and workflow hardening. Use when: creating or reviewing .github/workflows/*.yml files, setting up CI or reusable workflows, or securing workflow tokens, actions, and runner choices."
 metadata:
+  agentic-tools-category: "github"
   shareable-skills.visibility: "shareable"
 ---
 
