@@ -92,6 +92,9 @@ All project skills are located in `.agents/skills/` and automatically load in Co
 **`ref-dev-package-management`** — Portable package-management and changelog workflow guidance
 - Use when: syncing versions across multiple manifests, defining a changelog workflow, or designing a repo command for release metadata management
 
+**`ref-py-commitizen`** — Python Commitizen release workflow guidance
+- Use when: configuring Commitizen in `pyproject.toml`, choosing version providers, generating changelogs, validating conventional commits, or designing Commitizen-led release commands
+
 **`ref-js-deno`** — Portable Deno guidance for modern runtime usage, tsconfig or ESLint adoption, and hybrid repos
 - Use when: writing Deno code, configuring `deno.json`, or adopting Deno into an existing TypeScript or Node repo
 
@@ -202,6 +205,7 @@ Use the Poe validation tasks above as the default way to run tests, lint, and ty
 - For Dependabot config, schedules, grouping, and GitHub Actions dependency updates: use `ref-github-dependabot`.
 - For version-bump decisions, semver rules, npm dependency ranges, and package.json dependency-field choices: use `ref-dev-semantic-versioning`.
 - For syncing versions across multiple manifests, changelog policy, and release-metadata workflow design: use `ref-dev-package-management`.
+- For Commitizen configuration, version providers, generated changelogs, and Commitizen-led release commands: use `ref-py-commitizen`.
 - For Python code and CLI patterns: use `ref-python`.
 - For JavaScript scripts or browser code with JSDoc: use `ref-js-javascript`.
 - For React component structure, hooks, client-side state, and React-friendly library choices: use `ref-js-react`.

@@ -23,6 +23,7 @@ Provide portable defaults for keeping package metadata, version sources, changel
 ## Scope Boundaries
 
 - Use `.agents/skills/ref-dev-semantic-versioning/SKILL.md` when deciding the meaning of a bump level or a dependency range.
+- Use `.agents/skills/ref-py-commitizen/SKILL.md` when the release workflow specifically uses the Python `commitizen` package, `cz bump`, Commitizen version providers, or Commitizen-generated changelogs.
 - Use this skill for workflow, source-of-truth, manifest-alignment, and changelog policy.
 
 ## Defaults
@@ -95,4 +96,5 @@ Provide portable defaults for keeping package metadata, version sources, changel
 ## References
 
 - Read `.agents/skills/ref-dev-semantic-versioning/SKILL.md` for bump semantics and dependency-range guidance.
+- Read `.agents/skills/ref-py-commitizen/SKILL.md` for Commitizen-specific release command and configuration guidance.
 - Read `./references/checklist.md` for a quick package-management review pass.
