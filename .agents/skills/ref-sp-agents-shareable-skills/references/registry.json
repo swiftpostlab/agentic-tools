@@ -107,7 +107,8 @@
     "working-style",
     "modeling",
     "operations",
-    "nosql"
+    "nosql",
+    "review"
   ],
   "domainAliases": {
     "seo": "web",

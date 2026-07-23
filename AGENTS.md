@@ -81,6 +81,10 @@ All project skills are located in `.agents/skills/` and automatically load in Co
 
 - Use when: choosing between approaches or root causes, acting on an unverified claim, responding to a user challenge, deciding how much verification a risky action needs, or calibrating stated confidence
 
+**`ref-sp-agents-adversarial-review`** — Adversarial review method: a reviewer separated from the author, gated on an objective oracle, across selectable dimensions
+
+- Use when: designing or running a review a separate agent performs, deciding whether a change is safe to accept, reviewing code against a repo's skills and scope, reviewing for introduced security risk, smoke-testing end-to-end, or reasoning about why self-review misses defects
+
 **`ref-sp-dev-projects-architecture`** — Portable architecture guidance for feature folders and code boundaries
 
 - Use when: deciding where code should live, splitting features, or separating product code from maintenance scripts
@@ -213,6 +217,10 @@ All project skills are located in `.agents/skills/` and automatically load in Co
 
 - Use when: a skill lacks shareability metadata, portability is unclear, or a repo-local skill may need to be split before export
 
+**`tool-sp-run-adversarial-review`** — Run an adversarial review over a change with a reviewer separated from the author
+
+- Use when: the user asks to adversarially review, independently verify, or red-team a change, wants a separate agent to review code, skills, security, or end-to-end behavior before accepting it, or wants a structured review pass over the current diff
+
 **`tool-sp-commit`** — Group edited files into logical commits and create focused commits
 
 - Use when: the user asks to commit changes, split work into focused commits, or decide how the current diff should be grouped before committing
@@ -303,6 +311,7 @@ After editing any skill under `.agents/skills/`, validate it with `yarn validate
 - For commit format, commit bodies, or reproducibility details in commit messages: use `ref-sp-dev-git-commits`.
 - For agent voice, directness, pushing back on a flawed premise, and structural caution: use `ref-sp-agents-mr-wolf-persona`.
 - For routing verification by confidence and stakes, enumeration floors, human-claim challenges, and calibrated confidence: use `ref-sp-agents-verification-discipline`.
+- For the adversarial-review method — a reviewer separated from the author, the oracle precondition, the skills/code/security/e2e dimensions, and provider degradation: use `ref-sp-agents-adversarial-review`.
 - For portable coding defaults across languages and CLIs: use `ref-sp-dev-coding-patterns`.
 - For README structure, docs audience, and concrete documentation examples: use `ref-sp-dev-docs-authoring`.
 - For generic architecture and feature-boundary decisions: use `ref-sp-dev-projects-architecture`.
@@ -347,4 +356,5 @@ After editing any skill under `.agents/skills/`, validate it with `yarn validate
 - For refreshing project skills after repo or branch changes: use `tool-sp-maintain-skills`.
 - For turning an existing skill into a shareable one through a guided review: use `tool-sp-make-skill-shareable`.
 - For grouping the current diff into focused commits and making them: use `tool-sp-commit`.
+- For running an adversarial review over a change — probing the repo, spawning a reviewer separated from the author, and verifying selected dimensions: use `tool-sp-run-adversarial-review`.
 - For skills themselves: use `ref-sp-agents-skills-authoring` and `tool-sp-maintain-skills`.
