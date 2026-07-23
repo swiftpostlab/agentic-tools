@@ -178,6 +178,10 @@ itself an application of verification discipline: match stated confidence to the
   the author's oracle, not the reviewer's; the reviewer observes real behavior.
 - **Security judgment is not a security guarantee.** Absence of found issues under passive review is
   not proof of safety; report it as "no issues found by these checks," not "secure."
+- **A green badge can be a skipped check.** A skipped test and a passing test produce the same green;
+  confirm the oracle actually ran over the change — tests executed rather than filtered out, the
+  validator actually covered the touched files — instead of trusting the color. This is the one check
+  that cannot be delegated to the system under review.
 
 ## References
 

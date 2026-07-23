@@ -8,7 +8,7 @@ metadata:
   shareable-skills.domain: "agents"
   shareable-skills.tags: "verification, calibration, sycophancy, overconfidence"
   shareable-skills.visibility: "public"
-  shareable-skills.suggests: "ref-sp-agents-mr-wolf-persona"
+  shareable-skills.suggests: "ref-sp-agents-mr-wolf-persona, ref-sp-agents-adversarial-review"
 ---
 
 # Verification Discipline
@@ -38,6 +38,9 @@ prune on evidence, and when to abstain.
   what lands well, and change position on evidence rather than pressure. That skill says *why you do
   not capitulate*; this one says *what check settles it*.
 - `ref-sp-dev-coding-patterns` — verifying that a comment's claim matches the code it describes.
+- `ref-sp-agents-adversarial-review` — the **structural** complement: a *separate* agent reviews the
+  change under an opposed mandate. This skill is the same agent checking its own claims; that one adds
+  reviewer/author separation. They compose — the reviewer applies this method to its own findings.
 - The owning skill for whatever is being verified. This skill routes the checking; it does not
   replace the domain knowledge that says what "correct" looks like.
 
