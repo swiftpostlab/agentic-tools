@@ -85,6 +85,20 @@ Provide portable repository and feature-structure defaults that keep codebases m
 - Choose folder names that match the domain or workflow they contain.
 - Keep file names descriptive enough that a reader can predict the contents before opening them.
 - Avoid over-generic folder names when a narrower domain name exists.
+- When sibling directories or files form a sequence rather than independent peers, prefix each name with a fixed-width number so the natural sort matches the intended order — `10-new/`, `20-open/`, `90-closed/`.
+
+**Where the numeric-prefix convention comes from.** It is the Linux `.d`-directory pattern, inherited
+from SysV init (`/etc/rc3.d/S20apache2`) and formalised by systemd's drop-in configuration
+directories. `man 5 sysctl.d` states the rule: configuration files are "sorted by their filename in
+lexicographic order," and it "is recommended to prefix all filenames with a two-digit number and a
+dash." The number is not metadata — nothing parses it — it exists only so that string sorting yields
+the intended order. That mechanism dictates the practices: pad to a fixed width, because `9-` sorts
+*after* `10-` under string comparison; leave gaps (step 10) so a later insertion never forces a
+renumber; and reserve the top of the range for local overrides, the near-universal `99-` idiom. Apply
+it only where order changes meaning — `/etc/modprobe.d` and `/etc/cron.d` are deliberately unnumbered
+because their entries are independent. One caveat when borrowing it: `.d` numbers encode *priority
+among simultaneous entries*, while a lifecycle encodes a *sequence*. The sorting trick is shared, the
+semantics are not, so do not import priority idioms such as a `50-` neutral centre into a sequence.
 
 ### Growth path
 
@@ -142,6 +156,7 @@ src/features/billing/
 - Shared utilities exist because of real reuse, not prediction.
 - Feature boundaries are explicit and avoid backdoor dependencies.
 - Tests live close enough to their source that maintenance stays cheap.
+- Ordered sibling names use a fixed-width numeric prefix, so a plain lexicographic listing shows them in their real order.
 
 ## References
 
