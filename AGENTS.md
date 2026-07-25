@@ -233,6 +233,10 @@ All project skills are located in `.agents/skills/` and automatically load in Co
 
 - Use when: a task needs local planning, temporary task notes, or structured tracking under `.agents/tasks/`
 
+**`ref-sp-agents-retro`** — Record a descriptive task retrospective under `.agents/retro/`
+
+- Use when: finishing a substantial task and capturing what went well or wrong, reading past retros to calibrate an approach, or deciding whether a recurring retro observation should be promoted into a skill
+
 **`ref-sp-dev-playwright-cli`** — Drive a real browser from the terminal via `playwright-cli`
 
 - Use when: verifying a UI change in a real browser, debugging page console/network/DOM state, running or debugging Playwright tests, recording video/traces, or gathering live UI/design feedback from the user
@@ -266,7 +270,7 @@ When working on this project:
 3. **Implement**: Follow the owning skill for the area you are touching.
 4. **Validate**: Before committing, run the validators for the toolchain you touched — `uv run poe lint/typecheck/test` for Python, `yarn lint/typecheck/test` for JS/TS, and `yarn validate` when you changed a skill under `.agents/skills/`. Confirm the change introduced no new warnings or type issues, filtering output to the changed files so unrelated noise does not hide a real regression. Chain lint and type-check into one command when that saves a round trip.
 5. **Commit**: Keep commits small and focused — one feature or area, a few related files at a time — and commit only after lint and type-check pass.
-6. **Reflect**: Review what happened in the session, identify both corrections and durable lessons, and decide whether any skill or instruction should be updated. Summarize the result to the user and ask if they want the guidance updated. If yes, update the relevant skill using `ref-sp-agents-skills-authoring`, and after editing suggest a follow-up maintenance pass with `tool-sp-maintain-skills`.
+6. **Reflect**: Review what happened in the session, identify both corrections and durable lessons, and decide whether any skill or instruction should be updated. For a substantial task, capture a short, descriptive retrospective under `.agents/retro/` following `ref-sp-agents-retro` — what went well, what went wrong, and improvement hypotheses — kept descriptive rather than prescriptive. Summarize the result to the user and ask if they want the guidance updated. If yes, promote the durable, general observations into the relevant skill using `ref-sp-agents-skills-authoring`, and after editing suggest a follow-up maintenance pass with `tool-sp-maintain-skills`.
 
 Run steps 3–5 as a loop, not a phase: for a task with several steps or several review comments, take one item at a time — edit, then lint and type-check, then commit — before starting the next.
 
@@ -319,6 +323,7 @@ After editing any skill under `.agents/skills/`, validate it with `yarn validate
 - For authoring agent lifecycle hooks (command hooks, event choice, portability across platforms): use `ref-sp-agents-hooks`.
 - For local `.agents/tasks/` conventions and task-file structure: use `ref-sp-agents-local-tasks`.
 - For working through the local backlog under `.agents/tasks/TODO.md`: use `tool-sp-handle-agents-local-tasks`.
+- For recording a descriptive task retrospective under `.agents/retro/` and deciding when a retro observation should be promoted into a skill: use `ref-sp-agents-retro`.
 - For this repo's `agents-policy` feature, `.agents/config.json` policy section, and generated vendor outputs: use `ref-sp-agents-policy`.
 - For skill scope metadata and the scopes registry: use `ref-sp-agents-shareable-skills`.
 - For writing and maintaining `AGENTS.md`, `GEMINI.md`, and `.claude/CLAUDE.md`: use `ref-sp-agents-instructions-authoring`.

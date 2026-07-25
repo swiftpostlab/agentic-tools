@@ -108,7 +108,9 @@
     "modeling",
     "operations",
     "nosql",
-    "review"
+    "review",
+    "retro",
+    "reflection"
   ],
   "domainAliases": {
     "seo": "web",

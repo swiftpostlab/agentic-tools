@@ -1,6 +1,7 @@
 # Agent only dirs
 /.agents/playground/
 /.agents/tasks/
+/.agents/retro/
 
 # Node
 node_modules/
