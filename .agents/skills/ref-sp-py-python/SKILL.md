@@ -64,6 +64,8 @@ Provide portable Python defaults that emphasize explicit typing, simple structur
 - Reserve `Any` for rare interoperability gaps that cannot be expressed cleanly with narrower types.
 - Use `Protocol`, `TypedDict`, dataclasses, or type aliases when they improve readability.
 - Prefer type guards and restructuring over `# type: ignore`.
+- Treat type hints as the checked parameter contract: Pyright and mypy verify annotations but never read docstring `Args:`, `:param`, or `Returns:` blocks, so a docstring that restates the signature drifts silently and no type check catches it.
+- Prefer not to restate typed parameters in prose; if a project genuinely needs API docstrings, enforce them with a dedicated docstring linter, not the type checker. Prefer `pydoclint` — actively maintained, runs standalone or as a pre-commit hook, and adds no new lint stack; `darglint` is unmaintained. Ruff's equivalent `DOC` rules are still preview-only, so do not pull in Ruff just for docstring checks.
 
 ### Structure
 
@@ -126,6 +128,7 @@ scripts/
 ## Validation
 
 - Public Python code is typed clearly and reads without guesswork.
+- Parameter contracts live in type hints; any prose `Args:` docstrings are backed by a docstring linter, not assumed correct by the type checker.
 - Modern-baseline projects do not carry legacy compatibility imports without a version-specific reason.
 - Paths, errors, and data structures are explicit.
 - Importing a module runs no connections or I/O; stateful clients are built by factories or lazy accessors, not at module scope.
