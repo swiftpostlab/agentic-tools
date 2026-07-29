@@ -102,6 +102,13 @@ Document the stable behavior of this repository's grouped `agentic-tools skills`
   - `package:<name>` package references
 - Relative paths resolve from the target repo root when the config lives under `.agents/config.json` or `.agents/skills.json`.
 - Package sources are resolved by locating the installed package and walking upward until a repo root with `.agents/skills` is found.
+- A `package:<name>` source therefore reads the **installed** copy, at whatever revision the consumer's lockfile pins. It does not read a local checkout of the source repo, even when one is sitting next to it.
+
+### Debugging a missing skill from a package source
+
+When `sync` reports configured skills as missing and the names look correct, suspect a stale pin before suspecting the config. A skill that exists only in unpushed commits, or in commits newer than the pinned revision, is invisible to the consumer.
+
+Resolve it in order: push the source repo, re-pin the dependency in the consumer, reinstall, then sync. Skipping the re-pin silently leaves the consumer on the old revision and reproduces the same error. A renamed skill fails the same way as a new one, so a rename in the source repo is a breaking change for every consumer that has not re-pinned.
 
 ## Windows Behavior
 
