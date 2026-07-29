@@ -118,6 +118,14 @@ certainty.
 - **Enumeration can be gamed.** Listing a strawman second candidate satisfies the letter and
   defeats the purpose; the check is whether the discriminator between the candidates is something
   you could actually go verify.
+- **A post-change measurement cannot establish the pre-change state.** Reading the evidence after
+  applying a fix and inferring backwards what it must have been is a fabricated baseline: the same
+  observation is usually consistent with the fix having worked *and* with a cause still present that
+  you never found. Capture the baseline before changing anything, or reconstruct it from a source
+  the change did not touch.
+- **When several components can produce the same artifact, attribution needs its own check.** Finding
+  that your component no longer accounts for something does not mean nothing does. Ask which
+  component owns it now, rather than treating your own exoneration as the answer.
 
 ## Validation
 
@@ -127,6 +135,8 @@ certainty.
   by the strongest feasible check, not just felt confidence?
 - After a user challenge: were both positions re-verified in ground truth before the position
   changed or was defended?
+- When the claim describes what a change did: was the baseline captured before the change rather
+  than inferred backwards from the state after it?
 - In the final answer: does stated confidence match the evidence actually gathered, and are
   unverified assumptions explicitly marked?
 
