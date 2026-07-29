@@ -98,6 +98,13 @@ def get_client() -> ApiClient:
 - If code is only for repo maintenance or one-off automation, keep it as a script.
 - Use descriptive subcommands and flags for multi-action CLIs.
 
+### Packaging boundaries
+
+- `[project.scripts]` is distribution metadata, not a local convenience: it becomes `entry_points.txt` inside the built artifact. There is no internal-only entrypoint, so a command meant to stay in the repo belongs in the task runner instead.
+- Keep repo maintenance directories out of the distributed package list. Shipping them installs test files and repo-mutating scripts into every consumer's environment.
+- Never distribute a generic top-level import name such as `scripts`, `utils`, `common`, or `i18n`. A directory with no `__init__.py` is a namespace package, so it merges across `sys.path` and silently shadows a consumer's same-named package — the consumer's own code loses, because installed paths usually sort ahead of theirs.
+- Do not derive a repo root from `__file__` in a module that can be installed. Once it is copied into `site-packages` the path resolves to the venv rather than the checkout. Walk up from the working directory, or keep the module out of the distribution.
+
 ### Testing
 
 - Add unit tests for non-trivial logic and error cases.
@@ -132,7 +139,8 @@ scripts/
 - Modern-baseline projects do not carry legacy compatibility imports without a version-specific reason.
 - Paths, errors, and data structures are explicit.
 - Importing a module runs no connections or I/O; stateful clients are built by factories or lazy accessors, not at module scope.
-- Product CLIs and maintenance scripts are separated intentionally.
+- Product CLIs and maintenance scripts are separated intentionally, and internal commands are task-runner tasks rather than `[project.scripts]` entries.
+- No distributed package claims a generic top-level import name, and no installable module derives a repo root from `__file__`.
 - Tests cover non-trivial logic and stay readable.
 
 ## References
