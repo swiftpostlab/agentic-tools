@@ -22,7 +22,11 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/agentic_tools", "src/agentic_tools_old", "src/i18n", "scripts"]
+# `scripts` stays out of the wheel. It is repo maintenance tooling, run by path
+# from poe and pytest, and nothing in the package imports it. Shipping it planted
+# a bare top-level `scripts` in every consumer's site-packages, where it shadowed
+# their own same-named package.
+packages = ["src/agentic_tools", "src/agentic_tools_old", "src/i18n"]
 
 [tool.hatch.build.targets.wheel.force-include]
 ".agents/skills" = "agentic_tools_old/shareable_skills"
