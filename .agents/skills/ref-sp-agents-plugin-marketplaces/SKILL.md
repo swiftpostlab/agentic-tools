@@ -141,6 +141,12 @@ Two traps follow, and both fail *silently*:
 - **Never set `version` in both `plugin.json` and the marketplace entry.** `plugin.json` always wins,
   with no warning, so a stale manifest can mask the version you set in the catalog.
 
+The ban is on the **plugin entry** inside `marketplace.json`'s `plugins` array. A `version` under the
+catalog's own top-level `metadata` is a different field describing the catalog, and setting it
+alongside `plugin.json.version` is correct, not a conflict. The two look identical in a grep for
+`"version"` across `.claude-plugin/`, which is a good way to talk yourself into "fixing" a manifest
+that was already right — check which object the field sits in before touching it.
+
 Wire the version into the release tool rather than bumping it by hand. In this repo, Commitizen's
 `version_files` in `pyproject.toml` rewrites `.claude-plugin/plugin.json:version` and
 `.claude-plugin/marketplace.json:version` alongside `package.json` and `VERSION`, so one `cz bump`
@@ -203,19 +209,28 @@ Claude does not — is in [`./references/cross-agent-compat.md`](./references/cr
    claims to support**. Then check the always-on cost: every published skill's `description` loads
    into **every session**, so the publish set is a token budget, not just a policy question.
 
+The whole Claude flow has a **non-interactive CLI equivalent**, so the proof can be scripted rather
+than driven through slash commands in a session:
+
 ```bash
 # Claude Code
-/plugin marketplace add <owner>/<repo>     # add the catalog
-/plugin marketplace update                 # refresh it later
-claude plugin list                         # what is installed, and ignored-folder warnings
-claude plugin details <plugin>             # components and their descriptions
-/reload-plugins                            # pick up non-skill component changes in-session
+claude plugin marketplace add <owner>/<repo>      # add the catalog
+claude plugin marketplace list                    # catalogs currently configured
+claude plugin install <plugin>@<marketplace>      # note: marketplace NAME, not repo
+claude plugin list                                # what is installed, and ignored-folder warnings
+claude plugin details <plugin>@<marketplace>      # components, descriptions, token cost
+/plugin marketplace update                        # refresh it later
+/reload-plugins                                   # pick up non-skill component changes in-session
 
 # Copilot CLI
 copilot plugin marketplace add <owner>/<repo>
 copilot plugin install <plugin>@<marketplace>
 copilot plugin list
 ```
+
+**The `@` suffix is the marketplace's `name` field, not the repo.** A catalog added as
+`<owner>/<repo>` installs as `<plugin>@<name-from-marketplace.json>`, and the two are usually
+different strings. Read the name out of the manifest rather than guessing it from the add command.
 
 Skills namespace as `/<plugin>:<skill>`, so the plugin name is a user-visible prefix on every skill.
 Keep it short. This is also why a skill's own owner-prefix stays useful: it lets the same directories
@@ -273,7 +288,17 @@ credentials, `extraKnownMarketplaces`, air-gapped sources, and the public market
 - **A plugin bundling many skills costs tokens in every session**, because all their descriptions load
   at discovery. Bundling everything into one plugin keeps intra-repo skill dependencies from crossing a
   plugin boundary, which is usually the right trade — but it makes description discipline a
-  distribution concern, not just a style one.
+  distribution concern, not just a style one. Measured on this repo's first publish: **47 skills,
+  ~4,710 always-on tokens**, so budget roughly **100 tokens per published skill** and treat an
+  outlier description as a real cost. `claude plugin details` prints the per-skill breakdown, which is
+  the fastest way to find the descriptions worth trimming.
+- **`marketplace add` writes `extraKnownMarketplaces` into user settings.** The manual add and the
+  org-wide pre-registration described under [Visibility mapping](#visibility-mapping) are not two
+  mechanisms — pre-registering is just shipping the entry the add command would have written.
+- **It clones over SSH when git is configured for SSH**, not the HTTPS path the credential docs
+  centre on. For a private-repo marketplace that changes which credential has to work: interactive
+  installs go through `ssh-agent` and `known_hosts`, while background auto-update still needs the
+  token env var, because it runs without either.
 - **`strict: false` plus a `plugin.json` that declares components is a hard load failure.** Choose one
   authority: the manifest (`strict: true`, the default) or the marketplace entry (`strict: false`).
 - **Relative `source` paths break in URL-distributed marketplaces.** If users add the marketplace by a
