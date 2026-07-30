@@ -132,6 +132,20 @@ scripts/
   update_from_upstream_test.py
 ```
 
+Give it a task-runner entry rather than a `[project.scripts]` one, so it keeps a first-class
+invocation without becoming distribution metadata:
+
+```toml
+[tool.poe.tasks]
+init-project = "python scripts/init_project.py"
+```
+
+Invoked as `uv run poe init-project --name cool-app`; a `cmd`-type task forwards arguments through
+unchanged. The task table is read from the working tree and never lands in the built wheel, which is
+what makes it internal-only in a way `[project.scripts]` cannot be. The payoff beyond packaging is
+consistency: every documented command in the repo becomes `uv run poe <task>`, instead of one script
+path standing out from the rest.
+
 ## Validation
 
 - Public Python code is typed clearly and reads without guesswork.
