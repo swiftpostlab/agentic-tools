@@ -264,6 +264,16 @@ All project skills are located in `.agents/skills/` and automatically load in Co
 
 - Use when: asked whether to be on TikTok/YouTube/Instagram for reach, how in-app discovery or search works, whether outbound links hurt reach, how younger audiences find things, how social content shows up in Google, or judging a social-strategy claim
 
+**`ref-sp-ux-design`** — Interface and visual design from evidence: grouping, spacing, typography, colour, readability, responsive
+
+- Use when: designing or reviewing a UI, page, or component, diagnosing why a layout feels off or cluttered, choosing spacing, type sizes, line length, or emphasis, building a colour palette, turning a wall of text into something readable, designing mobile-first, or judging a design claim or "law of UX" against the research
+- Every claim carries a tier — research, standard, convention, or folklore. Thresholds are not here
+
+**`ref-sp-ux-accessibility`** — WCAG 2.2 as the normative floor; owns every accessibility threshold in this repo
+
+- Use when: checking or fixing accessibility, asking whether a colour pair, tap target, focus ring, or zoom level passes, auditing against WCAG 2.2 A/AA/AAA, weighing APCA against WCAG 2, adding ARIA or alt text, or judging an accessibility score or overlay claim
+- No other skill may restate a threshold it owns; `ref-sp-ux-design` defers to it
+
 ## Workflow
 
 When working on this project:
