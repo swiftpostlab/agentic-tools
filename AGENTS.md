@@ -53,7 +53,7 @@ Every claim — the agent's or the user's — starts unverified. Two dials gover
 
 ## Project Skills
 
-All project skills are located in `.agents/skills/` and automatically load in Copilot based on context and trigger phrases.
+All project skills are located in `.agents/skills/` and automatically load in Copilot based on context and trigger phrases. Each entry below carries its own routing: read the `Use when` line to pick the skill for the problem at hand.
 
 ### Available Skills
 
@@ -100,6 +100,7 @@ All project skills are located in `.agents/skills/` and automatically load in Co
 **`ref-sp-agents-skills-authoring`** — Guidelines for creating and maintaining project skills
 
 - Use when: designing skills, updating copied skills, or evaluating skill quality
+- For skills themselves, pair this with `tool-sp-maintain-skills`
 
 **`ref-sp-agents-instructions-authoring`** — Guidance for structuring and maintaining multi-provider instruction files
 
@@ -160,6 +161,7 @@ All project skills are located in `.agents/skills/` and automatically load in Co
 **`ref-sp-agents-plugin-marketplaces`** — Publishing skills as an agent plugin through a plugin marketplace, installable from Claude Code, Copilot CLI, and VS Code
 
 - Use when: packaging skills as a plugin, writing `plugin.json` or `marketplace.json`, deciding which skills may be published, targeting Copilot or VS Code users, cutting a plugin release, or debugging an installed plugin that is missing skills or not updating
+- For consuming skills in a repo that links them from a source, use `ref-sp-agents-skills-management` instead
 
 **`ref-sp-baas-supabase`** — Portable Supabase guidance for CLI workflows, migrations, CRUD API usage, edge functions, and ORM boundaries
 
@@ -256,6 +258,7 @@ All project skills are located in `.agents/skills/` and automatically load in Co
 **`ref-sp-web-wordpress`** — Building on WordPress: security gates, hooks, safe DB access, headless
 
 - Use when: writing or reviewing a WordPress plugin or theme, handling request data in PHP, adding an admin/AJAX/REST endpoint, querying the database, extending WordPress without editing core, or auditing a WordPress site's security posture
+- WordPress *SEO* lives in `ref-sp-web-seo`'s `references/frameworks.md`, not here
 
 **`ref-sp-web-social-media`** — Organic discovery on social and video platforms, folklore separated from fact
 
@@ -308,58 +311,3 @@ This is a mixed repo: the Python code is managed with `uv` (and Poe tasks), and 
 Use the Poe tasks as the default way to run tests, lint, and type-checking for the Python code. Only call the underlying tools directly when a task needs flags or behavior that the Poe wrapper does not expose.
 For iterative post-edit validation of Python, prefer `uv run poe test-focused`, `uv run poe lint-focused`, and `uv run poe typecheck-focused` on the touched files or folders first, then run the full repo-wide Poe validation tasks before committing.
 After editing any skill under `.agents/skills/`, validate it with `yarn validate:skills` and `yarn validate:sharing` (or `yarn validate` for both) before committing. These are the canonical skill validators; the underlying `.mts` scripts require Node >= 22, so run them under a matching Node (for example via `nvm use 22`).
-
-## Asking for Help
-
-- For this repo's Python layout, `pyproject.toml` wiring, tooling, typing, tests, or folder placement: use `ref-sp-dev-repo-conventions`.
-- For commit format, commit bodies, or reproducibility details in commit messages: use `ref-sp-dev-git-commits`.
-- For agent voice, directness, pushing back on a flawed premise, and structural caution: use `ref-sp-agents-mr-wolf-persona`.
-- For routing verification by confidence and stakes, enumeration floors, human-claim challenges, and calibrated confidence: use `ref-sp-agents-verification-discipline`.
-- For the adversarial-review method — a reviewer separated from the author, the oracle precondition, the skills/code/security/e2e dimensions, and provider degradation: use `ref-sp-agents-adversarial-review`.
-- For portable coding defaults across languages and CLIs: use `ref-sp-dev-coding-patterns`.
-- For README structure, docs audience, and concrete documentation examples: use `ref-sp-dev-docs-authoring`.
-- For generic architecture and feature-boundary decisions: use `ref-sp-dev-projects-architecture`.
-- For security policy config and generated restriction files: use `ref-sp-agents-security`.
-- For authoring agent lifecycle hooks (command hooks, event choice, portability across platforms): use `ref-sp-agents-hooks`.
-- For local `.agents/tasks/` conventions and task-file structure: use `ref-sp-agents-local-tasks`.
-- For working through the local backlog under `.agents/tasks/TODO.md`: use `tool-sp-handle-agents-local-tasks`.
-- For recording a descriptive task retrospective under `.agents/retro/` and deciding when a retro observation should be promoted into a skill: use `ref-sp-agents-retro`.
-- For this repo's `agents-policy` feature, `.agents/config.json` policy section, and generated vendor outputs: use `ref-sp-agents-policy`.
-- For skill scope metadata and the scopes registry: use `ref-sp-agents-shareable-skills`.
-- For writing and maintaining `AGENTS.md`, `GEMINI.md`, and `.claude/CLAUDE.md`: use `ref-sp-agents-instructions-authoring`.
-- For GitHub Actions workflow design, CI structure, and workflow hardening: use `ref-sp-dev-github-actions-ci`.
-- For Dependabot config, schedules, grouping, and GitHub Actions dependency updates: use `ref-sp-dev-github-dependabot`.
-- For version-bump decisions, semver rules, npm dependency ranges, and package.json dependency-field choices: use `ref-sp-dev-semantic-versioning`.
-- For syncing versions across multiple manifests, changelog policy, and release-metadata workflow design: use `ref-sp-dev-package-management`.
-- For Commitizen configuration, version providers, generated changelogs, and Commitizen-led release commands: use `ref-sp-py-commitizen`.
-- For Python code and CLI patterns: use `ref-sp-py-python`.
-- For JavaScript scripts or browser code with JSDoc: use `ref-sp-js-javascript`.
-- For React component structure, hooks, client-side state, and React-friendly library choices: use `ref-sp-js-react`.
-- For Next.js App Router structure, rendering boundaries, and Next-specific integrations: use `ref-sp-js-next`.
-- For TypeScript typing and boundary decisions: use `ref-sp-js-typescript`.
-- For standalone browser apps and no-build web tools: use `ref-sp-js-web-standalone-template`.
-- For whole React and Next.js app planning and app-level stack choices: use `ref-sp-js-next-template`.
-- For browser userscripts: use `ref-sp-js-userscript`.
-- For Deno runtime, tsconfig or ESLint adoption, and hybrid Deno or Node repos: use `ref-sp-js-deno`.
-- For Supabase CLI, schema, CRUD API, edge functions, and ORM boundaries: use `ref-sp-baas-supabase`.
-- For designing a relational schema from requirements — ER modeling, keys and relationships, functional dependencies, normalization, and workload-driven physical design: use `ref-sp-db-schema-design`.
-- For running a database in production — transaction boundaries and isolation, lock contention, indexing, query optimization, backup and restore, and safe migrations: use `ref-sp-db-operations`.
-- For choosing a non-relational model and living with its tradeoffs — document, key-value, graph, or wide-column, CAP, and eventual consistency: use `ref-sp-db-nosql`.
-- For database security — access control, views, auditing, encryption, integrity, and secure recovery: use `ref-sp-db-security`.
-- For distributed and replicated databases — fragmentation, replica placement, topology, and disconnected synchronization: use `ref-sp-db-distributed`.
-- For driving a real browser from the terminal — verifying a UI change, debugging page console, network, or DOM state, running Playwright tests, or reading a page that plain fetching cannot: use `ref-sp-dev-playwright-cli`.
-- For auditing a site's SEO, indexing and crawl diagnosis, JavaScript rendering for crawlers, Core Web Vitals, content quality against Google's rater framework, or designing a valid before/after SEO test: use `ref-sp-web-seo`.
-- For visibility in AI Overviews, AI Mode, and assistants, AI crawler access decisions, or separating defensible GEO advice from speculation: use `ref-sp-web-seo-ai`.
-- For reading traffic, channel, and conversion data honestly — the "Direct" bucket, dark social, attribution recovery, and whether a difference is signal or noise: use `ref-sp-web-marketing`.
-- For building on WordPress — the sanitize/capability/escape security gates, hooks instead of editing core, `$wpdb->prepare`, child themes, and headless REST: use `ref-sp-web-wordpress`. (WordPress *SEO* lives in `ref-sp-web-seo`'s `references/frameworks.md`.)
-- For organic discovery and reach on social and video platforms — in-app search, link suppression, cohort behaviour, and how social content surfaces in Google, with folklore separated from documented fact: use `ref-sp-web-social-media`.
-- For this repo's skills-management CLI and `.agents/config.json` skills sync model: use `ref-sp-agents-skills-management`.
-- For deciding whether a skill should be shared, exported, or kept repo-local: use `ref-sp-agents-shareable-skills`.
-- For getting this repo's skills into another repo — packaging them as an agent plugin, writing `plugin.json` or `marketplace.json`, hosting a marketplace, reaching Claude Code, Copilot CLI, and VS Code users from one repo, or releasing and updating a published plugin: use `ref-sp-agents-plugin-marketplaces`. For consuming them in a repo that links skills from a source, use `ref-sp-agents-skills-management`.
-- For creating a new skill through a guided intake flow: use `tool-sp-create-skill`.
-- For refreshing `AGENTS.md`, `GEMINI.md`, and `.claude/CLAUDE.md` after repo changes: use `tool-sp-maintain-agents-instructions`.
-- For refreshing project skills after repo or branch changes: use `tool-sp-maintain-skills`.
-- For turning an existing skill into a shareable one through a guided review: use `tool-sp-make-skill-shareable`.
-- For grouping the current diff into focused commits and making them: use `tool-sp-commit`.
-- For running an adversarial review over a change — probing the repo, spawning a reviewer separated from the author, and verifying selected dimensions: use `tool-sp-run-adversarial-review`.
-- For skills themselves: use `ref-sp-agents-skills-authoring` and `tool-sp-maintain-skills`.
