@@ -127,6 +127,20 @@ cannot corroborate a position by reading one side of it — and Google, on the q
 Google's AI surfaces need special optimization, is not a neutral party either. Where the two agree
 (no special markup, no chunking), the claim is strong. Where only one speaks, say so.
 
+## Section: Content extraction and semantic HTML
+
+Backing `./extraction.md` and the extraction bullet in "What is mechanically true". Unusually for
+this skill, the strongest source here is **code rather than a vendor statement** — an extractor's
+behaviour is not a matter of opinion, and it is the one part of the AI pipeline you can read.
+
+| Claim in SKILL.md / extraction.md | Source | Verified | Notes |
+| --- | --- | --- | --- |
+| Readability scores `SECTION,H2–H6,P,TD,PRE`; base scores `DIV +5`, `PRE/TD/BLOCKQUOTE +3`, lists `−3`, `H1–H6/TH −5`; class weight `±25`; `okMaybeItsACandidate` and `unlikelyCandidates` test **class and id**, not tags; score scaled by `(1 − linkDensity)` with "5% or less" named as good; `<aside>`/`<footer>` conditionally removed in `_prepArticle()` | [`Readability.js`](https://github.com/mozilla/readability) | 2026-08-02 | **Tier 1 for its own behaviour** — read from the algorithm, not from a description of it. Actively developed; these constants drift. Re-read before treating a number as current. |
+| `<article>` and `<main>` receive no tag-level initialization bonus | same | 2026-08-02 | The finding that overturns the usual advice. The `article`/`main` rescue is a class/id regex match. |
+| trafilatura: precision 0.914 / recall 0.904 / F1 0.909 on 750 documents; goose3 0.934 precision but 0.690 recall | [trafilatura evaluation](https://trafilatura.readthedocs.io/en/latest/evaluation.html), benchmark dated 2022-05-18 | 2026-08-02 | The maintainer's own benchmark — **interested source.** Trust the ordering more than the absolutes. The load-bearing point is the recall column: the best extractor still loses ~10% of main content. |
+| Semantic HTML is not a Google ranking factor; fixing heading hierarchy will not improve rankings | John Mueller, quoted consistently across SEO trade press | 2026-08-02 | **Corroborated, not primary.** Not fetched from Google Search Central this pass. Consistent with this skill's existing position that structured data is not an AI lever. |
+| No AI vendor documents its extraction internals | absence of evidence | 2026-08-02 | Stated as an absence, which is the honest form. Anyone claiming vendor X privileges tag Y is guessing. |
+
 ## Sources that live in the SEO skill
 
 These two files are deliberately split, and claims cross the boundary. Do not duplicate a row — look

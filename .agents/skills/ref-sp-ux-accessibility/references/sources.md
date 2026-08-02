@@ -74,6 +74,19 @@ contrast algorithm is undetermined.
 - **Status: corroborated, not primary.** Re-verify against Birch (2012) before quoting the exact
   figure in a deliverable.
 
+## Semantic markup, SEO, and AI extraction
+
+Claims made in `./semantic-structure.md` about what semantic HTML does *not* buy you.
+
+| Claim | Tier | Source | Verified | Status |
+| --- | --- | --- | --- | --- |
+| Semantic HTML is not a Google ranking factor; fixing heading hierarchy will not improve rankings | 3 | John Mueller, quoted consistently across SEO trade press | 2026-08-02 | **Corroborated, not primary.** Not fetched from Google Search Central this pass |
+| Readability gives `<article>`/`<main>` no tag-level score; `<div>` +5; class/id weight ±25; link density scales the score; `<aside>`/`<footer>` conditionally removed | 1 (for its own behaviour) | `Readability.js`, <https://github.com/mozilla/readability> | 2026-08-02 | Read from the algorithm itself. Actively developed — re-read before relying on a constant |
+| trafilatura benchmark: 0.914 precision / 0.904 recall / 0.909 F1 on 750 docs (2022-05-18) | 3 | <https://trafilatura.readthedocs.io/en/latest/evaluation.html> | 2026-08-02 | Vendor's own benchmark; treat the ordering as more reliable than the absolute numbers |
+
+Full working notes, including what these findings do and do not license, live in
+`.agents/skills/ref-sp-web-seo-ai/references/extraction.md`.
+
 ## Known gaps
 
 - Overlay-product enforcement history is stated qualitatively; no specific case is cited here. Do not

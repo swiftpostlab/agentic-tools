@@ -139,6 +139,13 @@ These are checkable, and they are the whole of the defensible baseline.
   citations, and never add schema *for* generative AI. There is no special markup for it.
 - **The answer has to actually be on the page, in text.** A page whose substance is in an image, a
   video with no transcript, or a PDF behind a click cannot be quoted.
+- **Semantic HTML is not an AI-visibility lever either — but *content extraction* is real.** Before
+  a model sees anything, a boilerplate-removal step strips the page to a main-content block, and
+  what it discards is genuinely lost. The levers that matter there are **link density** (keep the
+  content region under ~5%), **not burying content in `<aside>` or `<footer>`** (extractors delete
+  both), and **class/id names** (which outweigh tag choice). `<article>` and `<main>` earn no bonus
+  in the most widely deployed extractor. Load `./references/extraction.md` when someone asks whether
+  semantic tags help AI, or when a page is being ingested wrongly.
 - **Being worth citing is not a trick.** Systems that cite sources are built to prefer ones that are
   accurate, specific, and attributable. That is the same target as ordinary content quality — load
   `.agents/skills/ref-sp-web-seo/references/content-quality.md` (Google's rater framework: page

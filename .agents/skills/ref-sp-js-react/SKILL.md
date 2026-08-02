@@ -59,7 +59,10 @@ Provide portable defaults for readable React code, disciplined hook boundaries, 
 - Keep render logic obvious from top to bottom.
 - Split components when one file heavily mixes layout, data loading, mutations, and event choreography.
 - Prefer composition and explicit props over deep wrapper stacks or implicit children contracts.
-- Preserve semantic HTML even when a component library provides generic wrappers.
+- Preserve semantic HTML even when a component library provides generic wrappers. A native element
+  carries role, focusability, and keyboard behaviour that a styled `<div>` does not, and every
+  capability you drop has to be rebuilt in ARIA and kept correct — see
+  `.agents/skills/ref-sp-ux-accessibility/references/semantic-structure.md`.
 - When a component relies on a closed set of variants or labels, keep the canonical list in a const object or tuple and derive the prop or state union from that value.
 - In JSDoc-backed React files, import external types with `/** @import { SomeType } from './somewhere.js' */` instead of duplicating typedefs locally.
 

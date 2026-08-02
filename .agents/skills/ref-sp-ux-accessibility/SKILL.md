@@ -1,6 +1,6 @@
 ---
 name: ref-sp-ux-accessibility
-description: "Make an interface usable by people the design did not assume — using WCAG 2.2 as the normative floor rather than a vibe. Owns every accessibility threshold this repo states: contrast ratios, target sizes, reflow, text spacing, focus visibility, and motion. Use when: checking or fixing accessibility; asked whether a colour pair, tap target, focus ring, or font size passes; auditing a page or component against WCAG 2.2 A/AA/AAA; deciding whether to use APCA or WCAG 2 contrast; adding ARIA, roles, labels, or alt text; keyboard navigation, focus order, or screen-reader behaviour; handling reduced motion; making content reflow at 320px or survive user text-spacing overrides; or judging an accessibility claim, overlay product, or automated-checker score."
+description: "Make an interface usable by people the design did not assume — using WCAG 2.2 as the normative floor rather than a vibe. Owns every accessibility threshold this repo states: contrast ratios, target sizes, reflow, text spacing, focus visibility, and motion. Use when: checking or fixing accessibility; asked whether a colour pair, tap target, focus ring, or font size passes; auditing a page or component against WCAG 2.2 A/AA/AAA; deciding whether to use APCA or WCAG 2 contrast; adding ARIA, roles, labels, or alt text; choosing between a div and a semantic element, adding landmarks, or fixing heading order; keyboard navigation, focus order, or screen-reader behaviour; handling reduced motion; making content reflow at 320px or survive user text-spacing overrides; or judging an accessibility claim, overlay product, or automated-checker score."
 license: MIT
 metadata:
   shareable-skills.owner-prefix: "sp"
@@ -24,7 +24,9 @@ sourced, so that no other skill invents a threshold and no two skills disagree.
   WCAG.
 - Checking a specific value: contrast ratio, tap target size, font size, focus indicator, line
   height, reflow width.
-- Adding or reviewing ARIA, roles, labels, alt text, or heading structure.
+- Adding or reviewing ARIA, roles, labels, or alt text.
+- Choosing between a `<div>` and a real element, adding landmarks, or fixing heading structure —
+  including when the question arrives as "does semantic HTML help SEO or AI?"
 - Keyboard navigation, focus order, focus visibility, or skip links.
 - Reduced motion, autoplay, or interaction-triggered animation.
 - Someone proposes APCA, an accessibility overlay, or an automated score as proof of conformance.
@@ -132,6 +134,12 @@ correctly.
 Order of preference: native element → native element with an accessible name → ARIA only for
 patterns HTML cannot express (live regions, complex composite widgets). Every ARIA attribute you add
 is a promise you must keep in JavaScript.
+
+Load `./references/semantic-structure.md` for the element-by-behaviour table, landmark mapping and
+its traps (`<header>` is only `banner` at page level; an unnamed `<section>` is not a landmark), and
+heading rules. It also answers the SEO/AI version of the question honestly: semantic markup is
+**not** a ranking factor and barely affects AI content extraction — accessibility and
+maintainability are the real case, and they are enough.
 
 ## What automated checking can and cannot tell you
 

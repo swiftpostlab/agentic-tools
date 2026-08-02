@@ -34,7 +34,9 @@ Provide app-level defaults for self-contained browser apps and local web tools t
 ## Defaults
 
 - Start with one self-contained HTML file for small and medium apps.
-- Use semantic HTML before reaching for generic containers.
+- Use semantic HTML before reaching for generic containers — choose the element for the behaviour it
+  carries, not for how it looks. Element table, landmarks, and heading rules:
+  `.agents/skills/ref-sp-ux-accessibility/references/semantic-structure.md`.
 - Prefer no package manager or build pipeline by default.
 - If Node-based tooling becomes necessary, prefer Yarn for dependency management and scripts.
 - For richer no-build UI, prefer browser-loadable UI libraries over re-creating every control from scratch.
