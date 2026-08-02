@@ -1,0 +1,144 @@
+{
+  "skill_name": "ref-sp-ux-design",
+  "note": "Trigger coverage matters more than usual here: one description carries spacing, typography, colour, emphasis, readability, and responsive triggers. Cases 1-6 are should-trigger across each cluster; 7-9 are near misses that must route to ref-sp-ux-accessibility or elsewhere; 10-12 test the claim-tiering behaviour that distinguishes this skill from generic design advice.",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "This settings page feels cluttered and I can't work out why. Everything is 16px apart and it just looks like soup.",
+      "expected_output": "Diagnosis as a grouping failure caused by uniform spacing, with the proximity mechanism named and unequal inner/outer gaps proposed.",
+      "files": [],
+      "assertions": [
+        "Identifies uniform spacing as the defect rather than suggesting more space overall",
+        "Explains grouping via proximity rather than asserting a pixel value as correct",
+        "Recommends space before borders, cards, or dividers",
+        "Labels any spacing scale it proposes as a convention, not a finding"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "What line length should I use for the body text on our blog?",
+      "expected_output": "45-75 characters recommended as a preference optimum, with the explicit correction that longer lines are read faster.",
+      "files": [],
+      "assertions": [
+        "States that reading is fastest at long lines (~100 CPL) and that 45-75 is a preference finding",
+        "Does not present 50-75 characters as a reading-speed optimum",
+        "Cites WCAG 1.4.8 (AAA) 80 characters as the only normative figure",
+        "Routes the normative threshold to ref-sp-ux-accessibility rather than restating it as its own"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Should I use bold or italic to emphasise key terms in our docs?",
+      "expected_output": "Bold for emphasis, italic for subtle differentiation, grounded in Dyson & Beier (2016), with a warning about emphasis inflation.",
+      "files": [],
+      "assertions": [
+        "Cites Dyson & Beier 2016 or the finding that bold may impair letter identification while italic does not disrupt recognition",
+        "Explains that bold's disruptiveness is what makes it work as emphasis",
+        "Warns against emphasis inflation",
+        "Does not recommend all-caps or underline for emphasis on the web"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Our colour palette keeps looking inconsistent when we add new shades. How should we build it?",
+      "expected_output": "Ramps built in OKLCH with semantic role naming, chroma falling at the extremes, and dark theme treated as a separate design.",
+      "files": [],
+      "assertions": [
+        "Explains why equal HSL lightness does not look equally light across hues",
+        "Recommends oklch() ramps and names CSS Color 4's status honestly",
+        "Recommends semantic role names over hue names",
+        "Defers contrast thresholds to ref-sp-ux-accessibility"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "This blog post is a wall of text. Make it readable.",
+      "expected_output": "Cutting words first, then structure that produces layer-cake scanning, with the F-pattern named as a symptom rather than a target.",
+      "files": [],
+      "assertions": [
+        "Puts conciseness ahead of formatting, citing that conciseness measured highest in Nielsen's rewrite study",
+        "Notes the 1997 study does not disclose a sample size",
+        "Describes the F-pattern as a failure symptom NN/g calls bad for users",
+        "Names the layer-cake pattern as the design target"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "We're going mobile-first. What breakpoints should we set?",
+      "expected_output": "Content-driven breakpoints, container queries where the unit is a component, and size classes used as a sanity check.",
+      "files": [],
+      "assertions": [
+        "Recommends breaking where the content breaks rather than at device widths",
+        "Mentions container queries or intrinsic layout as removing the need for many breakpoints",
+        "Labels Material window size classes as a vendor convention",
+        "Treats mobile-first as content prioritisation rather than media-query ordering"
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "Is #767676 on white an accessible text colour?",
+      "expected_output": "Routes to ref-sp-ux-accessibility, which owns contrast thresholds.",
+      "files": [],
+      "assertions": [
+        "Does not state the 4.5:1 threshold as this skill's own rule",
+        "Routes to ref-sp-ux-accessibility"
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "Our tap targets are 20x20. Does that pass?",
+      "expected_output": "Routes to ref-sp-ux-accessibility for WCAG 2.5.8.",
+      "files": [],
+      "assertions": [
+        "Does not invent or restate the target-size threshold",
+        "Routes to ref-sp-ux-accessibility"
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "Why isn't our landing page ranking on Google?",
+      "expected_output": "Routes to ref-sp-web-seo; this is not a UX design question.",
+      "files": [],
+      "assertions": [
+        "Does not treat this as a design question",
+        "Routes to ref-sp-web-seo"
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "My designer says we should cut the nav to seven items because of Miller's law. Is that right?",
+      "expected_output": "Correction: Miller 1956 is about immediate memory span for unrelated items, not menu length; Cowan 2001 puts the limit nearer 4±1; argue from scanning cost instead.",
+      "files": [],
+      "assertions": [
+        "States that Miller's paper is not about menus and that Miller proposed no UI rule",
+        "Mentions Cowan 2001 / 4±1 or otherwise corrects the number",
+        "Offers a defensible alternative argument (scanning or decision cost)",
+        "Corrects the premise without being evasive about it"
+      ]
+    },
+    {
+      "id": 11,
+      "prompt": "Let's use the 60-30-10 rule for the palette and the golden ratio for the type scale.",
+      "expected_output": "Both named as folklore, with the useful residue of each stated and a defensible replacement offered.",
+      "files": [],
+      "assertions": [
+        "Identifies 60-30-10 as a decorating heuristic with no perceptual research behind it",
+        "States that no perceptual evidence supports the golden ratio in typography",
+        "Keeps the useful part of each (mostly-neutral surfaces; a consistent modular ratio)",
+        "Does not simply comply with the premise"
+      ]
+    },
+    {
+      "id": 12,
+      "prompt": "Put the primary action in the thumb zone — most phone use is one-handed.",
+      "expected_output": "Bottom-reachable placement endorsed as a cheap default, with the underlying data stated accurately: 49% one-handed, n=1,333, 2013.",
+      "files": [],
+      "assertions": [
+        "States the actual figure (49% one-handed) rather than accepting 'most'",
+        "States the year (2013) and sample size (1,333)",
+        "Still endorses bottom placement as a reasonable default",
+        "Does not present the thumb zone as a law"
+      ]
+    }
+  ]
+}
