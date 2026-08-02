@@ -174,6 +174,13 @@ registry-driven** vocabulary.
 - **AI family** (crisp, they overlap): `llm` = prompting/context/tool-use/agents-as-LLM;
   `ml` = classical training/modeling; `nlp` = language processing broadly; `ai` = catch-all for
   AI concepts with no sharper home (keep even alongside the others).
+- **`ux`** — how a human perceives and operates an interface: interaction, usability, spacing,
+  typography, colour, readability, accessibility, on any platform. `belongs-when`: "Is the subject
+  the human side of the interface, rather than the platform delivering it?"
+  - Disambiguation vs `web`: `web` owns the web *as a platform and as a presence* (CMSes, crawlers,
+    discoverability). "Does this page rank" → `web`. "Can a person read and use this page" → `ux`.
+  - Disambiguation vs `js`: component and framework code → `js`. What the component should look
+    like and why → `ux`.
 - **`dev`** — catch-all; absorbs today's leaked buckets (`git`, `github`, `docs`, `code`,
   `projects`) unless a sharper domain applies. Specifics go in `tags`.
 

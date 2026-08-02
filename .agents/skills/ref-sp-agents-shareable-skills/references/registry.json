@@ -54,6 +54,10 @@
       "description": "The web as a platform and as a presence: site platforms and CMSes (WordPress, Shopify), web standards and crawler/browser behavior, and discoverability — search, AI answers, and marketing measurement.",
       "belongsWhen": "Is the subject the web itself — a web platform, or how a site is found, served, and consumed on it — rather than a programming language or a generic engineering practice? Use js for the JS/TS ecosystem, dev for language-agnostic dev practice, and baas for managed backend platforms."
     },
+    "ux": {
+      "description": "Designing what a human sees and operates: interaction, usability, visual craft, spacing, typography, colour, readability, and accessibility, on any platform — web, mobile, or desktop.",
+      "belongsWhen": "Is the subject how a human perceives and uses an interface, rather than the platform it is delivered on? Use web for the web as a platform and for discoverability, js for framework and component code, and dev for generic engineering practice."
+    },
     "rust": {
       "description": "The Rust language and toolchain.",
       "belongsWhen": "Is this mainly about Rust itself, not a feature or domain that merely uses Rust?"
@@ -110,7 +114,12 @@
     "nosql",
     "review",
     "retro",
-    "reflection"
+    "reflection",
+    "accessibility",
+    "wcag",
+    "design",
+    "typography",
+    "readability"
   ],
   "domainAliases": {
     "seo": "web",
