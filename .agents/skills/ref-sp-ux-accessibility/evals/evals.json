@@ -1,0 +1,97 @@
+{
+  "skill_name": "ref-sp-ux-accessibility",
+  "note": "This skill exists to be the single owner of normative thresholds. Cases 1-4 check that it produces the right number with the right version; 5-7 check the claims that most sources get wrong (APCA, 1.4.12's direction, automated scores); 8 is a near miss that must route to ref-sp-ux-design.",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Is 16px grey text at #767676 on a white background compliant?",
+      "expected_output": "Contrast measured against the 4.5:1 AA threshold for normal text, with the large-text carve-out explained and the WCAG version stated.",
+      "files": [],
+      "assertions": [
+        "Applies 4.5:1 for normal text and names SC 1.4.3",
+        "States that large text (>=18pt, or >=14pt bold) uses 3:1 and that 16px does not qualify",
+        "States the WCAG version (2.2) rather than an unversioned 'WCAG'"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Our icon buttons are 20x20 pixels with 4px between them. Is that a problem?",
+      "expected_output": "Fails SC 2.5.8 (24x24 AA) unless the spacing exception applies; the spacing exception is evaluated.",
+      "files": [],
+      "assertions": [
+        "Names SC 2.5.8 and the 24x24 CSS px minimum",
+        "Evaluates the spacing exception (24px-diameter circles must not intersect) rather than answering with the size alone",
+        "Distinguishes the AAA 44x44 figure from the AA requirement"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "A sticky header covers the focused element when I tab up the page. Which criterion is that?",
+      "expected_output": "SC 2.4.11 Focus Not Obscured (Minimum), Level AA, with the 'entirely hidden' wording and the AAA variant distinguished.",
+      "files": [],
+      "assertions": [
+        "Names SC 2.4.11 at Level AA",
+        "States the AA bar is 'not entirely hidden' and that 2.4.12 (AAA) requires no part hidden",
+        "Identifies sticky headers/banners as the common failure"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "What zoom and viewport widths should we test at?",
+      "expected_output": "320 CSS px for reflow (1.4.10) and 200% text resize (1.4.4), with the relationship to 400% zoom on 1280px explained.",
+      "files": [],
+      "assertions": [
+        "Gives 320 CSS px for SC 1.4.10 and 200% for SC 1.4.4",
+        "Explains that 320px corresponds to 1280px at 400% zoom",
+        "Distinguishes page zoom from text-only zoom"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "We're switching our contrast checks to APCA since it's the WCAG 3 algorithm.",
+      "expected_output": "Correction: APCA was removed from the WCAG 3 draft in July 2023, WCAG 3's contrast algorithm is undetermined, WCAG 3 is not expected before ~2030; conform to WCAG 2.2 and treat APCA as supplementary.",
+      "files": [],
+      "assertions": [
+        "States that APCA was pulled from the WCAG 3 working draft in July 2023",
+        "States that the WCAG 3 contrast algorithm is 'yet to be determined'",
+        "Recommends conforming to WCAG 2.2 contrast",
+        "Allows APCA as a supplementary check without calling it a standard",
+        "Corrects the premise directly rather than hedging"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "WCAG requires 1.5 line height, so I've set line-height: 1.5 everywhere. Done?",
+      "expected_output": "Correction: SC 1.4.12 is a resilience requirement about user-imposed spacing, not a mandate to ship 1.5; the real test is that nothing breaks when the user applies the values.",
+      "files": [],
+      "assertions": [
+        "Corrects the direction of SC 1.4.12",
+        "Lists the four user-imposed values (1.5 line height, 2x paragraph, 0.12x letter, 0.16x word)",
+        "Names fixed-height containers as the typical failure",
+        "Does not endorse the original premise"
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "Lighthouse gives us 100 on accessibility. Can we say the product is accessible?",
+      "expected_output": "No. Automated tools cover a minority of barriers; report as 'no automated violations' and name the manual passes still required.",
+      "files": [],
+      "assertions": [
+        "States that a clean automated run is a floor, not a pass",
+        "Names things automation cannot judge (alt meaningfulness, focus order logic, custom widget behaviour)",
+        "Recommends the keyboard, zoom, spacing-override, and screen-reader passes",
+        "Does not recommend an accessibility overlay"
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "How should I structure the spacing scale for our design system?",
+      "expected_output": "Routes to ref-sp-ux-design; spacing scale construction is not an accessibility threshold question.",
+      "files": [],
+      "assertions": [
+        "Routes to ref-sp-ux-design",
+        "Does not invent an accessibility justification for a spacing scale"
+      ]
+    }
+  ]
+}
