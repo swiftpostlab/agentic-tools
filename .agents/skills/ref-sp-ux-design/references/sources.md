@@ -38,7 +38,7 @@ about their own platform, not evidence about human perception.
 **Fetching note:** `m3.material.io` and `developer.apple.com/design/*` are client-rendered shells —
 a plain fetch returns HTTP 200 with no useful body. Read them with `playwright-cli`
 (`goto`, then `eval` over `document.querySelectorAll('table')` or `('p,li,h2,h3')`). See
-`ref-sp-dev-playwright-cli`.
+`.agents/skills/ref-sp-dev-playwright-cli/SKILL.md`.
 
 ## Claim table
 
@@ -61,7 +61,7 @@ a plain fetch returns HTTP 200 with no useful body. Read them with `playwright-c
 | M3 window size classes and pane counts | 4 | Material 3 | Material revising |
 | Apple: 17 pt default / 11 pt minimum body; 200% enlargement; "thicker weights are easier to read at small sizes" | 4 | Apple HIG Accessibility | Apple revising |
 | Apple layout quotes (grouping via negative space; reading order; crowding) | 4 | Apple HIG Layout | Apple revising |
-| WCAG numbers referenced from this skill | 2 | WCAG 2.2 — **owned by `ref-sp-ux-accessibility`** | WCAG 2.3/3.0 |
+| WCAG criteria referenced from this skill | 2 | WCAG 2.2 — values **owned by** `.agents/skills/ref-sp-ux-accessibility/references/thresholds.md`; this skill cites criterion numbers only | WCAG 2.3/3.0 |
 
 ## Corroborated but NOT primary-verified
 
@@ -84,7 +84,8 @@ pass. Re-verify before they become load-bearing in a deliverable.
   table; only unit conversions were recoverable (Android sp ↔ Web rem at 0.0625; tracking em =
   tracking px / font size sp). Not load-bearing — M3 itself says "No single product will use all the
   styles."
-- **Apple's 44 × 44 pt tap target.** Not captured verbatim from the pages fetched. WCAG 2.5.5 gives
-  44 × 44 CSS px at AAA and is the citable version.
+- **Apple's 44 × 44 pt tap target.** Not captured verbatim from the pages fetched, so it is not
+  cited as an Apple figure anywhere in this skill. The citable version is WCAG SC 2.5.5 (AAA), whose
+  value is owned by `.agents/skills/ref-sp-ux-accessibility/references/thresholds.md`.
 - **The grouping-conflict ordering** in `foundations.md` (common region > proximity > similarity) is
   labelled tier 4 in place: a working heuristic, not a finding from Wagemans.

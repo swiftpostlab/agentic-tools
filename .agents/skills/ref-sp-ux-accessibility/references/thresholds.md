@@ -75,7 +75,8 @@ For blocks of text, a mechanism is available to achieve all of:
 - Resizable to **200%** without horizontal scrolling.
 
 The ≤80-character measure is the only *normative* line-length number in WCAG. Everything else about
-measure is practitioner research — see `ref-sp-ux-design`.
+measure is practitioner research — see
+`.agents/skills/ref-sp-ux-design/references/typography.md`.
 
 ## Targets
 

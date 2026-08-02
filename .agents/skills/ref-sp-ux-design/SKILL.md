@@ -37,6 +37,12 @@ reflow, focus visibility, any WCAG threshold. That is
 `.agents/skills/ref-sp-ux-accessibility/SKILL.md`, which owns every normative number. This skill
 tells you how to build a palette; that one tells you whether the pair is legal.
 
+**The ownership rule, stated so it can be checked:** this skill names WCAG success criteria by
+number (SC 1.4.1, SC 2.5.8) and never states their threshold *values*. One deliberate exception is
+recorded in `./references/typography.md` — the 80-character cap, because that number is the object
+of a correction rather than a lookup. If you find yourself writing a ratio, a pixel count, or a
+percentage from WCAG anywhere else in this skill, it belongs in the accessibility skill instead.
+
 ## The rule that makes this skill different: label the claim
 
 Before asserting anything about design, know which of these you are saying. State the tier when it
@@ -92,7 +98,7 @@ The single highest-leverage thing in a layout, and the least discussed.
 - **Make the gaps unequal on purpose.** A label 4 px from its input and 24 px from the next field
   says something. Both at 16 px says nothing.
 - **Space *around* a control is part of the control.** Crowded controls are hard to tell apart —
-  Apple's HIG says exactly this, and WCAG 2.5.8's spacing exception encodes it.
+  Apple's HIG says exactly this, and WCAG SC 2.5.8's spacing exception encodes it.
 - **A spacing scale is a convention, not a finding.** 4/8-pt grids, 1.5 modular ratios, 8-point
   systems — all tier 4. They are worth adopting because consistency is legible, not because 8 is a
   perceptually special number. Say "we use an 8-pt scale" and never "8 px is correct".
@@ -112,8 +118,8 @@ web's 16 px convention sit consistently above that floor. Floor: tier 1. The spe
 **Measure (line length).** The most misreported fact in design writing. Dyson's work finds reading
 is **fastest at long lines — around 100 characters** — while readers **prefer** 45–72. The famous
 "50–75 characters is optimal" is a *preference* result being sold as a *speed* result. The honest
-statement: measure is a comfort optimum. The only normative number is WCAG 1.4.8's ≤80 characters,
-and that is AAA.
+statement: measure is a comfort optimum. The one place a normative cap exists is WCAG SC 1.4.8, and
+that is AAA — see `./references/typography.md`.
 
 **Emphasis.** Dyson & Beier (2016) tested this directly: bold words are perceptually salient but
 alternating into bold **can impair** letter identification, while switching to italic does not
@@ -143,7 +149,8 @@ loading.
 - **Never encode meaning in hue alone.** Red–green deficiency affects roughly 8% of males in
   Northern European populations (nearer 4.5% pooled globally). Pair hue with text, icon, shape, or
   position. The normative form of this rule is WCAG 1.4.1, Level A — see the accessibility skill.
-- **Contrast thresholds live in `ref-sp-ux-accessibility`.** Do not restate them here. And if
+- **Contrast thresholds live in `.agents/skills/ref-sp-ux-accessibility/SKILL.md`.** Do not restate
+  them here. And if
   someone proposes APCA: it is a candidate method, not a standard, and it was removed from the
   WCAG 3 draft in 2023.
 - **60-30-10 is folklore.** Fine as a starting sketch, not a rule, and there is no perceptual
@@ -206,8 +213,8 @@ Load `./references/responsive.md` for breakpoint strategy, touch vs pointer inpu
 2. Which tier is your justification — research, standard, convention, or taste? Taste is allowed;
    claiming it is research is not.
 3. Does grouping survive: would a stranger draw the same boxes around your content that you would?
-4. Does it hold at 320 px and at 200% text zoom? (Thresholds:
-   `.agents/skills/ref-sp-ux-accessibility/SKILL.md`.)
+4. Does it survive the narrow-viewport and text-zoom checks (WCAG SC 1.4.10 and 1.4.4)? Values and
+   procedure: `.agents/skills/ref-sp-ux-accessibility/references/testing.md`.
 5. Is any information carried by colour alone?
 6. Have you deleted anything? Conciseness measured better than every formatting change.
 

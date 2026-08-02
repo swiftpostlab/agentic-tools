@@ -3,7 +3,7 @@
 Every dated or numeric claim in this skill, mapped to where it came from, when it was checked, and
 what would make it wrong.
 
-**Claim tiers** (same scheme as `ref-sp-ux-design`):
+**Claim tiers** (same scheme as `.agents/skills/ref-sp-ux-design/references/sources.md`):
 
 1. **Perceptual/cognitive research** — durable, cite the primary.
 2. **Normative standard** — binding, versioned, checkable.

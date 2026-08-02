@@ -31,7 +31,13 @@ sourced, so that no other skill invents a threshold and no two skills disagree.
 
 **Route elsewhere when:** the question is how something should *look* — spacing rhythm, palette
 construction, type scale, hierarchy, readability of prose — that is
-`.agents/skills/ref-sp-ux-design/SKILL.md`. It defers every threshold back here.
+`.agents/skills/ref-sp-ux-design/SKILL.md`.
+
+**The ownership rule, stated so it can be checked:** every WCAG threshold value in this repo lives
+here, in `./references/thresholds.md`. `ref-sp-ux-design` cites criterion numbers and never their
+values, with one recorded exception (the 80-character measure cap, because it is the object of a
+correction there). If a threshold value appears in a third place, this skill is no longer the single
+source of truth and the copy should be removed rather than kept in sync.
 
 ## The version matters — say it out loud
 

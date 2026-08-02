@@ -31,7 +31,8 @@ which you did not.
 
 ## Driving checks from the terminal
 
-This repo has `playwright-cli` (see `ref-sp-dev-playwright-cli`). Useful patterns:
+This repo has `playwright-cli` (see `.agents/skills/ref-sp-dev-playwright-cli/SKILL.md`). Useful
+patterns — `ref-sp-ux-design`'s responsive reference points here rather than keeping a second copy:
 
 ```bash
 # Reflow: 320 CSS px wide, then look for horizontal overflow

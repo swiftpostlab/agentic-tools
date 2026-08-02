@@ -61,9 +61,10 @@ rare that a layout needs to respond to available height.
 
 ## Touch, pointer, and reach
 
-**Target size** is normative and lives in `ref-sp-ux-accessibility`: 24 × 24 CSS px at AA
-(WCAG 2.5.8), 44 × 44 at AAA (2.5.5). Apple's 44 pt and Material's 48 dp are vendor conventions that
-happen to align with the AAA figure.
+**Target size is normative and this skill does not own the number.** WCAG SC 2.5.8 (AA) and 2.5.5
+(AAA) set it; read the values in `.agents/skills/ref-sp-ux-accessibility/references/thresholds.md`.
+What belongs here is the design consequence: Apple's 44 pt and Material's 48 dp are vendor
+conventions that happen to sit near the AAA criterion, and neither is independent evidence.
 
 **Detect capability, not device:**
 
@@ -104,16 +105,17 @@ the year and the n whenever you use this.
 
 ## Practical checks
 
-- Test at **320 CSS px** — that is WCAG 1.4.10's reflow condition and also 1280 px at 400% zoom.
-- Test at **200% text zoom** without changing the viewport (WCAG 1.4.4). Text-only zoom breaks
-  layouts that page zoom does not.
-- Test **landscape on a phone** — short viewports break fixed headers and modals.
-- Check that nothing depends on hover.
+The narrow-viewport and zoom checks are accessibility conformance tests, and the procedure — with
+the exact widths, zoom levels, and `playwright-cli` commands — lives in
+`.agents/skills/ref-sp-ux-accessibility/references/testing.md`. Run it from there rather than
+keeping a second copy in sync here.
 
-```bash
-yarn playwright resize 320 800
-yarn playwright eval "() => document.documentElement.scrollWidth > document.documentElement.clientWidth"
-```
+Two design checks that are *not* conformance tests, and so do belong here:
+
+- **Landscape on a phone.** Short viewports break fixed headers, modals, and anything positioned
+  against the bottom edge. No criterion covers this; it is just a layout that falls over.
+- **Hover dependence.** Any affordance that only appears on hover is invisible to touch. This is a
+  design defect before it is a conformance one.
 
 ## Fluid type, carefully
 
@@ -123,5 +125,5 @@ h1 { font-size: clamp(1.75rem, 1.2rem + 2.5vw, 3rem); }
 ```
 
 Use `rem` in the `clamp()` bounds. A purely `vw`-based size does not respond to the user's font-size
-setting, which fails WCAG 1.4.4. Fluid type is a convenience, not a requirement — a few fixed steps
+setting, which fails WCAG SC 1.4.4. Fluid type is a convenience, not a requirement — a few fixed steps
 at breakpoints is perfectly good and easier to reason about.

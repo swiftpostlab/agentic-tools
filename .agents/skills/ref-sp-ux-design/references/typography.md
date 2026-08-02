@@ -49,7 +49,11 @@ Why preference still wins in practice: on the web, nobody is being paid to finis
 find unpleasant is abandoned, and abandonment costs more than the reading-speed delta. Design for
 45–75 CPL because readers prefer it — not because it is faster, because it is not.
 
-The only normative number: **WCAG 1.4.8 (AAA) caps at 80 characters** (40 for CJK).
+The only normative figure is **WCAG SC 1.4.8 (AAA)**, which caps measure at 80 characters (40 for
+CJK). That number is owned by
+`.agents/skills/ref-sp-ux-accessibility/references/thresholds.md` and is repeated here only because
+it is the object of the correction above — it is the one place a normative cap exists, and the
+45–75 convention is not it.
 
 ```css
 /* ch ≈ width of "0"; 60–70ch lands around 55–70 characters for most fonts */
@@ -66,7 +70,7 @@ The only normative number: **WCAG 1.4.8 (AAA) caps at 80 characters** (40 for CJ
   inherits correctly through nested elements of different sizes.
 
 WCAG 1.4.12 requires that nothing *breaks* when a user forces 1.5 — it does not require you to ship
-1.5. See `ref-sp-ux-accessibility`.
+1.5. See `.agents/skills/ref-sp-ux-accessibility/SKILL.md`.
 
 ## Tracking (letter spacing)
 

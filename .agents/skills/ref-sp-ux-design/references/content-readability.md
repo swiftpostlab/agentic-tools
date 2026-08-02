@@ -73,7 +73,7 @@ readers).
   see `typography.md`.
 - Paragraph spacing must exceed line spacing, or paragraphs stop reading as units.
 - Left-align body text. Justified text on the web produces rivers and inconsistent word spacing
-  because browsers do not hyphenate well; WCAG 1.4.8 (AAA) explicitly asks for un-justified text.
+  because browsers do not hyphenate well; WCAG SC 1.4.8 (AAA) explicitly asks for un-justified text.
 - Do not centre body copy. The left edge is where the eye returns on every line.
 
 ## Plain language

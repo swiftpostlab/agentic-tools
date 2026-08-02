@@ -77,9 +77,10 @@ Apple's HIG, on layout: "Make controls easier to use by providing enough space a
 grouping them in logical sections. If unrelated controls are too close together — or if other
 content crowds them — they can be difficult for people to tell apart."
 
-WCAG 2.5.8 encodes the same idea from the other direction: a target smaller than 24 × 24 px can
-still conform if a 24 px circle centred on it does not intersect another target's circle. Space
-substitutes for size.
+WCAG SC 2.5.8 encodes the same idea from the other direction, through its spacing exception: an
+undersized target can still conform when it is far enough from its neighbours. **Space substitutes
+for size.** The threshold and the exact exception wording are owned by
+`.agents/skills/ref-sp-ux-accessibility/references/thresholds.md`.
 
 Practical: destructive actions get extra separation from the action next to them. That is a Fitts
 argument (see `foundations.md`) and it is one of the legitimate ones.
@@ -104,8 +105,8 @@ It is worth doing loosely and not worth being religious about — strict baselin
 fight with images, embeds, and variable content and rarely survive contact.
 
 The part that *is* worth keeping: **paragraph spacing should be larger than line spacing**, or
-paragraphs stop reading as units. WCAG 1.4.8 (AAA) puts a normative floor on this at 1.5× the line
-spacing.
+paragraphs stop reading as units. WCAG SC 1.4.8 (AAA) puts a normative floor under this — the value
+is in `.agents/skills/ref-sp-ux-accessibility/references/thresholds.md`.
 
 ## Layout containers
 

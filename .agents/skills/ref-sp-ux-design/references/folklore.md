@@ -59,7 +59,8 @@ the n, and do not distort a layout for it.
 characters per line**; readers prefer 45–72.
 
 **Say instead:** target 45–75 characters because readers prefer it and abandonment is the real cost —
-not because it is faster, because it is not. The only normative figure is WCAG 1.4.8's ≤80 (AAA).
+not because it is faster, because it is not. The one place a *normative* cap on measure exists is
+WCAG SC 1.4.8, at AAA — see `./typography.md`.
 
 ## "60-30-10 colour rule"
 
@@ -90,7 +91,7 @@ July 2023 WCAG 3 working draft**. The current draft says the contrast algorithm 
 determined". WCAG 3 is not expected before ~2030.
 
 **Say instead:** conform to WCAG 2.2. APCA is a reasonable supplementary check, not a standard. Full
-treatment in `ref-sp-ux-accessibility`.
+treatment in `.agents/skills/ref-sp-ux-accessibility/SKILL.md`.
 
 ## "The golden ratio in typography and layout"
 
@@ -140,7 +141,7 @@ gaps, not in the total amount. See `spacing-and-layout.md`.
 **Reality:** it does not, it is widely rejected by the accessibility community, and it has attracted
 enforcement action.
 
-**Say instead:** fix the markup. See `ref-sp-ux-accessibility`.
+**Say instead:** fix the markup. See `.agents/skills/ref-sp-ux-accessibility/SKILL.md`.
 
 ## How to handle a claim not on this list
 
