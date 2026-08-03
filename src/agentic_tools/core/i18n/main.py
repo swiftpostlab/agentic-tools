@@ -9,6 +9,7 @@ _TRANSLATION_DIRECTORIES = (
     _PACKAGE_ROOT / "main" / "translations",
     _PACKAGE_ROOT / "features" / "skills" / "translations",
     _PACKAGE_ROOT / "features" / "plugin" / "translations",
+    _PACKAGE_ROOT / "features" / "export" / "translations",
 )
 
 

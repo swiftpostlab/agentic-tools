@@ -5,6 +5,7 @@ from collections.abc import Sequence
 import click
 import typer
 
+from agentic_tools.features.export.main import app as export_app
 from agentic_tools.features.plugin.main import app as plugin_app
 from agentic_tools.features.skills.main import app as skills_app
 from agentic_tools.core.i18n.main import translate
@@ -17,6 +18,7 @@ app = typer.Typer(
 )
 app.add_typer(skills_app, name="skills")
 app.add_typer(plugin_app, name="plugin")
+app.add_typer(export_app, name="export")
 
 
 def normalize_exit_code(code: object) -> int:
