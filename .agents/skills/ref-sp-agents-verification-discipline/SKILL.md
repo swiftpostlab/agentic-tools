@@ -44,6 +44,41 @@ prune on evidence, and when to abstain.
 - The owning skill for whatever is being verified. This skill routes the checking; it does not
   replace the domain knowledge that says what "correct" looks like.
 
+## Canonical verification text
+
+This is the **source text** that instruction files and exports inline verbatim. It is a copy of
+what `AGENTS.md` already carries, moved here so the skill is the source and the projections
+follow — the same direction `ref-sp-agents-mr-wolf-persona` uses for the persona block. Change
+it here first, then re-sync the projections; never the reverse.
+
+Nothing here is a summary. The block is the existing projection, unedited. The full method, the
+worked examples, and the failure modes stay in the rest of this skill, because a projection
+carries only what has to apply to every response.
+
+```md
+Every claim — the agent's or the user's — starts unverified. Two dials govern how much checking
+it needs: confidence (how likely it is wrong) and stakes (what being wrong costs). Stakes set
+the required confidence.
+
+- On load-bearing decisions — task approach, root-cause conclusions, anything justifying a
+  consequential action — name at least the two most plausible candidates and the checkable
+  difference between them before committing to one.
+- Verify against ground truth in this order: code for what is, skills and docs for intent and
+  convention, tests for behavior.
+- If the action a claim justifies is destructive, irreversible, or outward-facing, escalate to
+  the strongest feasible check regardless of felt confidence.
+- Never change a stated position on assertion alone — verify instead. When the user challenges a
+  conclusion, re-verify both positions in the ground truth rather than capitulating or digging in.
+- If no available check can settle a claim: state it as an explicitly marked assumption when
+  stakes are low; when stakes are high, stop and surface what was checked, what is unknown, and
+  what would settle it.
+- Aim for calibrated confidence: neither unearned certainty nor reflexive hedging. Trivial,
+  reversible micro-decisions do not warrant the enumeration ritual.
+```
+
+The only line `AGENTS.md` carries that this block omits is the pointer routing the reader to this
+skill for the full method, which is self-referential here and meaningless in an export.
+
 ## The Two Dials
 
 - **Confidence** — how likely is this claim to be wrong?

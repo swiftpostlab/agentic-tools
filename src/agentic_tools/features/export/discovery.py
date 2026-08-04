@@ -24,6 +24,10 @@ _SKILL_PATH = re.compile(
     r"`?\.agents/skills/((?:ref|tool)-[a-z0-9-]+)(?:/(?:SKILL\.md|references/[a-z0-9-]+\.md))?`?"
 )
 _HEADING = re.compile(r"^(#{1,6})\s", re.MULTILINE)
+_CANONICAL_BLOCK = re.compile(
+    r"^##\s+Canonical[^\n]*\n.*?^```(?:md|markdown)?\r?\n(?P<block>.*?)^```",
+    re.DOTALL | re.MULTILINE | re.IGNORECASE,
+)
 
 
 def parse_frontmatter(text: str) -> dict[str, str]:
@@ -116,6 +120,27 @@ def flatten_skill(skill_directory: Path) -> SkillDocument | None:
         description=fields.get("description", ""),
         body="\n\n".join(section for section in sections if section),
     )
+
+
+def read_canonical_block(skill_directory: Path) -> str | None:
+    """Extract a skill's canonical projection block, if it publishes one.
+
+    Some skills hold text that an always-loaded instruction file inlines verbatim
+    — a persona, a discipline — under a `## Canonical ... text` heading followed
+    by a fenced block. Those are behavioural: they must shape every response, so
+    they belong in an instruction field rather than in a retrieved knowledge file,
+    which would only surface when a query happened to match them.
+
+    The tool *projects* this text and never edits it. Anything that reads wrong
+    for a destination is a defect to fix in the skill, because an exporter that
+    rewrites canonical text is just a forking machine with extra steps.
+    """
+    manifest = skill_directory / "SKILL.md"
+    if not manifest.is_file():
+        return None
+
+    match = _CANONICAL_BLOCK.search(manifest.read_text(encoding="utf-8"))
+    return match.group("block").strip() if match else None
 
 
 def _title_from(path: Path) -> str:

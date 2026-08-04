@@ -89,18 +89,29 @@ def _trigger_from(description: str) -> str:
     return f"{collapsed[:297].rsplit(' ', 1)[0]}…"
 
 
-def render_instructions(plan: ExportPlan, template: str) -> str:
-    """Fill a hand-written instruction template with the generated routing.
+def render_instructions(
+    plan: ExportPlan, template: str, injections: dict[str, str] | None = None
+) -> str:
+    """Fill an instruction template with projected and generated text.
 
-    The template is authored, not derived: an instruction file assembled by
-    cutting sections out of a repo's `AGENTS.md` inherits its audience, its
-    tooling references, and its assumption of file access.
+    `injections` carries canonical blocks copied verbatim out of skills — a
+    persona, a verification discipline. That text is behavioural: it has to
+    shape every response, so it belongs in an always-loaded instruction field
+    rather than in a knowledge file, which would only surface when a query
+    happened to match it.
+
+    The projection is a copy. Nothing here rewrites, trims, or summarises the
+    source, because a projection that edits its source is a fork.
     """
-    if _BUNDLE_MAP_PLACEHOLDER not in template:
+    rendered = template
+    for name, value in (injections or {}).items():
+        rendered = rendered.replace(f"{{{{{name}}}}}", value)
+
+    if _BUNDLE_MAP_PLACEHOLDER not in rendered:
         return (
-            f"{template.rstrip()}\n\n## Knowledge files\n\n{render_bundle_map(plan)}\n"
+            f"{rendered.rstrip()}\n\n## Knowledge files\n\n{render_bundle_map(plan)}\n"
         )
-    return template.replace(_BUNDLE_MAP_PLACEHOLDER, render_bundle_map(plan))
+    return rendered.replace(_BUNDLE_MAP_PLACEHOLDER, render_bundle_map(plan))
 
 
 def render_readme(plan: ExportPlan, out_dir: Path) -> str:
@@ -165,7 +176,10 @@ def render_readme(plan: ExportPlan, out_dir: Path) -> str:
 
 
 def write_export(
-    plan: ExportPlan, out_dir: Path, instructions_template: str
+    plan: ExportPlan,
+    out_dir: Path,
+    instructions_template: str,
+    injections: dict[str, str] | None = None,
 ) -> tuple[Path, ...]:
     """Write the knowledge files, instructions, and README. Returns what it wrote."""
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -178,7 +192,7 @@ def write_export(
 
     instructions = out_dir / "instructions.md"
     instructions.write_text(
-        render_instructions(plan, instructions_template), encoding="utf-8"
+        render_instructions(plan, instructions_template, injections), encoding="utf-8"
     )
     written.append(instructions)
 

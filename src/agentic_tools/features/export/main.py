@@ -8,10 +8,14 @@ import typer
 from agentic_tools.core.i18n.main import translate
 from agentic_tools.features.export.config import (
     ExportConfigError,
+    injections_from_config,
     load_config_file,
     resolve_selection,
 )
-from agentic_tools.features.export.discovery import discover_skills
+from agentic_tools.features.export.discovery import (
+    discover_skills,
+    read_canonical_block,
+)
 from agentic_tools.features.export.gemini_gem import (
     GEMINI_GEM_LIMITS,
     bundle_filename,
@@ -120,12 +124,21 @@ def build(
         return 0
 
     template = _resolve_template(config, instructions)
+    try:
+        injections = _resolve_injections(config, skills_root)
+    except ExportConfigError as error:
+        typer.echo(str(error), err=True)
+        return 2
+
     destination = out_dir or Path(".agents/playground/export") / target
-    written = write_export(plan, destination, template)
+    written = write_export(plan, destination, template, injections)
+
+    for placeholder in sorted(injections):
+        typer.echo(translate("export.build.injected", placeholder=placeholder))
 
     # The Gem instruction field's limit is undocumented, so report the size
     # rather than let it be discovered on paste.
-    instruction_chars = len(render_instructions(plan, template))
+    instruction_chars = len(render_instructions(plan, template, injections))
     typer.echo(
         translate("export.build.instruction_size", chars=f"{instruction_chars:,}")
     )
@@ -146,6 +159,27 @@ def _resolve_template(
         if isinstance(configured, str):
             return Path(configured).read_text(encoding="utf-8")
     return _DEFAULT_INSTRUCTIONS
+
+
+def _resolve_injections(
+    config: dict[str, object] | None, skills_root: Path
+) -> dict[str, str]:
+    """Project each configured skill's canonical block into a placeholder value.
+
+    A missing block is an error rather than a silent empty substitution: an
+    instruction file quietly shipped without its persona still looks fine.
+    """
+    resolved: dict[str, str] = {}
+    for placeholder, skill_name in injections_from_config(config).items():
+        block = read_canonical_block(skills_root / skill_name)
+        if block is None:
+            raise ExportConfigError(
+                f"'{skill_name}' publishes no canonical block, so {{{{{placeholder}}}}} "
+                "cannot be filled. The skill needs a '## Canonical ... text' heading "
+                "followed by a fenced block."
+            )
+        resolved[placeholder] = block
+    return resolved
 
 
 def _report(plan: ExportPlan) -> None:

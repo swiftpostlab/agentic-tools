@@ -21,7 +21,8 @@
         "dry_run_notice": "Dry run: nothing written.",
         "no_skills": "No skills found under {{path}}",
         "empty_selection": "The selection matched no skills.",
-        "unknown_target": "Unknown target '{{target}}'. Supported: gemini-gem"
+        "unknown_target": "Unknown target '{{target}}'. Supported: gemini-gem",
+        "injected": "Projected the canonical block for {{placeholder}} verbatim from its skill."
       }
     }
   }

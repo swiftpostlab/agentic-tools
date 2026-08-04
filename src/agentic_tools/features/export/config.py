@@ -110,6 +110,32 @@ def selection_from_config(config: dict[str, Any], *, base: Selection) -> Selecti
     )
 
 
+def injections_from_config(config: dict[str, Any] | None) -> dict[str, str]:
+    """Read the `inject` block: placeholder name → skill that publishes the text.
+
+    Skill names live in the request, never in the tool, for the same reason
+    presets stay generic: a hardcoded name means nothing in a consuming repo.
+    """
+    if config is None:
+        return {}
+    raw: Any = config.get("inject")
+    if raw is None:
+        return {}
+    if not isinstance(raw, dict):
+        raise ExportConfigError(
+            "'inject' must be an object mapping a placeholder name to a skill name"
+        )
+    mapping: dict[str, str] = {}
+    # JSON keys are always strings; only the values need checking.
+    for placeholder, skill_name in cast(dict[str, Any], raw).items():
+        if not isinstance(skill_name, str):
+            raise ExportConfigError(
+                f"'inject.{placeholder}' must be a skill name, as a string"
+            )
+        mapping[placeholder] = skill_name
+    return mapping
+
+
 def resolve_selection(
     *,
     preset: str,
