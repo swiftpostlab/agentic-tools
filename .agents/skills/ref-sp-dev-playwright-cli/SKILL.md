@@ -27,6 +27,8 @@ Playwright script for one-off checks or agent-driven UI verification.
 - Running or debugging Playwright test files (`references/playwright-tests.md`).
 - Recording a session as video or trace for later review (`references/video-recording.md`, `references/tracing.md`).
 - Asking the user for live UI/design feedback via the annotation dashboard.
+- Reading a page that plain fetching cannot retrieve — see [Reading pages that plain fetching
+  cannot](#reading-pages-that-plain-fetching-cannot).
 - Any task that would otherwise require writing and discarding a one-off Playwright script.
 
 ## Provenance
@@ -41,6 +43,46 @@ below is upstream Playwright/Microsoft content, adapted only to this repo's skil
 `@playwright/cli` is a devDependency (see `package.json`); run the CLI via the `yarn playwright`
 script or `node_modules/.bin/playwright-cli` directly. Requires Node >= 22 — use the repo's Node
 toolchain (`nvm use 22` or `corepack enable` if `yarn`/`playwright-cli` are not on `PATH`).
+
+## Reading pages that plain fetching cannot
+
+Repo-owned guidance, not upstream. Escalate in this order and stop as soon as you have the content —
+a browser costs far more than a fetch, so it is a step to reach for on evidence, not by default.
+
+**1. Plain fetching first.** Cheapest, and it works for most sources.
+
+**2. Read the failure before escalating.** The symptom tells you which problem you have:
+
+| Symptom | Cause | What helps |
+| --- | --- | --- |
+| HTTP 403 on a page a browser shows fine | Bot protection keyed on more than the User-Agent | A real browser |
+| HTTP 200 with an empty or near-empty body | Client-rendered app; the HTML is a shell | A real browser |
+| A challenge page — titles like `Just a moment...`, or body text about verifying you are not a bot | Interstitial challenge | A browser will **not** help; change source |
+
+**3. Escalate to a real browser** for the first two:
+
+```bash
+playwright-cli goto <url>
+playwright-cli eval "() => document.body.innerText"
+```
+
+`eval` on `innerText` is usually better than a snapshot when you want prose rather than structure —
+it returns the rendered text without the accessibility tree around it.
+
+**4. When the browser is also challenged, change source rather than escalating further.** Do not try
+to defeat the challenge. The same content is very often served from somewhere without the
+protection, and that path is both cheaper and more stable:
+
+- a documentation, datasheet, or asset subdomain, often serving the authoritative PDF
+- the project's repository rather than its rendered docs site — `gh api repos/OWNER/REPO/contents/PATH --jq '.content' | base64 -d` returns file contents directly
+- a structured API rather than a rendered page — for example a registry or package API that answers the question as JSON without downloading the artifact
+
+*Illustrative:* a vendor's marketing site sat behind an interstitial that defeated the browser, while
+the same specification as a PDF on their `datasheets.` subdomain fetched with plain `curl`. The
+browser was the wrong escalation; a different host was the answer.
+
+**Record which sources needed which treatment** when the research will be revisited. The next agent
+otherwise repeats the whole ladder from the top.
 
 ## Quick start
 
