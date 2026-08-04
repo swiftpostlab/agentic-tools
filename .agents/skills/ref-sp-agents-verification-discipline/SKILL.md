@@ -79,6 +79,31 @@ certainty.
    - High stakes → stop and surface what was checked, what remains unknown, and what would settle
      it; the decision goes to the user.
 
+## What a Check Can Prove
+
+A check that runs cleanly and returns a clear result can still be silently ambiguous about the thing
+it was run to settle. Three failure shapes recur, and all three produce *evidence* — which is what
+makes them dangerous, since step 3 of the workflow says to prune on evidence.
+
+- **The observer's position decides what the check exercises.** A check performed from inside the
+  boundary being tested may travel a different path than the real caller, be answered by a different
+  component, or be admitted by a rule that only applies to local traffic. The result looks like
+  confirmation and is consistent with both the state you hoped for and the one you were checking
+  for. Before trusting a check, ask whether the caller you actually care about would take the same
+  path — and if not, run it from where that caller stands.
+- **The happy path systematically avoids the fallback path.** Anything that exists only for adverse
+  conditions is, by construction, what a successful run never reaches: retries, failover, degraded
+  modes, error branches, reconnection. Passing results accumulate while it stays unexercised, and it
+  fails later under conditions nobody can reproduce. Name the component the success path cannot
+  reach and force it deliberately rather than waiting for it to be needed.
+- **A test can pass on preconditions that will not exist in operation.** Where the test environment
+  supplies something real use will not — a human present to read a value, a warm cache, a populated
+  fixture, an already-open session — the run is valid and still says nothing about whether the system
+  works. Check that every state the test leans on will be there when the system is actually used.
+
+The common repair is the same in all three: state what the check *did* establish, separately from
+what it was hoped to establish, and treat the gap as unverified rather than covered.
+
 ## Human Claims
 
 - A human interaction is **high-stakes by default** — it steers everything downstream. When the
@@ -91,6 +116,11 @@ certainty.
 - **Point-of-consequence verification:** a casual low-stakes remark may be provisionally accepted
   and marked unverified; the moment it starts justifying a consequential action, its stakes have
   risen and it gets verified then.
+- **A terse reply to a multi-part question is not confirmation.** When an answer is equally
+  consistent with two readings of what was asked, taking the reading that matches the current
+  hypothesis manufactures agreement that was never given — and the resulting work can run a long way
+  before the divergence surfaces. Say which reading is being acted on before acting, particularly
+  when the reply is much shorter than the question.
 
 ## Defaults
 
@@ -126,6 +156,11 @@ certainty.
 - **When several components can produce the same artifact, attribution needs its own check.** Finding
   that your component no longer accounts for something does not mean nothing does. Ask which
   component owns it now, rather than treating your own exoneration as the answer.
+- **A control's configuration is not evidence of its effect.** In layered systems a rule declared at
+  one layer can be bypassed entirely by a lower one, and the configuration file will read as correct
+  either way — it records intent, not outcome. Reading the rule verifies that someone wrote it;
+  only observing the layer that actually decides verifies that it does anything. Where a control
+  matters, check the effect from the position the real traffic or caller occupies.
 
 ## Validation
 
@@ -137,6 +172,10 @@ certainty.
   changed or was defended?
 - When the claim describes what a change did: was the baseline captured before the change rather
   than inferred backwards from the state after it?
+- Before treating a check as settling something: would the caller that matters take the same path,
+  and which components did the check leave unexercised?
+- After a terse or ambiguous reply to a multi-part question: was the reading being acted on stated
+  back before work proceeded on it?
 - In the final answer: does stated confidence match the evidence actually gathered, and are
   unverified assumptions explicitly marked?
 
