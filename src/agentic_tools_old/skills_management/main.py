@@ -69,9 +69,10 @@ class SkillManifest:
     # visibility value, i.e. the skill has not been migrated to the namespaced
     # schema yet. Drives the transition warn/error policy for a consumer's own skills.
     uses_legacy_metadata: bool = False
-    # True when the skill directory is a symlink (a skill linked in from a source
-    # we own); such skills are our migration burden, not the consumer's.
-    is_symlink: bool = False
+    # True when the skill directory is a directory link — a symlink, or a Windows
+    # junction where symlink privileges were unavailable (a skill linked in from a
+    # source we own); such skills are our migration burden, not the consumer's.
+    is_link: bool = False
 
 
 @dataclass(frozen=True)
@@ -521,7 +522,7 @@ def read_skill_manifest(skill_directory: Path) -> SkillManifest:
         requires=requires,
         reason=reason,
         uses_legacy_metadata=uses_legacy_metadata,
-        is_symlink=skill_directory.is_symlink(),
+        is_link=is_directory_link(skill_directory),
     )
 
 
@@ -698,11 +699,11 @@ def build_legacy_metadata_migration_hint(skill_name: str) -> str:
 def legacy_metadata_warning(manifest: SkillManifest) -> str | None:
     """A soft migration nudge for a consumer's own non-public legacy skill.
 
-    Public legacy skills are a hard error at the export gate; symlinked skills are
+    Public legacy skills are a hard error at the export gate; linked skills are
     our migration burden (handled by sync's rename/gitignore flow), so neither is
     warned about here.
     """
-    if not manifest.uses_legacy_metadata or manifest.is_symlink:
+    if not manifest.uses_legacy_metadata or manifest.is_link:
         return None
     if manifest.visibility == "public":
         return None
@@ -730,10 +731,10 @@ def ensure_shareable_manifest(
 
     # A public skill is published to the world, so it must be on the current schema
     # before it can be exported; org-visibility legacy skills are tolerated (warned).
-    # Symlinked skills are ours to migrate, not the consumer's, so they are exempt.
+    # Linked skills are ours to migrate, not the consumer's, so they are exempt.
     if (
         manifest.uses_legacy_metadata
-        and not manifest.is_symlink
+        and not manifest.is_link
         and manifest.visibility == "public"
     ):
         raise SkillsManagementError(
@@ -819,7 +820,7 @@ def describe_skills(manifests: dict[str, SkillManifest]) -> str:
         )
         if manifest.reason:
             line = f"{line}; reason {manifest.reason}"
-        if manifest.uses_legacy_metadata and not manifest.is_symlink:
+        if manifest.uses_legacy_metadata and not manifest.is_link:
             line = f"{line}; legacy metadata — migrate to shareable-skills.*"
         lines.append(line)
 

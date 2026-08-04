@@ -200,10 +200,48 @@ def test_symlinked_legacy_skill_is_our_burden_not_the_consumers(
     manifests = discover_skill_manifests(tmp_path)
     manifest = manifests["ref-linked"]
 
-    assert manifest.is_symlink is True
+    assert manifest.is_link is True
     assert manifest.uses_legacy_metadata is True
     assert legacy_metadata_warning(manifest) is None
     # The public-legacy export error is skipped for symlinked skills.
+    assert [m.name for m in resolve_selected_skills(manifests, ["ref-linked"])] == [
+        "ref-linked"
+    ]
+
+
+def test_junctioned_legacy_skill_is_our_burden_not_the_consumers(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # On Windows a linked skill can be a directory junction rather than a symlink.
+    # It is still a skill we own, so it must get the same legacy-metadata exemption.
+    source_root = tmp_path / "source"
+    write_skill_in_root(source_root, "ref-linked", metadata={"visibility": "public"})
+    skills_root = tmp_path / ".agents" / "skills"
+    skills_root.mkdir(parents=True)
+    junction = skills_root / "ref-linked"
+    junction.symlink_to(source_root / "ref-linked", target_is_directory=True)
+
+    # Stand in for a junction: reads like a plain directory, not a symlink.
+    def never_a_symlink(self: Path) -> bool:
+        del self
+        return False
+
+    def only_the_junction(path: Path) -> bool:
+        return path == junction
+
+    monkeypatch.setattr(skills_management_main, "is_windows", lambda: True)
+    monkeypatch.setattr(Path, "is_symlink", never_a_symlink)
+    monkeypatch.setattr(
+        skills_management_main, "is_directory_junction", only_the_junction
+    )
+
+    manifests = discover_skill_manifests(tmp_path)
+    manifest = manifests["ref-linked"]
+
+    assert manifest.is_link is True
+    assert manifest.uses_legacy_metadata is True
+    assert legacy_metadata_warning(manifest) is None
     assert [m.name for m in resolve_selected_skills(manifests, ["ref-linked"])] == [
         "ref-linked"
     ]
