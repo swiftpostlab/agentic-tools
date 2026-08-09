@@ -23,6 +23,24 @@ Both matter. File-level restrictions alone are not sufficient in every client.
 
 The `copilot-restricted-file` language-association workaround in `.vscode/settings.json` is best effort only. It is not a formal security boundary. The top-level behavioral instructions remain the primary enforcement for Copilot.
 
+## Non-File Channels
+
+Both layers above are addressed at paths. Neither sees a command that fetches the same data over the
+network, so the policy stops an agent reading a protected CSV on disk while leaving the identical
+rows reachable through a warehouse or database client the repo already depends on.
+
+Enumerate those channels per repo rather than assuming the list is the usual database CLIs. A
+transformation tool counts: `dbt show` and `dbt run-operation --sql` both execute arbitrary SQL and
+surface results, and blocking `bq` or `psql` while leaving dbt open closes nothing. Notebook kernels,
+ORM shells, and cloud CLIs (`gcloud`, `aws`) behave the same way.
+
+Closing one has two levers, and they are not equivalent:
+
+| Lever | Mechanism | Strength |
+| --- | --- | --- |
+| Agent-scoped credential | A separate connection profile or service account bound to a read-restricted role | Holds against commands nobody enumerated |
+| Command gate | A `PreToolUse` hook matching the tool and subcommand (see `ref-sp-agents-hooks`) | Holds only for the subcommands actually enumerated |
+
 ## Review Rule
 
 When changing the policy, ask:
@@ -30,3 +48,4 @@ When changing the policy, ask:
 - Did the generated file-level controls change as intended?
 - Did the behavioral instructions still describe the same model?
 - Did the change accidentally make enforcement weaker in one client than another?
+- Is any data protected by a path pattern also reachable through a command the agent may run?

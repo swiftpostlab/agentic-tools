@@ -43,6 +43,8 @@ generated, and how each client enforces them.
   (privileges, encryption, auditing). Nothing to do with agent file access.
 - `ref-sp-dev-github-actions-ci` — workflow token scope, runner trust, and action pinning. CI
   hardening is a different attack surface from agent read policy.
+- `ref-sp-agents-hooks` — the mechanism for gating a *command* rather than a file path. This skill
+  decides what should be reachable; a `PreToolUse` hook is how a non-file channel gets closed.
 
 ## Core Workflow
 
@@ -74,6 +76,32 @@ policy source file                 ← Source of truth
 - `protectedFiles`: security-sensitive files that must not be read or modified.
 - `excludedFiles`: low-signal generated output or noise that should usually stay out of agent context, but are not secrets by default.
 
+## What the Policy Does Not Bound
+
+The policy bounds **files**, not **data**. Every mechanism here matches a path pattern, so it reaches
+only what is sitting on disk in the repo. Any command that can pull the same data over a network is
+outside the boundary entirely.
+
+That gap opens whenever the repo's toolchain includes a live query client — `psql`, `bq`, `snowsql`,
+an ORM shell, a notebook kernel, or a transformation tool like dbt. Blocking the obvious database
+CLIs while leaving the project's primary tool unblocked is a false boundary: dbt alone runs
+`dbt show --inline "<sql>"` (arbitrary SQL, rows previewed in the terminal, `--output json` for
+machine reading) and `dbt run-operation --sql "<sql>"` (arbitrary SQL against the target, no macro
+needed as of dbt Core v1.12). A file allowlist has no opinion on either.
+
+Two responses, in order of strength:
+
+1. **Give the agent its own credential.** A connection profile bound to a read-restricted role is the
+   only control that survives a command nobody enumerated. Agents inherit the human's ambient
+   credentials (service account, ADC, `~/.dbt/profiles.yml`), so datastore IAM expresses nothing
+   agent-specific until a distinct identity exists.
+2. **Gate the read-shaped subcommands** with a `PreToolUse` hook (`ref-sp-agents-hooks`), the way a
+   `git` subcommand guard works. Enumerate the whole surface rather than the first example that comes
+   to mind — for dbt that is `show` *and* `run-operation`, not just `--inline`.
+
+Gating is a speed bump; the credential is the boundary. State which one the repo relies on: an
+unstated boundary reads as a boundary that exists.
+
 ## Task Framing
 
 | Command or action | What | Why | When | Expected outcome |
@@ -103,6 +131,8 @@ The `.vscode/settings.json` approach maps protected patterns to a `copilot-restr
 - Keep approval policy in the source-of-truth file instead of manually editing generated outputs.
 - Treat generated policy files as deterministic outputs, not primary authoring surfaces.
 - Review enforcement limitations explicitly when changing Copilot-facing restrictions.
+- Treat the policy as a bound on files, not on data. When the toolchain can query a live datastore,
+  decide explicitly which commands are gated and under whose credential the agent runs.
 
 ## References
 
