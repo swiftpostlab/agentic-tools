@@ -71,6 +71,8 @@ agentic-tools = "agentic_tools_old.main:main"
 [tool.poe.tasks]
 policy-check = "uv run python -m agentic_tools_old.main policy check"
 version-check = "python scripts/check_version_drift.py check"
+assistants-build = "python scripts/project_assistant_instructions.py"
+assistants-check = "python scripts/project_assistant_instructions.py --check"
 plugin-sync = "python -m agentic_tools.main.cli plugin sync"
 plugin-check = "python -m agentic_tools.main.cli plugin check"
 version-next = "cz bump --get-next --yes"
