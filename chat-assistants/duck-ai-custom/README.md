@@ -6,8 +6,9 @@ which drives everything about these two files.
 ## Setting it up
 
 1. Open duck.ai and find custom instructions in its settings.
-2. Copy [`default.md`](./default.md) for English or
-   [`default-it.md`](./default-it.md) for Italian. Paste the whole file.
+2. Copy [`default/instructions.md`](./default/instructions.md) for English or
+   [`default-it/instructions.md`](./default-it/instructions.md) for Italian.
+   Paste the whole file.
 3. Save, then ask a plain question and check two things: it answers instead of
    correcting how you asked, and it says so when it does not know something.
 
@@ -32,5 +33,5 @@ drifting from the skills.
 Measure after editing, because going over is silent until the field rejects it:
 
 ```bash
-uv run python -c "from pathlib import Path; print(len(Path('chat-assistants/duck-ai-custom/default.md').read_text().strip()))"
+uv run python -c "from pathlib import Path; print(len(Path('chat-assistants/duck-ai-custom/default/instructions.md').read_text().strip()))"
 ```

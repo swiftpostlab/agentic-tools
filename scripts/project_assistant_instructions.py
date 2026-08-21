@@ -58,9 +58,13 @@ def render(template_path: Path) -> str:
 
 
 def output_path(template_path: Path) -> Path:
-    """`<product>/templates/<name>.template.md` -> `<product>/<name>.md`."""
+    """`<product>/templates/<name>.template.md` -> `<product>/<name>/instructions.md`.
+
+    One folder per assistant, so a product that also needs knowledge files has
+    somewhere to put them next to the instructions a person pastes.
+    """
     name = template_path.name.removesuffix(".template.md")
-    return template_path.parent.parent / f"{name}.md"
+    return template_path.parent.parent / name / "instructions.md"
 
 
 def main() -> int:
@@ -97,6 +101,7 @@ def main() -> int:
                 print(f"stale: {relative}", file=sys.stderr)
             continue
 
+        destination.parent.mkdir(parents=True, exist_ok=True)
         destination.write_text(rendered, encoding="utf-8")
         # The instruction field limits are undocumented on every one of these
         # products, so report the size rather than let it be found on paste.

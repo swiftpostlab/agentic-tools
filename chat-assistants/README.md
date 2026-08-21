@@ -11,11 +11,24 @@ finished text for a human to copy into a settings field somewhere else.
 
 | Product | Field | English | Italian | Size |
 | --- | --- | --- | --- | --- |
-| [Gemini Gem](./gemini-gem/) | Gem instructions | `default.md` | `default-it.md` | ~10,500 chars |
-| [ChatGPT](./chatgpt-custom/) | Custom instructions | `default.md` | `default-it.md` | ~1,500 chars |
-| [duck.ai](./duck-ai-custom/) | Custom instructions | `default.md` | `default-it.md` | ~500 chars |
+| [Gemini Gem](./gemini-gem/) | Gem instructions | `default/` | `default-it/` | ~10,500 chars |
+| [ChatGPT](./chatgpt-custom/) | Custom instructions | `default/` | `default-it/` | ~1,500 chars |
+| [duck.ai](./duck-ai-custom/) | Custom instructions | `default/` | `default-it/` | ~500 chars |
 
 Each folder has a README with the setup steps for that product.
+
+## Layout
+
+```text
+<product>/README.md              setup steps for a person
+<product>/<assistant>/           one folder per assistant, one folder per Gem
+<product>/templates/             sources for whatever is generated
+```
+
+One folder is one assistant, so a product whose assistant also needs uploaded
+files has somewhere to keep them beside the instructions. None of the three here
+uses knowledge files; `swiftpost-site-template` carries a Gem in the same layout
+that does.
 
 `default` is the general-purpose assistant, for understanding concepts and
 checking claims, with no specialisation. A specialised assistant would sit
@@ -59,8 +72,9 @@ uv run poe assistants-build   # regenerate from chat-assistants/*/templates/
 uv run poe assistants-check   # fail if a generated file drifted from its template
 ```
 
-Edit `gemini-gem/templates/*.template.md`, never `gemini-gem/default*.md`. The
-`{{PERSONA}}` and `{{VERIFICATION}}` placeholders are filled from
+Edit `gemini-gem/templates/*.template.md`, never the generated
+`gemini-gem/*/instructions.md`. The `{{PERSONA}}` and `{{VERIFICATION}}`
+placeholders are filled from
 `.agents/skills/ref-sp-agents-mr-wolf-persona` and
 `.agents/skills/ref-sp-agents-verification-discipline`, which own that text.
 

@@ -7,9 +7,9 @@ ChatGPT should respond.
 ## Setting it up
 
 1. Open ChatGPT settings and find Custom instructions under personalisation.
-2. Copy [`default.md`](./default.md) for English or
-   [`default-it.md`](./default-it.md) for Italian into the box asking **how
-   ChatGPT should respond**.
+2. Copy [`default/instructions.md`](./default/instructions.md) for English or
+   [`default-it/instructions.md`](./default-it/instructions.md) for Italian into
+   the box asking **how ChatGPT should respond**.
 3. Leave the other box for who you are and what you work on. That is what it is
    for, and it is a separate budget.
 4. Save, then check two things:
@@ -28,10 +28,10 @@ primary source and these files are written to the smaller number, which works
 either way.
 
 If your box does take more, the things worth restoring first, in order, are:
-the four-tier source ladder from the [Gem
-version](../gemini-gem/default.md), the line that your own recall is a lead
-rather than a citation, and the no-preface rule on corrections spelled out
-rather than compressed.
+the four-tier source ladder from the
+[Gem version](../gemini-gem/default/instructions.md), the line that your own
+recall is a lead rather than a citation, and the no-preface rule on corrections
+spelled out rather than compressed.
 
 ## Editing
 
@@ -42,5 +42,5 @@ check notices when the skills move on without them. Edit them directly, and
 measure afterwards:
 
 ```bash
-uv run python -c "from pathlib import Path; print(len(Path('chat-assistants/chatgpt-custom/default.md').read_text().strip()))"
+uv run python -c "from pathlib import Path; print(len(Path('chat-assistants/chatgpt-custom/default/instructions.md').read_text().strip()))"
 ```

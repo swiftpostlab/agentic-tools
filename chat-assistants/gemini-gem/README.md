@@ -7,9 +7,9 @@ knowledge files.
 
 1. Go to <https://gemini.google.com> and create a new Gem. The button has moved
    around over time; look for Gems in the sidebar or under Explore.
-2. Open [`default.md`](./default.md) for English or
-   [`default-it.md`](./default-it.md) for Italian, copy the whole file, and
-   paste it into the Gem's instructions field.
+2. Open [`default/instructions.md`](./default/instructions.md) for English or
+   [`default-it/instructions.md`](./default-it/instructions.md) for Italian,
+   copy the whole file, and paste it into the Gem's instructions field.
 3. Leave Knowledge empty. This assistant carries no knowledge files, and adding
    the repo's skills would fill it with software-development guidance it has no
    use for.
@@ -44,5 +44,6 @@ uv run poe assistants-build
 ```
 
 The `{{PERSONA}}` and `{{VERIFICATION}}` placeholders are filled verbatim from
-the skills that own that text. Editing `default.md` directly forks it from its
-source, and `uv run poe assistants-check` will fail until it is regenerated.
+the skills that own that text. Editing a generated `instructions.md` directly
+forks it from its source, and `uv run poe assistants-check` will fail until it
+is regenerated.
