@@ -227,6 +227,10 @@ All project skills are located in `.agents/skills/` and automatically load in Co
 
 - Use when: setting up agent tooling in a repo, checking whether the `.agents/` workspaces, core skills, and `AGENTS.md` are in place, choosing between vendoring, sync, and a marketplace plugin, or bridging a client such as Claude Code, Copilot, Gemini, Cursor, or OpenClaw to `AGENTS.md`
 
+**`tool-sp-setup-local-agents`** — Audit and fix this machine's local-model setup, then wire a client to it
+
+- Use when: setting up a local model for an agent on a machine, asking whether this machine's setup is correct or fast enough, diagnosing a local agent that is slow, silent, or not calling tools, or reviewing Ollama's context, keep-alive, KV cache, or host binding
+
 **`tool-sp-run-adversarial-review`** — Run an adversarial review over a change with a reviewer separated from the author
 
 - Use when: the user asks to adversarially review, independently verify, or red-team a change, wants a separate agent to review code, skills, security, or end-to-end behavior before accepting it, or wants a structured review pass over the current diff

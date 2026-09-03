@@ -366,6 +366,9 @@ Load these when the situation calls for them, not preemptively.
 | `./references/pi.md` | Setting up or debugging pi against a local model. |
 | `./references/hermes.md` | Setting up or debugging Hermes against a local model. |
 
+To audit and fix a specific machine rather than read the rules, use `tool-sp-setup-local-agents`.
+It runs these checks against a real host and maps each finding to a fix.
+
 `./assets/AGENTS.lean.md` is a copy-and-fill instruction-file template for repos driven by a small
 local model.
 
