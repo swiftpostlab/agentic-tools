@@ -119,7 +119,12 @@
     "wcag",
     "design",
     "typography",
-    "readability"
+    "readability",
+    "llm",
+    "ollama",
+    "local-models",
+    "hardware",
+    "inference"
   ],
   "domainAliases": {
     "seo": "web",

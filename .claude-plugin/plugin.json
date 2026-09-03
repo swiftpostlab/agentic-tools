@@ -14,6 +14,7 @@
     "./.agents/skills/ref-sp-agents-adversarial-review",
     "./.agents/skills/ref-sp-agents-hooks",
     "./.agents/skills/ref-sp-agents-instructions-authoring",
+    "./.agents/skills/ref-sp-agents-local-setup",
     "./.agents/skills/ref-sp-agents-local-tasks",
     "./.agents/skills/ref-sp-agents-mr-wolf-persona",
     "./.agents/skills/ref-sp-agents-plugin-marketplaces",

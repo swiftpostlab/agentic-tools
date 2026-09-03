@@ -77,6 +77,10 @@ All project skills are located in `.agents/skills/` and automatically load in Co
 
 - Use when: creating or editing a hook, choosing a lifecycle event, writing a hook script that reads stdin JSON and returns an allow/deny/context decision, making a hook portable across agents, or debugging why a hook does not fire or block
 
+**`ref-sp-agents-local-setup`** — Running an agent on a local model: hardware sizing, harness class, Ollama, model choice, and wiring pi or Hermes
+
+- Use when: setting up or debugging a local LLM for an agent, asking whether a machine can run a given model, deciding whether the hardware should run an agent, an Aider-style edit-format assistant, or inline autocomplete, sizing VRAM, context, or quantization, checking which models exist right now, or wiring a client to a local OpenAI-compatible endpoint
+
 **`ref-sp-agents-verification-discipline`** — Verification discipline against jumping to answers, sycophancy, and overconfidence
 
 - Use when: choosing between approaches or root causes, acting on an unverified claim, responding to a user challenge, deciding how much verification a risky action needs, or calibrating stated confidence
