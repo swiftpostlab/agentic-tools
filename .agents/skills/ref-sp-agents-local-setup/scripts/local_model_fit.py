@@ -39,6 +39,8 @@ from typing import Any, cast
 
 GB = 1_000_000_000
 RUNTIME_OVERHEAD_GB = 1.0
+# Mid-range dense model, 64K context, f16 cache. Scaled by estimated_kv_gb.
+REFERENCE_KV_GB_AT_64K = 3.0
 
 # Accelerator memory in GB -> what is honestly achievable. Mirrors the table in
 # ../references/hardware.md; keep the two in step.
@@ -273,6 +275,17 @@ def kv_cache_gb(
     return 2 * kv_heads * head_dim * bytes_per_element * cached_tokens / GB
 
 
+def estimated_kv_gb(context: int, bytes_per_element: int) -> float:
+    """Rough KV cache size when no model config is available.
+
+    Anchored on a mid-range dense model needing about 3 GB at 64K context in
+    f16, then scaled linearly, since cache size is linear in both context and
+    element width. Per-model shape varies by an order of magnitude, so this is
+    only a placeholder: pass --config for a figure that means something.
+    """
+    return REFERENCE_KV_GB_AT_64K * (context / 65536) * (bytes_per_element / 2)
+
+
 def render(
     machine: Machine, models: list[InstalledModel], context: int, kv_gb: float
 ) -> str:
@@ -293,7 +306,7 @@ def render(
     lines.append("")
     lines.append(f"Installed Ollama models, sized at {context} context")
     lines.append(
-        f"  (assumed KV cache {kv_gb:.1f} GB; pass --config for a real figure)"
+        f"  (estimated KV cache {kv_gb:.1f} GB; pass --config for a real figure)"
     )
     if not models:
         lines.append("  none found (is ollama installed and are any models pulled?)")
@@ -340,7 +353,7 @@ def main() -> int:
     context: int = args.context
     kv_bytes: int = args.kv_bytes
 
-    kv_gb = 3.0  # a mid-range placeholder when no config is supplied
+    kv_gb = estimated_kv_gb(context, kv_bytes)
     config_path: Path | None = args.config
     if config_path is not None:
         if not config_path.is_file():
